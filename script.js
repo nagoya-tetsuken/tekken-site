@@ -1,24 +1,21 @@
-const GAS_URL = "あなたのGASウェブアプリURL";
+const API_URL = "https://script.google.com/macros/s/AKfycbwlzBgQoST_MLC8nvPeJSMQBHnIFouiEB8MI6N2s-oObA0HP-X_txcevkIv8q7UFpfLJQ/exec";
 
-async function issueTicket(type) {
-  // 番号の生成ロジック（本来は現在の最終番号をスプシから取得して+1する）
-  const id = generateNextId(type); 
-  const vehicle = document.getElementById('vehicleSelect').value;
+// データの読み込み
+async function getData() {
+    const response = await fetch(API_URL);
+    return await response.json();
+}
 
-  const data = {
-    id: id,
-    type: type,
-    vehicle: vehicle
-  };
+// データの送信 (発行・更新)
+async function sendData(payload) {
+    await fetch(API_URL, {
+        method: "POST",
+        mode: "no-cors", // GASの仕様上、レスポンスを受け取らない設定が安定します
+        body: JSON.stringify(payload)
+    });
+}
 
-  // GASへ送信
-  const response = await fetch(GAS_URL, {
-    method: "POST",
-    body: JSON.stringify(data)
-  });
-
-  if (response.ok) {
-    // 発行成功したら issued.html へ飛ばす（IDをクエリパラメータで渡す）
-    window.location.href = `issued.html?id=${id}&type=${type}&v=${encodeURIComponent(vehicle)}`;
-  }
+// 待ち時間計算 (5分/組)
+function getWaitTime(count) {
+    return count * 5;
 }
