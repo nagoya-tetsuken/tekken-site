@@ -22,14 +22,29 @@
     </div>
     <script src="script.js"></script>
     <script>
-        async function issue() {
-            const b = document.getElementById('btn'); b.disabled = true; b.innerText = "発行中...";
-            const v = document.getElementById('v-select').value;
-            const t = document.querySelector('input[name="t"]:checked').value;
-            const res = await postToSheet({ action: 'issue', type: t, vehicle: v });
-            if(res.result === 'success') location.href = `issued.html?id=${res.id}&v=${encodeURIComponent(v)}`;
-            else { alert("失敗"); b.disabled = false; b.innerText = "発行する"; }
-        }
+// entry.html 内の issue 関数を以下に書き換え
+async function issue() {
+    const b = document.getElementById('btn'); 
+    b.disabled = true; 
+    b.innerText = "発行中...";
+    const v = document.getElementById('v-select').value;
+    const t = document.querySelector('input[name="t"]:checked').value;
+    
+    const res = await postToSheet({ action: 'issue', type: t, vehicle: v });
+    
+    if(res.result === 'success') {
+        // --- ここから追加：ブラウザに保存 ---
+        localStorage.setItem('my_ticket_id', res.id);
+        localStorage.setItem('my_ticket_v', v);
+        // --- ここまで ---
+        
+        location.href = `issued.html?id=${res.id}&v=${encodeURIComponent(v)}`;
+    } else { 
+        alert("失敗"); 
+        b.disabled = false; 
+        b.innerText = "発行する"; 
+    }
+}
     </script>
 </body>
 </html>
