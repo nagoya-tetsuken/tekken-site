@@ -19,98 +19,70 @@
 
     <main class="monitor-container">
         <div class="lcd-panel">
-            <div class="lcd-header">
-                <span class="lcd-label">STATUS</span>
-                <span class="lcd-main-title">ただいまの呼出番号</span>
-            </div>
-            
-            <div id="calling-now" class="lcd-number">
-                読み込み中...
-            </div>
-            
-            <div class="lcd-footer">
-                <marquee scrollamount="5">【鉄道研究部】 整理券番号が呼ばれましたら、受付までお越しください。 ジオラマの安全運転にご協力をお願いします。</marquee>
-            </div>
+            <div class="lcd-header"><span class="lcd-label">STATUS</span> <span class="lcd-main-title">ただいまの呼出番号</span></div>
+            <div id="calling-now" class="lcd-number">LOADING...</div>
+            <div class="lcd-footer"><marquee>【鉄道研究部】番号が呼ばれたら受付へお越しください。</marquee></div>
         </div>
 
         <div class="status-grid">
-            <div class="status-card">
-                <div class="label">待ち組数</div>
-                <div class="value"><span id="wait-count">0</span> <small>組</small></div>
-            </div>
-            <div class="status-card">
-                <div class="label">推定待ち時間</div>
-                <div class="value"><span id="wait-time">0</span> <small>分</small></div>
-            </div>
+            <div class="status-card"><div class="label">待ち組数</div><div class="value"><span id="wait-count">0</span>組</div></div>
+            <div class="status-card"><div class="label">推定待ち時間</div><div class="value"><span id="wait-time">0</span>分</div></div>
         </div>
     </main>
 
     <script src="script.js"></script>
-    
     <script>
-        // 1. ページ読み込み時に履歴ボタンをチェック
-        function initResumeButton() {
+        // 履歴ボタンの表示・非表示を管理する関数
+        function manageResumeButton(data) {
             const savedId = localStorage.getItem('my_ticket_id');
-            const savedV = localStorage.getItem('my_ticket_v');
+            const resumeBtn = document.getElementById('resume-btn');
             
-            if (savedId && savedV) {
-                const resumeBtn = document.getElementById('resume-btn');
-                resumeBtn.style.display = 'inline-block';
-                resumeBtn.onclick = function() {
-                    location.href = `issued.html?id=${savedId}&v=${encodeURIComponent(savedV)}`;
-                };
+            if (!savedId) {
+                resumeBtn.style.display = 'none';
+                return;
             }
-        }
 
-        // 2. データの状態を見て、終了した履歴を消去する
-        function checkTicketValidity(data) {
-            const savedId = localStorage.getItem('my_ticket_id');
-            if (!savedId) return;
-
+            // 自分のIDがスプレッドシート上に存在し、かつ status が 'end' ではないか確認
             const myTicket = data.find(d => d.id === savedId);
             
-            // データが届いているのに自分のIDがない、またはステータスがendなら削除
-            if (data.length > 0) {
-                if (!myTicket || myTicket.status === 'end') {
-                    localStorage.removeItem('my_ticket_id');
-                    localStorage.removeItem('my_ticket_v');
-                    document.getElementById('resume-btn').style.display = 'none';
+            if (myTicket && myTicket.status !== 'end') {
+                // 有効な場合のみ表示
+                resumeBtn.style.display = 'inline-block';
+                resumeBtn.onclick = () => {
+                    location.href = `issued.html?id=${savedId}&v=${encodeURIComponent(localStorage.getItem('my_ticket_v'))}`;
+                };
+            } else {
+                // 終了済み、またはデータから消えていた場合は履歴を削除して非表示に
+                localStorage.removeItem('my_ticket_id');
+                localStorage.removeItem('my_ticket_v');
+                resumeBtn.style.display = 'none';
+                if (myTicket && myTicket.status === 'end') {
+                    alert("ご体験ありがとうございました！整理券の有効期限が終了しました。");
                 }
             }
         }
 
-        // 3. 画面全体の更新
         async function updateDisplay() {
             try {
                 const data = await fetchSheetData();
                 
-                // 履歴の有効性を確認
-                checkTicketValidity(data);
+                // 1. 履歴ボタンのチェック
+                manageResumeButton(data);
 
-                // 呼出中(call)の番号を表示
+                // 2. 呼出番号の表示
                 const callingIds = data.filter(d => d.status === 'call').map(d => d.id);
                 const callingDisplay = document.getElementById('calling-now');
+                callingDisplay.innerText = callingIds.length > 0 ? callingIds.join(' / ') : "お待ちください";
                 
-                if (callingIds.length > 0) {
-                    callingDisplay.innerText = callingIds.join(' / ');
-                } else {
-                    callingDisplay.innerText = "お待ちください";
-                }
-
-                // 待機中(resep)の組数をカウント
+                // 3. 待ち情報の更新
                 const waitingCount = data.filter(d => d.status === 'resep').length;
                 document.getElementById('wait-count').innerText = waitingCount;
                 document.getElementById('wait-time').innerText = waitingCount * 5;
-
-            } catch (e) {
-                console.error("更新エラー:", e);
-            }
+            } catch (e) { console.error(e); }
         }
 
-        // 実行開始
-        initResumeButton();
+        setInterval(updateDisplay, 10000);
         updateDisplay();
-        setInterval(updateDisplay, 10000); // 10秒おきに更新
     </script>
 </body>
 </html>
