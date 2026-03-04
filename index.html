@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鉄道研究部 運転体験サイト</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .gate-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .gate-logo {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        .gate-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 40px;
+            border-bottom: 4px solid #e67e22;
+            display: inline-block;
+        }
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        .gate-btn {
+            padding: 25px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+        }
+        .gate-btn:active { transform: translateY(4px); box-shadow: none; }
+        
+        .btn-monitor { background: #2c3e50; } /* 紺色：モニター */
+        .btn-reserve { background: #e67e22; } /* オレンジ：予約 */
+        
+        .status-box {
+            margin-top: 50px;
+            padding: 15px;
+            background: #fff;
+            border: 2px solid #ddd;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+
+<div class="gate-container">
+    <div class="gate-logo">🚂</div>
+    <div class="gate-title">運転体験 管理システム</div>
+
+    <div class="menu-grid">
+        <a href="monitor.html" class="gate-btn btn-monitor">
+            📊 運行状況を確認する
+        </a>
+
+        <a href="entry.html" class="gate-btn btn-reserve">
+            🎫 整理券を発行する
+        </a>
+    </div>
+
+    <div class="status-box">
+        [ 運行ステータス ]<br>
+        <span id="quick-status">データ取得中...</span>
+    </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+    async function updateQuickStatus() {
+        try {
+            const data = await fetchSheetData();
+            const waitCount = data.filter(d => d.status === 'resep').length;
+            const msg = waitCount === 0 ? "【良好】待ち時間なし" : `【混雑】${waitCount}組待ち（約${waitCount*5}分）`;
+            document.getElementById('quick-status').innerText = msg;
+        } catch (e) {
+            document.getElementById('quick-status').innerText = "オフライン";
+        }
+    }
+    updateQuickStatus();
+</script>
+
+</body>
+</html>
