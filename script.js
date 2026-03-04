@@ -1,21 +1,32 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbwlzBgQoST_MLC8nvPeJSMQBHnIFouiEB8MI6N2s-oObA0HP-X_txcevkIv8q7UFpfLJQ/exec";
 
-// データの読み込み
-async function getData() {
-    const response = await fetch(API_URL);
-    return await response.json();
+// データを取得する関数
+async function fetchSheetData() {
+    try {
+        const response = await fetch(API_URL);
+        return await response.json();
+    } catch (e) {
+        console.error("データ取得失敗:", e);
+        return [];
+    }
 }
 
-// データの送信 (発行・更新)
-async function sendData(payload) {
+// データを送信する関数
+async function postToSheet(payload) {
     await fetch(API_URL, {
         method: "POST",
-        mode: "no-cors", // GASの仕様上、レスポンスを受け取らない設定が安定します
+        mode: "no-cors",
         body: JSON.stringify(payload)
     });
 }
 
-// 待ち時間計算 (5分/組)
-function getWaitTime(count) {
-    return count * 5;
+// 自動採番ロジック (例: 001S, 002A)
+function generateNextID(data, type) {
+    const sameTypeIds = data
+        .filter(d => d.id.endsWith(type))
+        .map(d => parseInt(d.id.replace(type, "")));
+    
+    const maxNum = sameTypeIds.length > 0 ? Math.max(...sameTypeIds) : 0;
+    const nextNum = (maxNum + 1).toString().padStart(3, '0');
+    return nextNum + type;
 }
