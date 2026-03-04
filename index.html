@@ -8,6 +8,12 @@
 </head>
 <body class="viewer-mode">
 
+    <div id="loading-screen" class="loading-screen">
+        <div class="train-container">
+            <div class="track"></div>
+            <div class="train">🚂</div> <div class="loading-text">ロード中...</div>
+        </div>
+    </div>
     <nav class="top-nav">
         <button onclick="location.href='entry.html'" class="btn-entry">
             <span>🎫</span> 新規 整理券発行
@@ -32,32 +38,38 @@
 
     <script src="script.js"></script>
     <script>
-        // 履歴ボタンの表示・非表示を管理する関数
-        function manageResumeButton(data) {
+        // ボタンの初期表示（通信を待たずに、とりあえずIDがあれば表示しておく）
+        function initResumeButton() {
+            const savedId = localStorage.getItem('my_ticket_id');
+            const savedV = localStorage.getItem('my_ticket_v');
+            const resumeBtn = document.getElementById('resume-btn');
+
+            if (savedId && savedV) {
+                resumeBtn.style.display = 'inline-block';
+                resumeBtn.onclick = () => {
+                    location.href = `issued.html?id=${savedId}&v=${encodeURIComponent(savedV)}`;
+                };
+            }
+        }
+
+        // データの状態を見て履歴を削除するか決める関数
+        function checkTicketValidity(data) {
             const savedId = localStorage.getItem('my_ticket_id');
             const resumeBtn = document.getElementById('resume-btn');
             
-            if (!savedId) {
-                resumeBtn.style.display = 'none';
-                return;
-            }
+            if (!savedId) return; // 保存されていなければ何もしない
 
-            // 自分のIDがスプレッドシート上に存在し、かつ status が 'end' ではないか確認
             const myTicket = data.find(d => d.id === savedId);
-            
-            if (myTicket && myTicket.status !== 'end') {
-                // 有効な場合のみ表示
-                resumeBtn.style.display = 'inline-block';
-                resumeBtn.onclick = () => {
-                    location.href = `issued.html?id=${savedId}&v=${encodeURIComponent(localStorage.getItem('my_ticket_v'))}`;
-                };
-            } else {
-                // 終了済み、またはデータから消えていた場合は履歴を削除して非表示に
-                localStorage.removeItem('my_ticket_id');
-                localStorage.removeItem('my_ticket_v');
-                resumeBtn.style.display = 'none';
-                if (myTicket && myTicket.status === 'end') {
-                    alert("ご体験ありがとうございました！整理券の有効期限が終了しました。");
+
+            if (data.length > 0) { // データが取得できている場合のみ判定
+                if (!myTicket || myTicket.status === 'end') {
+                    console.log("整理券が終了または削除されたため履歴をクリアします");
+                    localStorage.removeItem('my_ticket_id');
+                    localStorage.removeItem('my_ticket_v');
+                    resumeBtn.style.display = 'none';
+                    if (myTicket && myTicket.status === 'end') {
+                        // alert("ご体験ありがとうございました！整理券の有効期限が終了しました。"); // 連続で出すぎないようコメントアウト
+                    }
                 }
             }
         }
@@ -66,23 +78,45 @@
             try {
                 const data = await fetchSheetData();
                 
-                // 1. 履歴ボタンのチェック
-                manageResumeButton(data);
+                // 1. 履歴の有効性をチェック
+                checkTicketValidity(data);
 
-                // 2. 呼出番号の表示
+                // 2. 呼出番号の表示更新
                 const callingIds = data.filter(d => d.status === 'call').map(d => d.id);
                 const callingDisplay = document.getElementById('calling-now');
                 callingDisplay.innerText = callingIds.length > 0 ? callingIds.join(' / ') : "お待ちください";
                 
-                // 3. 待ち情報の更新
+                // 3. 待ち組数の更新
                 const waitingCount = data.filter(d => d.status === 'resep').length;
                 document.getElementById('wait-count').innerText = waitingCount;
                 document.getElementById('wait-time').innerText = waitingCount * 5;
-            } catch (e) { console.error(e); }
+
+                // 【重要】ローディング画面を消す
+                const loadingScreen = document.getElementById('loading-screen');
+                if (loadingScreen) {
+                    loadingScreen.style.opacity = '0';
+                    loadingScreen.addEventListener('transitionend', () => {
+                        loadingScreen.style.display = 'none';
+                    }, { once: true });
+                }
+
+            } catch (e) { 
+                console.error("更新エラー:", e); 
+                // エラー時もローディング画面は消す（フリーズに見せないため）
+                const loadingScreen = document.getElementById('loading-screen');
+                if (loadingScreen) {
+                    loadingScreen.style.opacity = '0';
+                    loadingScreen.addEventListener('transitionend', () => {
+                        loadingScreen.style.display = 'none';
+                    }, { once: true });
+                }
+            }
         }
 
-        setInterval(updateDisplay, 10000);
-        updateDisplay();
+        // 起動時の処理
+        initResumeButton(); // まずボタンを出す
+        updateDisplay();    // そのあと通信して整合性を確認する
+        setInterval(updateDisplay, 10000); // 10秒おきに監視
     </script>
 </body>
 </html>
