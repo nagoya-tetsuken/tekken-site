@@ -12,7 +12,6 @@
         <button onclick="location.href='entry.html'" class="btn-entry">
             <span>🎫</span> 新規 整理券発行
         </button>
-        
         <button id="resume-btn" class="btn-entry" style="display:none; background: #2c3e50; box-shadow: 0 4px 0 #1a252f; margin-left: 10px;">
             <span>📄</span> 自分の整理券を再表示
         </button>
@@ -20,79 +19,68 @@
 
     <main class="monitor-container">
         <div class="lcd-panel">
-            <div class="lcd-header">
-                <span class="lcd-label">STATUS</span>
-                <span class="lcd-main-title">ただいまの呼出番号</span>
-            </div>
-            
-            <div id="calling-now" class="lcd-number">
-                LOADING...
-            </div>
-            
-            <div class="lcd-footer">
-                <marquee scrollamount="5">【鉄道研究部】 整理券番号が呼ばれましたら、受付までお越しください。 ジオラマの安全運転にご協力をお願いします。</marquee>
-            </div>
+            <div class="lcd-header"><span class="lcd-label">STATUS</span> <span class="lcd-main-title">ただいまの呼出番号</span></div>
+            <div id="calling-now" class="lcd-number">LOADING...</div>
+            <div class="lcd-footer"><marquee>【鉄道研究部】番号が呼ばれたら受付へお越しください。</marquee></div>
         </div>
 
         <div class="status-grid">
-            <div class="status-card">
-                <div class="label">待ち組数</div>
-                <div class="value"><span id="wait-count">0</span> <small>組</small></div>
-            </div>
-            <div class="status-card">
-                <div class="label">推定待ち時間</div>
-                <div class="value"><span id="wait-time">0</span> <small>分</small></div>
-            </div>
+            <div class="status-card"><div class="label">待ち組数</div><div class="value"><span id="wait-count">0</span>組</div></div>
+            <div class="status-card"><div class="label">推定待ち時間</div><div class="value"><span id="wait-time">0</span>分</div></div>
         </div>
     </main>
 
     <script src="script.js"></script>
-    
     <script>
-        // 1. ページ読み込み時の処理（整理券の復元チェック）
-        window.onload = function() {
+        // 履歴ボタンの表示・非表示を管理する関数
+        function manageResumeButton(data) {
             const savedId = localStorage.getItem('my_ticket_id');
-            const savedV = localStorage.getItem('my_ticket_v');
+            const resumeBtn = document.getElementById('resume-btn');
             
-            if (savedId && savedV) {
-                const resumeBtn = document.getElementById('resume-btn');
-                resumeBtn.style.display = 'inline-block'; // ボタンを表示
-                resumeBtn.onclick = function() {
-                    // 保存されている情報を使って issued.html へ飛ぶ
-                    location.href = `issued.html?id=${savedId}&v=${encodeURIComponent(savedV)}`;
-                };
+            if (!savedId) {
+                resumeBtn.style.display = 'none';
+                return;
             }
-        };
 
-        // 2. 画面表示の更新処理
+            // 自分のIDがスプレッドシート上に存在し、かつ status が 'end' ではないか確認
+            const myTicket = data.find(d => d.id === savedId);
+            
+            if (myTicket && myTicket.status !== 'end') {
+                // 有効な場合のみ表示
+                resumeBtn.style.display = 'inline-block';
+                resumeBtn.onclick = () => {
+                    location.href = `issued.html?id=${savedId}&v=${encodeURIComponent(localStorage.getItem('my_ticket_v'))}`;
+                };
+            } else {
+                // 終了済み、またはデータから消えていた場合は履歴を削除して非表示に
+                localStorage.removeItem('my_ticket_id');
+                localStorage.removeItem('my_ticket_v');
+                resumeBtn.style.display = 'none';
+                if (myTicket && myTicket.status === 'end') {
+                    alert("ご体験ありがとうございました！整理券の有効期限が終了しました。");
+                }
+            }
+        }
+
         async function updateDisplay() {
             try {
                 const data = await fetchSheetData();
                 
-                // 呼出中(call)の番号を抽出
-                const callingIds = data
-                    .filter(d => d.status === 'call')
-                    .map(d => d.id);
-                
-                const callingDisplay = document.getElementById('calling-now');
-                if (callingIds.length > 0) {
-                    callingDisplay.innerText = callingIds.join(' / ');
-                    callingDisplay.classList.add('blink');
-                } else {
-                    callingDisplay.innerText = "お待ちください";
-                    callingDisplay.classList.remove('blink');
-                }
+                // 1. 履歴ボタンのチェック
+                manageResumeButton(data);
 
-                // 待機中(resep)の組数をカウント
+                // 2. 呼出番号の表示
+                const callingIds = data.filter(d => d.status === 'call').map(d => d.id);
+                const callingDisplay = document.getElementById('calling-now');
+                callingDisplay.innerText = callingIds.length > 0 ? callingIds.join(' / ') : "お待ちください";
+                
+                // 3. 待ち情報の更新
                 const waitingCount = data.filter(d => d.status === 'resep').length;
                 document.getElementById('wait-count').innerText = waitingCount;
-                document.getElementById('wait-time').innerText = waitingCount * 5; // 1組5分計算
-            } catch (e) {
-                console.error("更新エラー:", e);
-            }
+                document.getElementById('wait-time').innerText = waitingCount * 5;
+            } catch (e) { console.error(e); }
         }
 
-        // 10秒ごとに自動で最新状態にする
         setInterval(updateDisplay, 10000);
         updateDisplay();
     </script>
