@@ -1,26 +1,182 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鉄道研究部 運転体験会</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* --- 基本設定 --- */
+        body {
+            margin: 0;
+            /* PCではヘッダーの高さ100pxに合わせて余裕を持たせる */
+            padding-top: 120px; 
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fcfcfc;
+        }
+
+        /* --- ヘッダー：スクロールしても消えない --- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100px; /* PCでの高さ */
+            
+            /* 画像の設定 */
+            background-image: url('header-img.png'); 
+            background-size: cover;      /* PCでは枠を埋める */
+            background-position: center; /* 中央基準 */
+            background-repeat: no-repeat;
+            
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        /* --- スマホ向けのレスポンシブ設定 (画面幅600px以下) --- */
+        @media (max-width: 600px) {
+            header {
+                height: 70px; /* スマホでは高さを少し抑える */
+                /* 画像を横幅ピッタリに合わせ、横スクロールを防止 */
+                background-size: 100% auto; 
+            }
+            body {
+                /* ヘッダーが低くなった分、上の余白も詰める */
+                padding-top: 90px; 
+            }
+        }
+
+        /* --- コンテンツエリア --- */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        section {
+            background: #fff;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            border-left: 5px solid #e67e22; /* アクセントカラー：オレンジ */
+            padding-left: 15px;
+            margin-top: 0;
+            font-size: 1.4rem;
+        }
+
+        /* --- アクションエリア（応募ボタン） --- */
+        .action-area {
+            text-align: center;
+            padding: 40px 20px;
+            background: #f0f3f5;
+            border-radius: 15px;
+            margin-top: 40px;
+        }
+
+        .btn-main {
+            display: inline-block;
+            background-color: #e67e22;
+            color: white;
+            padding: 18px 35px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: transform 0.2s, background-color 0.2s;
+            box-shadow: 0 4px 15px rgba(230, 126, 34, 0.4);
+        }
+
+        .btn-main:active {
+            transform: scale(0.95);
+        }
+
+        .status-text {
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .sub-link {
+            display: block;
+            margin-top: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
 <header>
     </header>
 
-<style>
-    header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100px; /* 先ほど決めたサイズ */
+<main class="container">
+
+    <section>
+        <h2>運転体験会へようこそ</h2>
+        <p>
+            今年の鉄道研究部のテーマは「出発進行！君の手で動かす1/80の世界」です。<br>
+            本物のマスターコントローラーを使用して、精密な鉄道模型を運転することができます。
+        </p>
+    </section>
+
+    <section>
+        <h2>体験の流れ</h2>
+        <p>1. <strong>整理券発行：</strong> 下記のボタンから発行してください。</p>
+        <p>2. <strong>自由に見学：</strong> 待ち時間は他の展示をご覧ください。</p>
+        <p>3. <strong>呼出通知：</strong> 順番が近づくとスマホでお知らせします。</p>
+    </section>
+
+    <section>
+        <h2>注意事項</h2>
+        <ul style="padding-left: 20px;">
+            <li>体験時間は一人あたり約5分間です。</li>
+            <li>順番時に不在の場合、次の方を優先します。</li>
+        </ul>
+    </section>
+
+    <div class="action-area">
+        <div id="quick-info" class="status-text">運行情報を読み込み中...</div>
         
-        /* 画像の設定 */
-        background-image: url('header-img.png'); /* 保存したファイル名に合わせる */
-        background-size: cover;      /* 横幅いっぱいに広げる */
-        background-position: center; /* 中央を基準にする */
-        background-repeat: no-repeat;
+        <a href="entry.html" class="btn-main">🎫 整理券を発行する</a>
         
-        z-index: 1000;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        <a href="monitor.html" class="sub-link">現在の呼出状況を確認する</a>
+    </div>
+
+</main>
+
+<script src="script.js"></script>
+<script>
+    // 待ち状況をリアルタイムに表示する関数
+    async function updateHomeStatus() {
+        try {
+            const data = await fetchSheetData();
+            const waitCount = data.filter(d => d.status === 'resep').length;
+            const info = document.getElementById('quick-info');
+            
+            if (waitCount === 0) {
+                info.innerHTML = "🟢 【待ち時間なし】すぐに体験できます！";
+                info.style.color = "#27ae60";
+            } else {
+                info.innerHTML = `🟡 現在 <strong>${waitCount}</strong> 組待ち（目安：約 ${waitCount * 5} 分）`;
+                info.style.color = "#e67e22";
+            }
+        } catch (e) {
+            document.getElementById('quick-info').innerText = "運行情報を取得できませんでした";
+        }
     }
 
-    body {
-        margin: 0;
-        padding-top: 110px; /* ヘッダー(100px) + 余白(10px) */
-    }
-</style>
+    // 初回実行
+    updateHomeStatus();
+    // 30秒ごとに更新（負荷軽減のため少し長めに設定）
+    setInterval(updateHomeStatus, 30000);
+</script>
+
+</body>
+</html>
