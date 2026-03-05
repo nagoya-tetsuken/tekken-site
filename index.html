@@ -9,68 +9,60 @@
         /* --- 基本設定 --- */
         body {
             margin: 0;
-            /* PCではヘッダーの高さ100pxに合わせて余裕を持たせる */
-            padding-top: 120px; 
+            padding: 0;
             font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", sans-serif;
             line-height: 1.6;
             color: #333;
             background-color: #fcfcfc;
         }
 
-        /* --- ヘッダー：スクロールしても消えない --- */
+        /* --- ヘッダー：PC・タブレット向けの基本設定 --- */
         header {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100px; /* PCでの高さ */
+            /* Canvaのサイズ2560x200の比率を維持 */
+            aspect-ratio: 2560 / 200; 
             
-            /* 画像の設定 */
             background-image: url('header-img.png'); 
-            background-size: cover;      /* PCでは枠を埋める */
-            background-position: center; /* 中央基準 */
+            background-size: contain;    /* PCでは全体を収める */
+            background-position: top center;
             background-repeat: no-repeat;
+            background-color: #2c3e50;    /* 画像の背景色（紺色など）に合わせる */
             
             z-index: 1000;
             box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
 
-           /* --- スマホ向けのレスポンシブ設定 (画面幅600px以下) --- */
-    @media (max-width: 600px) {
-        header {
-            /* 高さを固定せず、中身（画像）の比率に合わせる */
-            height: auto; 
-            /* アスペクト比を維持。Canvaの画像が「横:縦 = 2560:200」なら「12.8 / 1」 */
-            /* もし画像がもっと縦長なら、ここを 4/1 や 5/1 などに調整してください */
-            aspect-ratio: 2560 / 200; 
-            
-            background-size: contain; /* 画像をはみ出させず全部見せる */
-            background-position: top center;
-            
-            /* 影が浮いて見える場合は少し薄くする */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-    
-        body {
-            /* headerを「height: auto」にすると正確な高さが固定されないため、
-               一番上の要素に大きなマージンを持たせるのが確実です。
-            */
-            padding-top: 0; 
-        }
-        
-        /* bodyの代わりに、最初のsectionに余白を作る */
-        main.container {
-            padding-top: 25vw; /* 画面幅に応じた余白（画像の高さ分） */
-        }
-    }
-
-        /* --- コンテンツエリア --- */
+        /* --- コンテンツエリア全体のレイアウト --- */
         .container {
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
         }
 
+        /* ヘッダーの高さに合わせて中身を押し下げる計算式 */
+        main.container {
+            padding-top: calc(100vw * (200 / 2560) + 20px);
+        }
+
+        /* --- スマホ向けのレスポンシブ設定 (画面幅600px以下) --- */
+        @media (max-width: 600px) {
+            header {
+                /* スマホでは少し「縦に厚く」して、左右の隙間を埋める */
+                aspect-ratio: 2560 / 350; 
+                /* coverに変えることで、左右の端をわずかに切り捨てて隙間をなくす */
+                background-size: cover; 
+                background-position: center center;
+            }
+            main.container {
+                /* スマホ用の比率(350)に合わせて余白を再計算 */
+                padding-top: calc(100vw * (350 / 2560) + 20px);
+            }
+        }
+
+        /* --- 各セクションのデザイン --- */
         section {
             background: #fff;
             padding: 25px;
@@ -80,13 +72,13 @@
         }
 
         h2 {
-            border-left: 5px solid #e67e22; /* アクセントカラー：オレンジ */
+            border-left: 5px solid #e67e22; /* 鉄研らしいアクセント：オレンジ */
             padding-left: 15px;
             margin-top: 0;
             font-size: 1.4rem;
         }
 
-        /* --- アクションエリア（応募ボタン） --- */
+        /* --- アクションエリア（応募ボタン周辺） --- */
         .action-area {
             text-align: center;
             padding: 40px 20px;
@@ -104,7 +96,7 @@
             font-weight: bold;
             text-decoration: none;
             border-radius: 50px;
-            transition: transform 0.2s, background-color 0.2s;
+            transition: transform 0.2s;
             box-shadow: 0 4px 15px rgba(230, 126, 34, 0.4);
         }
 
@@ -129,11 +121,9 @@
 </head>
 <body>
 
-<header>
-    </header>
+<header></header>
 
 <main class="container">
-
     <section>
         <h2>運転体験会へようこそ</h2>
         <p>
@@ -144,17 +134,9 @@
 
     <section>
         <h2>体験の流れ</h2>
-        <p>1. <strong>整理券発行：</strong> 下記のボタンから発行してください。</p>
-        <p>2. <strong>自由に見学：</strong> 待ち時間は他の展示をご覧ください。</p>
-        <p>3. <strong>呼出通知：</strong> 順番が近づくとスマホでお知らせします。</p>
-    </section>
-
-    <section>
-        <h2>注意事項</h2>
-        <ul style="padding-left: 20px;">
-            <li>体験時間は一人あたり約5分間です。</li>
-            <li>順番時に不在の場合、次の方を優先します。</li>
-        </ul>
+        <p>1. <strong>整理券発行：</strong> 下記のボタンから発行してください。<br>
+           2. <strong>自由に見学：</strong> 待ち時間は他の展示をご覧ください。<br>
+           3. <strong>呼出通知：</strong> 順番が近づくとスマホでお知らせします。</p>
     </section>
 
     <div class="action-area">
@@ -164,12 +146,11 @@
         
         <a href="monitor.html" class="sub-link">現在の呼出状況を確認する</a>
     </div>
-
 </main>
 
 <script src="script.js"></script>
 <script>
-    // 待ち状況をリアルタイムに表示する関数
+    // 待ち状況をリアルタイムに表示する
     async function updateHomeStatus() {
         try {
             const data = await fetchSheetData();
@@ -188,9 +169,7 @@
         }
     }
 
-    // 初回実行
     updateHomeStatus();
-    // 30秒ごとに更新（負荷軽減のため少し長めに設定）
     setInterval(updateHomeStatus, 30000);
 </script>
 
