@@ -27,40 +27,30 @@
             display: block;
         }
 
-        /* --- 横並びメニュー設定 --- */
+        /* --- 横並びメニュー（画面に収める） --- */
         .navigation-section {
             background-color: #fff;
-            padding: 40px 0;
+            padding: 15px 10px;
             border-bottom: 2px solid #eee;
-            /* 横に突き抜ける場合にスクロールできるように設定 */
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
         }
 
         .route-map-wrapper {
-            position: relative;
-            /* ボタン5つ + 間隔(318px * 4) を考慮した幅を確保 */
-            /* ボタン1つの幅を仮に100pxとした場合、約1400px程度の領域になります */
             display: flex;
+            justify-content: space-around; /* ボタンを均等に配置 */
             align-items: center;
-            padding: 0 50px;
-            width: max-content; /* 中身に合わせて横幅を自動拡張 */
+            max-width: 800px; /* PCで見ても広がりすぎないように制限 */
+            margin: 0 auto;
         }
 
-        /* 各ボタンのリンク設定 */
+        /* 各ボタンの設定 */
         .station-link {
             display: block;
+            width: 18%; /* 5つ並べて少し余白が残るサイズ */
             transition: transform 0.1s;
-            flex-shrink: 0; /* 幅が縮まないように固定 */
-        }
-
-        /* 指定の318px間隔を空ける（最後のボタン以外） */
-        .station-link:not(:last-child) {
-            margin-right: 318px;
         }
 
         .station-link img {
-            /* 画像のサイズはリポジトリの元サイズに従いますが、必要に応じて width で調整してください */
+            width: 100%; /* 親要素の18%に合わせる */
             height: auto;
             display: block;
         }
@@ -73,7 +63,7 @@
         .container {
             max-width: 800px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 20px;
         }
 
         section {
@@ -87,11 +77,13 @@
             border-left: 5px solid #e67e22;
             padding-left: 15px;
             margin-top: 0;
+            font-size: 1.2rem;
         }
 
         .footer {
             text-align: center;
             padding: 20px;
+            font-size: 0.8rem;
             color: #888;
         }
     </style>
@@ -104,28 +96,18 @@
 
 <nav class="navigation-section">
     <div class="route-map-wrapper">
-        <a href="#" class="station-link">
-            <img src="description.png" alt="部活概要">
-        </a>
-        <a href="#" class="station-link">
-            <img src="notification.png" alt="お知らせ">
-        </a>
-        <a href="#" class="station-link">
-            <img src="activities.png" alt="活動紹介">
-        </a>
-        <a href="#" class="station-link">
-            <img src="media.png" alt="製作作品">
-        </a>
-        <a href="monitor.html" class="station-link">
-            <img src="N-gage.png" alt="運転体験">
-        </a>
+        <a href="#" class="station-link"><img src="description.png" alt="部活概要"></a>
+        <a href="#" class="station-link"><img src="notification.png" alt="お知らせ"></a>
+        <a href="#" class="station-link"><img src="activities.png" alt="活動紹介"></a>
+        <a href="#" class="station-link"><img src="media.png" alt="製作作品"></a>
+        <a href="monitor.html" class="station-link"><img src="N-gage.png" alt="運転体験"></a>
     </div>
 </nav>
 
 <main class="container">
     <section>
         <h2>最新の運行情報</h2>
-        <p>上のメニューを横にスクロールして各項目を選択してください。</p>
+        <p>ポータルサイトを公開しました。各ボタンから詳細をご覧いただけます。</p>
     </section>
 </main>
 
