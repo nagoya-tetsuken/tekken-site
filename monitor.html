@@ -3,116 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nゲージ運行状況モニター</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Staff Monitor - 鉄道研究部</title>
     <style>
-        /* ロード中の文字を目立たせるスタイル */
-        .loading-text {
-            color: #ffcc00 !important; /* 鮮やかなオレンジ黄色 */
-            font-size: 3rem !important;
-            animation: pulse 1.5s infinite;
+        body {
+            margin: 0; padding: 0;
+            background-color: #000; color: #fff;
+            font-family: 'Courier New', Courier, monospace;
         }
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
+
+        /* --- モニターヘッダー --- */
+        .monitor-header {
+            background-color: #333; padding: 10px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 3px solid #c0392b;
         }
+        .system-title { font-size: 1.2rem; font-weight: bold; color: #f1c40f; }
+
+        /* --- メインコンテンツ --- */
+        .monitor-container { padding: 20px; }
+        
+        .btn-staff-login {
+            background: #c0392b; color: white; border: none;
+            padding: 15px 30px; border-radius: 4px; cursor: pointer;
+            font-weight: bold; font-size: 1rem;
+        }
+
+        /* --- パスワード入力用モーダル（隠し画面） --- */
+        #login-modal {
+            display: none; /* 初期は隠す */
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center; align-items: center;
+            flex-direction: column;
+        }
+
+        .login-box {
+            background: #1a1a1a; border: 2px solid #f1c40f;
+            padding: 40px; border-radius: 8px; text-align: center;
+            box-shadow: 0 0 20px rgba(241, 196, 15, 0.3);
+        }
+
+        .login-box h2 { color: #f1c40f; margin-bottom: 20px; font-size: 1.2rem; }
+
+        .login-box input {
+            background: #000; border: 1px solid #444; color: #2ecc71;
+            padding: 12px; width: 200px; font-size: 1.2rem; text-align: center;
+            margin-bottom: 20px; outline: none;
+        }
+
+        .login-box .btn-group { display: flex; gap: 10px; justify-content: center; }
+
+        .btn-auth { background: #2ecc71; color: #000; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; }
+        .btn-cancel { background: #555; color: #fff; border: none; padding: 10px 20px; cursor: pointer; }
+
+        /* --- 処理中表示（前回の通信中演出） --- */
+        #loading-overlay {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; background: #000;
+            z-index: 3000; justify-content: center; align-items: center;
+            flex-direction: column;
+        }
+        .loading-text { color: #f1c40f; font-size: 1.5rem; animation: blink 1s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
     </style>
 </head>
-<body class="viewer-mode">
+<body>
 
-    <nav class="top-nav" style="display: flex; justify-content: space-between; align-items: center;">
-        <div>
-            <button onclick="location.href='entry.html'" class="btn-entry">
-                <span>🎫</span> 新規 整理券発行
-            </button>
-            <button id="resume-btn" class="btn-entry" style="display:none; background: #2c3e50; box-shadow: 0 4px 0 #1a252f; margin-left: 10px;">
-                <span>📄</span> 自分の再表示
-            </button>
+<div class="monitor-header">
+    <div class="system-title">OPERATION CONTROL MONITOR</div>
+    <div id="clock">00:00:00</div>
+</div>
+
+<div class="monitor-container">
+    <h2>Update Schedule</h2>
+    <p>スタッフ専用機能を使用するには認証が必要です。</p>
+    <button class="btn-staff-login" onclick="openLogin()">STAFF LOGIN / 管理画面へ</button>
+</div>
+
+<div id="login-modal">
+    <div class="login-box">
+        <h2>ENTER ACCESS CODE</h2>
+        <input type="password" id="pass-input" placeholder="****" autofocus>
+        <div class="btn-group">
+            <button class="btn-auth" onclick="checkPassword()">AUTHENTICATE</button>
+            <button class="btn-cancel" onclick="closeLogin()">CANCEL</button>
         </div>
-        <button onclick="location.href='staff.html'" style="background:none; border:none; color:#bbb; cursor:pointer; font-size:0.8rem;">
-            ⚙️ 管理
-        </button>
-    </nav>
+        <p id="error-msg" style="color: #e74c3c; margin-top: 15px; font-size: 0.8rem; visibility: hidden;">ACCESS DENIED: INVALID CODE</p>
+    </div>
+</div>
 
-    <main class="monitor-container">
-        <div class="lcd-panel">
-            <div class="lcd-header">
-                <span class="lcd-label">STATUS</span>
-                <span class="lcd-main-title">ただいまの呼出番号</span>
-            </div>
-            
-            <div id="calling-now" class="lcd-number loading-text">
-                LOADING...
-            </div>
-            
-            <div class="lcd-footer">
-                <marquee scrollamount="5">【鉄道研究部】 整理券番号が呼ばれましたら、受付までお越しください。 ジオラマの安全運転にご協力をお願いします。</marquee>
-            </div>
-        </div>
+<div id="loading-overlay">
+    <div class="loading-text">COMMUNICATING...</div>
+</div>
 
-        <div class="status-grid">
-            <div class="status-card">
-                <div class="label">待ち組数</div>
-                <div class="value"><span id="wait-count">0</span> <small>組</small></div>
-            </div>
-            <div class="status-card">
-                <div class="label">推定待ち時間</div>
-                <div class="value"><span id="wait-time">0</span> <small>分</small></div>
-            </div>
-        </div>
-    </main>
+<script>
+    // 時計
+    setInterval(() => {
+        const now = new Date();
+        document.getElementById('clock').innerText = now.toLocaleTimeString();
+    }, 1000);
 
-    <script src="script.js"></script>
-    
-    <script>
-        function manageResumeButton(data) {
-            const savedId = localStorage.getItem('my_ticket_id');
-            const resumeBtn = document.getElementById('resume-btn');
-            
-            if (!savedId) {
-                resumeBtn.style.display = 'none';
-                return;
-            }
+    // パスワード画面を開く
+    function openLogin() {
+        document.getElementById('login-modal').style.display = 'flex';
+        document.getElementById('pass-input').focus();
+    }
 
-            const myTicket = data.find(d => d.id === savedId);
+    // パスワード画面を閉じる
+    function closeLogin() {
+        document.getElementById('login-modal').style.display = 'none';
+        document.getElementById('error-msg').style.visibility = 'hidden';
+        document.getElementById('pass-input').value = '';
+    }
+
+    // 認証処理
+    async function checkPassword() {
+        const pass = document.getElementById('pass-input').value;
+        const errorMsg = document.getElementById('error-msg');
+        
+        // パスワード設定（例：1234）
+        if (pass === "1234") {
+            // 認証成功：処理中アニメーションを表示
+            document.getElementById('login-modal').style.display = 'none';
+            document.getElementById('loading-overlay').style.display = 'flex';
+
+            // 演出として少し待機（1.5秒）
+            await new Promise(resolve => setTimeout(resolve, 1500));
             
-            if (myTicket && myTicket.status !== 'end') {
-                resumeBtn.style.display = 'inline-block';
-                resumeBtn.onclick = () => {
-                    location.href = `issued.html?id=${savedId}&v=${encodeURIComponent(localStorage.getItem('my_ticket_v'))}`;
-                };
-            } else {
-                localStorage.removeItem('my_ticket_id');
-                localStorage.removeItem('my_ticket_v');
-                resumeBtn.style.display = 'none';
-            }
+            // staff.htmlへ移動
+            window.location.href = "staff.html";
+        } else {
+            // 認証失敗
+            errorMsg.style.visibility = 'visible';
+            document.getElementById('pass-input').value = '';
         }
+    }
 
-        async function updateDisplay() {
-            try {
-                const data = await fetchSheetData();
-                
-                // 通信が完了したら「loading-text」クラスを外す
-                const callingDisplay = document.getElementById('calling-now');
-                callingDisplay.classList.remove('loading-text');
+    // Enterキーでも送信可能にする
+    document.getElementById('pass-input').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+</script>
 
-                manageResumeButton(data);
-
-                const callingIds = data.filter(d => d.status === 'call').map(d => d.id);
-                callingDisplay.innerText = callingIds.length > 0 ? callingIds.join(' / ') : "お待ちください";
-
-                const waitingCount = data.filter(d => d.status === 'resep').length;
-                document.getElementById('wait-count').innerText = waitingCount;
-                document.getElementById('wait-time').innerText = waitingCount * 5;
-
-            } catch (e) {
-                console.error("更新エラー:", e);
-            }
-        }
-
-        updateDisplay();
-        setInterval(updateDisplay, 10000);
-    </script>
 </body>
 </html>
