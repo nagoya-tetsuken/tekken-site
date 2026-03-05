@@ -20,11 +20,18 @@
 
         /* --- 開閉メニューエリア --- */
         .navigation-section {
-            position: relative; background-color: #fff; border-bottom: 1px solid #eee; z-index: 500;
-            margin-top: -155px; transition: margin-top 0.4s ease-in-out;
+            position: relative; 
+            background-color: #fff; 
+            border-bottom: 1px solid #eee; 
+            z-index: 500;
+            /* 隠す量を調整：ボタンが消えないよう注意 */
+            margin-top: -180px; 
+            transition: margin-top 0.4s ease-in-out;
         }
-        .navigation-section.is-open { margin-top: -5px; }
+        /* 開いたとき */
+        .navigation-section.is-open { margin-top: 0; }
 
+        /* 言語切り替え */
         .lang-selector {
             position: absolute; right: 10px; top: 10px; z-index: 600;
         }
@@ -35,13 +42,13 @@
 
         .route-map-container {
             position: relative; width: 95%; max-width: 700px;
-            margin: 0 auto; padding: 40px 0 10px 0; line-height: 0;
+            margin: 0 auto; padding: 50px 0 20px 0; line-height: 0;
         }
 
-        /* 路線図画像（指示通りさらに上へ） */
+        /* 路線図画像：ご指示通りさらに上へ */
         .route-base-img {
             width: 100%; height: auto; display: block;
-            margin-top: -45px; 
+            margin-top: -50px; 
         }
 
         .station-group {
@@ -49,7 +56,7 @@
             width: 10%; display: flex; flex-direction: column; align-items: center;
         }
         .station-label {
-            position: absolute; bottom: 115%; width: max-content;
+            position: absolute; bottom: 120%; width: max-content;
             font-size: 0.85rem; font-weight: bold; color: #333;
             white-space: nowrap; pointer-events: none;
             background-color: rgba(255, 255, 255, 0.8);
@@ -58,37 +65,46 @@
         .station-link { width: 100%; display: block; transition: 0.2s; cursor: pointer; }
         .station-link img { width: 100%; height: auto; display: block; }
 
-        /* --- Now Here（文字をさらに下へ） --- */
+        /* --- Now Here：指示通りさらに下へ --- */
         .now-here-marker {
-            position: absolute; top: 100%; 
+            position: absolute; top: 105%; 
             display: flex; flex-direction: column; align-items: center; width: 100%;
         }
         .triangle-red {
             width: 0; height: 0;
             border-left: 6px solid transparent; border-right: 6px solid transparent;
             border-bottom: 8px solid #e74c3c; 
-            margin-bottom: 18px; /* さらに間隔を広げました */
+            margin-bottom: 20px; /* 三角形と文字の間隔をさらに広く */
         }
-        .now-here-text { font-size: 0.6rem; font-weight: bold; color: #e74c3c; }
+        .now-here-text { font-size: 0.6rem; font-weight: bold; color: #e74c3c; white-space: nowrap; }
 
         .pos-01 { left: 4%; } .pos-02 { left: 24.5%; } .pos-03 { left: 45%; } .pos-04 { left: 65.5%; } .pos-05 { left: 86%; }
 
-        /* 引き出しボタン（背景を灰色に） */
+        /* --- 出し入れボタン：確実に見えるように修正 --- */
         .menu-toggle-btn {
-            position: absolute; bottom: -35px; left: 50%; transform: translateX(-50%);
-            width: 70px; height: 35px; background-color: #f0f0f0;
-            border: 1px solid #ddd; border-top: none; border-radius: 0 0 12px 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.08); cursor: pointer;
-            display: flex; justify-content: center; align-items: center; z-index: 501;
+            position: absolute; 
+            bottom: -35px; /* メニューの底から35px下に出す */
+            left: 50%; 
+            transform: translateX(-50%);
+            width: 80px; height: 35px; 
+            background-color: #f0f0f0; /* 灰色 */
+            border: 1px solid #ddd; border-top: none; 
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+            cursor: pointer;
+            display: flex; justify-content: center; align-items: center; 
+            z-index: 1001; /* ヘッダーより前面、メニューより前面 */
         }
         .toggle-icon {
-            width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent;
-            border-top: 10px solid #c0392b; transition: transform 0.4s ease;
+            width: 0; height: 0; 
+            border-left: 10px solid transparent; border-right: 10px solid transparent;
+            border-top: 12px solid #c0392b; /* 赤色三角 */
+            transition: transform 0.4s ease;
         }
         .is-open .toggle-icon { transform: rotate(180deg); }
 
         /* コンテンツ */
-        .container { max-width: 650px; margin: 55px auto 40px auto; padding: 20px; }
+        .container { max-width: 650px; margin: 60px auto 40px auto; padding: 20px; }
         .welcome-section {
             background: #fff; padding: 35px; border-radius: 12px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05); line-height: 1.8;
@@ -100,8 +116,9 @@
         .test-release-note { display: block; margin-top: 30px; font-size: 0.8rem; color: #999; text-align: right; }
 
         @media screen and (max-width: 480px) {
-            .station-label { font-size: 0.6rem; bottom: 102%; }
-            .navigation-section { margin-top: -125px; }
+            .station-label { font-size: 0.6rem; bottom: 105%; }
+            .navigation-section { margin-top: -140px; }
+            .route-base-img { margin-top: -30px; }
         }
     </style>
 </head>
@@ -142,17 +159,17 @@
         </div>
 
         <div class="station-group pos-04">
-            <span class="station-label lang-target" data-ja="作品紹介" data-en="Gallary">作品紹介</span>
+            <span class="station-label lang-target" data-ja="作品紹介" data-en="Gallery">作品紹介</span>
             <a href="#" class="station-link"><img src="media.png" alt="製作作品"></a>
         </div>
 
         <div class="station-group pos-05">
-            <span class="station-label lang-target" data-ja="ジオラマ運転体験" data-en="Special Site">ジオラマ運転体験</span>
+            <span class="station-label lang-target" data-ja="ジオラマ運転体験" data-en="Diorama">ジオラマ運転体験</span>
             <a href="monitor.html" class="station-link"><img src="N-gage.png" alt="運転体験"></a>
         </div>
     </div>
 
-    <button class="menu-toggle-btn" onclick="toggleMenu()">
+    <button class="menu-toggle-btn" onclick="toggleMenu()" aria-label="Menu Toggle">
         <div class="toggle-icon"></div>
     </button>
 </nav>
@@ -182,17 +199,15 @@
         const note = document.getElementById('releaseNote');
         const targets = document.querySelectorAll('.lang-target');
 
-        // メニューバーの文字切り替え
         targets.forEach(el => {
             el.innerText = el.getAttribute('data-' + lang);
         });
 
-        // メイン文章の切り替え
         if (lang === 'en') {
             title.innerText = "Welcome to Nagoya Jr. & Sr. High School Railway Research Club!";
             text.innerHTML = `
                 <p>On this site, we provide information about our club activities and the latest event updates.</p>
-                <p>For details on "Railway Model Exhibits" held during school orientations and cultural festivals, please visit our special site via the <strong>"Special Site"</strong> in the menu above.</p>
+                <p>For details on "Railway Model Exhibits" held during school orientations and cultural festivals, please visit our special site via the <strong>"Diorama"</strong> in the menu above.</p>
                 <p>All of our members are looking forward to your visit!</p>
             `;
             note.innerText = "*This site is currently in beta/testing phase.";
