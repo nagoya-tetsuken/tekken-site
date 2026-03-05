@@ -8,7 +8,7 @@
         body {
             margin: 0; padding: 0;
             font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", sans-serif;
-            background-color: #f8fbff; color: #333;
+            background-color: #f8fbff; color: #333; overflow-x: hidden;
         }
 
         /* --- ヘッダー --- */
@@ -21,9 +21,12 @@
 
         /* --- メニューバー --- */
         .navigation-section {
-            position: relative; background-color: #fff;
-            border-bottom: 1px solid #ddd; z-index: 1000;
-            margin-top: -180px; transition: margin-top 0.4s ease-in-out;
+            position: relative; 
+            background-color: #fff;
+            border-bottom: 1px solid #ddd; 
+            z-index: 1000; 
+            margin-top: -180px; 
+            transition: margin-top 0.4s ease-in-out;
         }
         .navigation-section.is-open { margin-top: 0; }
 
@@ -33,54 +36,61 @@
         }
         .route-base-img { width: 100%; height: auto; display: block; margin-top: -45px; }
 
+        /* --- 【復活】出し入れボタン --- */
         .menu-toggle-btn {
-            position: absolute; bottom: -35px; left: 50%; transform: translateX(-50%);
-            width: 80px; height: 35px; background-color: #f0f0f0;
-            border: 1px solid #ddd; border-top: none; border-radius: 0 0 15px 15px;
-            cursor: pointer; display: flex; justify-content: center; align-items: center; z-index: 3000;
+            position: absolute; 
+            bottom: -35px; /* メニューの下端から飛び出す */
+            left: 50%; 
+            transform: translateX(-50%);
+            width: 80px; height: 35px; 
+            background-color: #f0f0f0; 
+            border: 1px solid #ddd; border-top: none; 
+            border-radius: 0 0 15px 15px;
+            cursor: pointer; 
+            display: flex; justify-content: center; align-items: center;
+            z-index: 3000; /* コンテンツより必ず上 */
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            outline: none;
         }
         .toggle-icon {
-            width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent;
-            border-top: 12px solid #c0392b; transition: transform 0.4s ease;
+            width: 0; height: 0; 
+            border-left: 10px solid transparent; border-right: 10px solid transparent;
+            border-top: 12px solid #c0392b; 
+            transition: transform 0.4s ease;
         }
         .is-open .toggle-icon { transform: rotate(180deg); }
 
-        /* 言語セレクター（メニュー内） */
-        .lang-selector {
-            position: absolute; right: 10px; top: 10px; z-index: 1100;
-        }
-        .lang-selector select { padding: 5px; border-radius: 4px; border: 1px solid #ccc; font-size: 0.8rem; }
+        /* 言語セレクター */
+        .lang-selector { position: absolute; right: 15px; top: 15px; z-index: 1100; }
+        .lang-selector select { padding: 5px; border-radius: 4px; border: 1px solid #ccc; font-size: 0.8rem; cursor: pointer; }
 
-        /* --- メインレイアウト：交互配置 --- */
+        /* --- メインコンテンツ：Z型レイアウト --- */
         .main-content {
-            max-width: 1000px; margin: 80px auto; padding: 0 20px;
+            max-width: 1000px; margin: 100px auto; padding: 0 20px;
         }
 
         .content-row {
-            display: flex; align-items: center; gap: 40px; margin-bottom: 100px;
-            flex-wrap: wrap; /* スマホ対応 */
+            display: flex; align-items: center; gap: 50px; margin-bottom: 120px;
         }
-
-        /* 2段目は左右反転 */
         .content-row.reverse { flex-direction: row-reverse; }
 
-        .text-side { flex: 1; min-width: 300px; }
-        .image-side { flex: 1; min-width: 300px; }
+        .text-side { flex: 1.2; }
+        .image-side { flex: 1; }
         .image-side img {
-            width: 100%; height: auto; border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            width: 100%; height: auto; border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
 
         h2 {
             color: #c0392b; border-left: 6px solid #c0392b;
-            padding-left: 15px; margin-bottom: 20px; font-size: 1.6rem;
+            padding-left: 15px; margin-bottom: 25px; font-size: 1.7rem;
         }
-        p { line-height: 1.8; font-size: 1.05rem; margin-bottom: 15px; }
+        p { line-height: 1.9; font-size: 1.1rem; margin-bottom: 20px; }
 
-        /* スマホ向け調整 */
+        /* モバイル対応 */
         @media (max-width: 768px) {
-            .content-row, .content-row.reverse { flex-direction: column; gap: 20px; }
-            .main-content { margin: 60px auto; }
+            .content-row, .content-row.reverse { flex-direction: column; gap: 30px; text-align: center; }
+            h2 { border-left: none; border-bottom: 3px solid #c0392b; padding-left: 0; display: inline-block; }
         }
     </style>
 </head>
@@ -98,7 +108,9 @@
     <div class="route-map-container">
         <img src="menu-image.png" alt="路線図" class="route-base-img">
     </div>
-    <button class="menu-toggle-btn" id="menuBtn"><div class="toggle-icon"></div></button>
+    <button class="menu-toggle-btn" id="menuBtn">
+        <div class="toggle-icon"></div>
+    </button>
 </nav>
 
 <main class="main-content">
@@ -107,36 +119,36 @@
             <h2 class="lang-target" data-ja="名古屋中学校・高等学校 鉄道研究部へようこそ！" data-en="Welcome to Nagoya Junior & Senior High School Railway Club!">名古屋中学校・高等学校 鉄道研究部へようこそ！</h2>
             <p class="lang-target" 
                data-ja="本サイトでは、当部活の活動内容や最新のイベント情報を発信しています。" 
-               data-en="On this site, we provide information about our club activities and the latest event information.">
+               data-en="This website provides the latest news and information about our club's activities and events.">
                本サイトでは、当部活の活動内容や最新のイベント情報を発信しています。
             </p>
             <p class="lang-target" 
                data-ja="詳細は、上部メニューの「ジオラマ運転体験」より特設サイトをご覧ください。皆様のご来場を、部員一同心よりお待ちしております。" 
-               data-en="For details, please visit the special site from 'Diorama Driving Experience' in the top menu. All our members are looking forward to your visit.">
+               data-en="For more details, please visit the special page via the 'Diorama Experience' menu above. We look forward to seeing you!">
                詳細は、上部メニューの「ジオラマ運転体験」より特設サイトをご覧ください。皆様のご来場を、部員一同心よりお待ちしております。
             </p>
         </div>
         <div class="image-side">
-            <img src="club-photo1.png" alt="部活動の様子">
+            <img src="club-photo1.png" alt="Activity Photo 1">
         </div>
     </section>
 
     <section class="content-row reverse">
         <div class="text-side">
-            <h2 class="lang-target" data-ja="情熱を形にする、私たちの活動" data-en="Shaping Passion: Our Activities">情熱を形にする、私たちの活動</h2>
+            <h2 class="lang-target" data-ja="情熱を形にする、私たちの活動" data-en="Our Passion in Motion">情熱を形にする、私たちの活動</h2>
             <p class="lang-target" 
-               data-ja="私たちは週3回、模型製作や実物鉄道の研究に励んでいます。特に文化祭で展示する巨大ジオラマは、1年かけて部員全員で作り上げる集大成です。" 
-               data-en="We work on model making and real railway research three times a week. In particular, the huge diorama exhibited at the school festival is the culmination of a year's work by all members.">
-               私たちは週3回、模型製作や実物鉄道の研究に励んでいます。特に文化祭で展示する巨大ジオラマは、1年かけて部員全員で作り上げる集大成です。
+               data-ja="私たちは模型製作から実物鉄道の調査まで、幅広く活動しています。特に学園祭での大型ジオラマ展示は、部員全員が協力して作り上げる、一年で最大のプロジェクトです。" 
+               data-en="From building intricate models to researching real-world railways, we engage in a wide variety of activities. Our large-scale diorama at the school festival is our biggest annual project.">
+               私たちは模型製作から実物鉄道の調査まで、幅広く活動しています。特に学園祭での大型ジオラマ展示は、部員全員が協力して作り上げる、一年で最大のプロジェクトです。
             </p>
             <p class="lang-target" 
-               data-ja="技術の継承だけでなく、鉄道を通じて地域の方々や他校との交流も大切にしています。切磋琢磨し合う仲間と共に、日々新しい挑戦を続けています。" 
-               data-en="In addition to passing down technical skills, we also value interaction with local people and other schools through railways. We continue to take on new challenges every day with our teammates.">
-               技術の継承だけでなく、鉄道を通じて地域の方々や他校との交流も大切にしています。切磋琢磨し合う仲間と共に、日々新しい挑戦を続けています。
+               data-ja="世代を超えて愛される「鉄道」という文化を通じて、技術力や想像力を養い、地域社会との繋がりも大切にしています。共に走り続ける仲間をいつでも歓迎しています。" 
+               data-en="Through railway culture, we foster technical skills and creativity while valuing our connection with the community. We always welcome new friends to join our journey.">
+               世代を超えて愛される「鉄道」という文化を通じて、技術力や想像力を養い、地域社会との繋がりも大切にしています。共に走り続ける仲間をいつでも歓迎しています。
             </p>
         </div>
         <div class="image-side">
-            <img src="club-photo2.png" alt="ジオラマ製作の様子">
+            <img src="club-photo2.png" alt="Activity Photo 2">
         </div>
     </section>
 </main>
@@ -145,11 +157,12 @@
     // メニュー開閉
     const menuBtn = document.getElementById('menuBtn');
     const routeMenu = document.getElementById('routeMenu');
+    
     menuBtn.addEventListener('click', () => {
         routeMenu.classList.toggle('is-open');
     });
 
-    // 言語切り替え機能
+    // 言語切り替え
     function switchLanguage() {
         const lang = document.getElementById('langSelect').value;
         const targets = document.querySelectorAll('.lang-target');
