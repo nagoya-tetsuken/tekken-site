@@ -11,16 +11,17 @@
             font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", sans-serif;
             background-color: #fcfcfc;
             color: #333;
+            overflow-x: hidden;
         }
 
-        /* --- ヘッダー（影あり） --- */
+        /* --- ヘッダー --- */
         header {
             position: relative;
             width: 100%;
             line-height: 0;
             background-color: #fff;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 100;
+            z-index: 1000;
         }
 
         header img {
@@ -29,14 +30,20 @@
             display: block;
         }
 
-        /* --- 路線図メニューエリア --- */
+        /* --- 開閉メニューエリア --- */
         .navigation-section {
             position: relative;
             background-color: #fff;
-            /* 上に文字が来るので、上側のパディングを少し広めに確保 */
-            padding: 25px 0 10px 0; 
             border-bottom: 1px solid #eee;
-            z-index: 10;
+            z-index: 500;
+            /* 隠す量を微調整 */
+            margin-top: -155px; 
+            transition: margin-top 0.4s ease-in-out;
+            padding-bottom: 0; /* 下の余白をカット */
+        }
+
+        .navigation-section.is-open {
+            margin-top: -10px; /* 開いたときも少し上に寄せる */
         }
 
         .route-map-container {
@@ -44,7 +51,10 @@
             width: 95%;
             max-width: 700px;
             margin: 0 auto;
+            padding: 30px 0 0 0; /* 上の余白を調整 */
             line-height: 0;
+            /* 路線図全体を均等に上に移動 */
+            transform: translateY(-5px); 
         }
 
         .route-base-img {
@@ -53,10 +63,10 @@
             display: block;
         }
 
-        /* ボタンとテキストを包むグループ */
+        /* --- ステーション要素 --- */
         .station-group {
             position: absolute;
-            top: 50%; /* 路線図の中央を基準にする */
+            top: 50%;
             transform: translateY(-50%);
             width: 10%; 
             display: flex;
@@ -64,91 +74,70 @@
             align-items: center;
         }
 
-        /* 駅名ラベル（位置をボタンのすぐ上に修正） */
         .station-label {
             position: absolute;
-            bottom: 105%; /* 135%から105%に下げてボタンに近づけました */
+            bottom: 110%; 
             width: max-content;
             font-size: 0.85rem;
             font-weight: bold;
             color: #333;
             white-space: nowrap;
-            pointer-events: none;
             background-color: rgba(255, 255, 255, 0.8);
             padding: 2px 6px;
             border-radius: 4px;
             z-index: 5;
         }
 
-        .station-link {
-            width: 100%;
-            display: block;
-            transition: all 0.2s ease;
-            line-height: 0;
-            cursor: pointer;
-        }
+        .station-link { width: 100%; display: block; transition: 0.2s; cursor: pointer; }
+        .station-link img { width: 100%; height: auto; display: block; }
+        .station-link:hover { filter: brightness(1.2); transform: translateY(-2px); }
 
-        .station-link img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .station-link:hover {
-            filter: brightness(1.2);
-            transform: translateY(-2px);
-        }
-
-        /* --- 現在地マーカー（Now Here） --- */
         .now-here-marker {
             position: absolute;
-            top: 105%; /* ボタンのすぐ下 */
+            top: 105%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 100%;
         }
-
-        .triangle {
-            width: 0;
-            height: 0;
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
+        .triangle-red {
+            width: 0; height: 0;
+            border-left: 6px solid transparent; border-right: 6px solid transparent;
             border-bottom: 8px solid #e74c3c;
         }
+        .now-here-text { font-size: 0.6rem; font-weight: bold; color: #e74c3c; margin-top: 3px; }
 
-        .now-here-text {
-            margin-top: 4px; 
-            font-size: 0.6rem;
-            font-weight: bold;
-            color: #e74c3c;
-            white-space: nowrap;
+        .pos-01 { left: 4%; } .pos-02 { left: 24.5%; } .pos-03 { left: 45%; } .pos-04 { left: 65.5%; } .pos-05 { left: 86%; }
+
+        /* --- 開閉ボタン（位置調整） --- */
+        .menu-toggle-btn {
+            position: absolute;
+            bottom: -35px; /* ボタンも少し上に */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px; height: 35px;
+            background-color: #fff;
+            border: 1px solid #eee; border-top: none;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            cursor: pointer;
+            display: flex; justify-content: center; align-items: center;
+            z-index: 501;
         }
 
-        /* 横位置設定 */
-        .pos-01 { left: 4%; }
-        .pos-02 { left: 24.5%; }
-        .pos-03 { left: 45%; }
-        .pos-04 { left: 65.5%; }
-        .pos-05 { left: 86%; }
-
-        /* --- スマホ調整 --- */
-        @media screen and (max-width: 480px) {
-            .station-label {
-                font-size: 0.6rem;
-                bottom: 102%;
-                padding: 1px 3px;
-            }
-            .navigation-section {
-                padding: 20px 0 8px 0;
-            }
+        .toggle-icon {
+            width: 0; height: 0;
+            border-left: 8px solid transparent; border-right: 8px solid transparent;
+            border-top: 10px solid #c0392b;
+            transition: transform 0.4s ease;
         }
+
+        .is-open .toggle-icon { transform: rotate(180deg); }
 
         /* --- メインコンテンツ --- */
         .container {
             max-width: 650px;
-            margin: 0 auto;
-            padding: 40px 20px;
+            margin: 50px auto 40px auto; /* メニューとの距離を最適化 */
+            padding: 20px;
         }
 
         .welcome-section {
@@ -161,19 +150,22 @@
 
         .welcome-section h2 {
             margin-top: 0;
-            color: #e67e22; 
-            font-size: 1.4rem;
-            border-bottom: 2px solid #f1f1f1;
-            padding-bottom: 10px;
+            color: #c0392b;
+            font-size: 1.3rem;
+            border-left: 5px solid #c0392b;
+            padding-left: 15px;
             margin-bottom: 20px;
         }
 
         .test-release-note {
-            display: block;
-            margin-top: 30px;
-            font-size: 0.8rem;
-            color: #999;
-            text-align: right;
+            display: block; margin-top: 30px;
+            font-size: 0.8rem; color: #999; text-align: right;
+        }
+
+        @media screen and (max-width: 480px) {
+            .station-label { font-size: 0.6rem; bottom: 102%; }
+            .navigation-section { margin-top: -125px; }
+            .welcome-section h2 { font-size: 1.1rem; }
         }
     </style>
 </head>
@@ -183,7 +175,7 @@
     <img src="header-img.png" alt="鉄研ヘッダー">
 </header>
 
-<nav class="navigation-section">
+<nav class="navigation-section" id="routeMenu">
     <div class="route-map-container">
         <img src="menu-image.png" alt="路線図ベース" class="route-base-img">
         
@@ -191,7 +183,7 @@
             <span class="station-label">部活動について</span>
             <a href="index.html" class="station-link"><img src="description.png" alt="部活概要"></a>
             <div class="now-here-marker">
-                <div class="triangle"></div>
+                <div class="triangle-red"></div>
                 <span class="now-here-text">NOW HERE</span>
             </div>
         </div>
@@ -216,6 +208,10 @@
             <a href="monitor.html" class="station-link"><img src="N-gage.png" alt="運転体験"></a>
         </div>
     </div>
+
+    <button class="menu-toggle-btn" onclick="toggleMenu()" title="メニュー開閉">
+        <div class="toggle-icon"></div>
+    </button>
 </nav>
 
 <main class="container">
@@ -227,6 +223,13 @@
         <span class="test-release-note">※当サイトは現在、試験公開中です。</span>
     </article>
 </main>
+
+<script>
+    function toggleMenu() {
+        const menu = document.getElementById('routeMenu');
+        menu.classList.toggle('is-open');
+    }
+</script>
 
 </body>
 </html>
