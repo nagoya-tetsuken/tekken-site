@@ -25,17 +25,17 @@
             display: block;
         }
 
-        /* --- 路線図メニューエリア（サイズ縮小） --- */
+        /* --- 路線図メニューエリア --- */
         .navigation-section {
             background-color: #fff;
-            padding: 25px 0 15px 0; /* 上下の余白を詰めました */
+            padding: 10px 0; /* 上下の枠を細くしました */
             border-bottom: 1px solid #eee;
         }
 
         .route-map-container {
             position: relative;
-            width: 90%;
-            max-width: 600px;  /* 最大幅を1000pxから600pxへ大幅縮小 */
+            width: 95%;
+            max-width: 700px; /* 少しだけ広げて窮屈さを解消 */
             margin: 0 auto;
             line-height: 0;
         }
@@ -51,32 +51,30 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 9%; /* ボタンの横幅を12%から9%へ縮小 */
+            width: 10%; 
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        /* ボタンの上のテキスト設定 */
+        /* ボタンの上のテキスト（大きめに修正） */
         .station-label {
             position: absolute;
-            bottom: 115%; 
+            bottom: 120%; 
             width: max-content;
-            font-size: 0.65rem; /* 文字を少し小さく */
+            font-size: 0.85rem; /* サイズアップ */
             font-weight: bold;
-            color: #444;
+            color: #333;
             white-space: nowrap;
-            background-color: rgba(255,255,255,0.9);
-            padding: 1px 4px;
-            border-radius: 3px;
             pointer-events: none;
         }
 
         .station-link {
             width: 100%;
             display: block;
-            transition: filter 0.2s, transform 0.1s;
+            transition: all 0.2s ease;
             line-height: 0;
+            cursor: pointer;
         }
 
         .station-link img {
@@ -85,16 +83,45 @@
             display: block;
         }
 
-        /* 明るさエフェクト */
+        /* カーソルが来た時の動作（明るくして、少し浮かす） */
         .station-link:hover {
-            filter: brightness(1.2); 
+            filter: brightness(1.3);
+            transform: translateY(-3px);
         }
 
         .station-link:active {
-            transform: scale(0.9);
+            transform: translateY(0) scale(0.9);
         }
 
-        /* ボタンの横位置 */
+        /* --- 現在地マーカー（Now Here） --- */
+        .now-here-marker {
+            position: absolute;
+            top: 110%; /* ボタンの下に配置 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* 赤い三角形 */
+        .triangle {
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 8px solid #e74c3c; /* 鉄道らしい赤 */
+            margin-bottom: 2px;
+        }
+
+        .now-here-text {
+            font-size: 0.6rem;
+            font-weight: bold;
+            color: #e74c3c;
+            white-space: nowrap;
+            text-transform: uppercase;
+        }
+
+        /* 各駅の横位置 */
         .pos-01 { left: 4%; }
         .pos-02 { left: 24.5%; }
         .pos-03 { left: 45%; }
@@ -105,12 +132,12 @@
         .container {
             max-width: 600px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 40px 20px;
         }
 
         section {
             background: #fff;
-            padding: 20px;
+            padding: 25px;
             border-radius: 8px;
             box-shadow: 0 1px 4px rgba(0,0,0,0.06);
         }
@@ -119,7 +146,7 @@
             border-left: 4px solid #e67e22;
             padding-left: 12px;
             margin-top: 0;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
         }
     </style>
 </head>
@@ -135,7 +162,11 @@
         
         <div class="station-group pos-01">
             <span class="station-label">部活動について</span>
-            <a href="#" class="station-link"><img src="description.png" alt="部活概要"></a>
+            <a href="index.html" class="station-link"><img src="description.png" alt="部活概要"></a>
+            <div class="now-here-marker">
+                <div class="triangle"></div>
+                <span class="now-here-text">Now Here</span>
+            </div>
         </div>
 
         <div class="station-group pos-02">
@@ -163,7 +194,7 @@
 <main class="container">
     <section>
         <h2>最新の運行情報</h2>
-        <p>上のメニューから各項目を選択してください。</p>
+        <p>ポータルサイトを公開しました。路線図の各駅を選択して詳細をご覧ください。</p>
     </section>
 </main>
 
