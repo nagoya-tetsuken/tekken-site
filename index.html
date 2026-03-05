@@ -12,11 +12,15 @@
             background-color: #fcfcfc;
         }
 
+        /* --- ヘッダー（影を強調し、最前面へ） --- */
         header {
+            position: relative; /* 影を正しく表示させるため */
             width: 100%;
             line-height: 0;
             background-color: #fff;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            /* 下方向にしっかり影を落とす */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
+            z-index: 100; /* 路線図より上に配置 */
         }
 
         header img {
@@ -27,15 +31,17 @@
 
         /* --- 路線図メニューエリア --- */
         .navigation-section {
+            position: relative;
             background-color: #fff;
-            padding: 10px 0; /* 上下の枠を細くしました */
+            padding: 10px 0;
             border-bottom: 1px solid #eee;
+            z-index: 10; /* ヘッダーより背面に */
         }
 
         .route-map-container {
             position: relative;
             width: 95%;
-            max-width: 700px; /* 少しだけ広げて窮屈さを解消 */
+            max-width: 700px;
             margin: 0 auto;
             line-height: 0;
         }
@@ -57,12 +63,12 @@
             align-items: center;
         }
 
-        /* ボタンの上のテキスト（大きめに修正） */
+        /* ボタンの上のテキスト（大きめ） */
         .station-label {
             position: absolute;
-            bottom: 120%; 
+            bottom: 125%; 
             width: max-content;
-            font-size: 0.85rem; /* サイズアップ */
+            font-size: 0.85rem;
             font-weight: bold;
             color: #333;
             white-space: nowrap;
@@ -96,20 +102,19 @@
         /* --- 現在地マーカー（Now Here） --- */
         .now-here-marker {
             position: absolute;
-            top: 110%; /* ボタンの下に配置 */
+            top: 115%; /* ボタンの下に配置 */
             display: flex;
             flex-direction: column;
             align-items: center;
             width: 100%;
         }
 
-        /* 赤い三角形 */
         .triangle {
             width: 0;
             height: 0;
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-bottom: 8px solid #e74c3c; /* 鉄道らしい赤 */
+            border-left: 7px solid transparent;
+            border-right: 7px solid transparent;
+            border-bottom: 9px solid #e74c3c;
             margin-bottom: 2px;
         }
 
@@ -118,7 +123,7 @@
             font-weight: bold;
             color: #e74c3c;
             white-space: nowrap;
-            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         /* 各駅の横位置 */
@@ -165,7 +170,7 @@
             <a href="index.html" class="station-link"><img src="description.png" alt="部活概要"></a>
             <div class="now-here-marker">
                 <div class="triangle"></div>
-                <span class="now-here-text">Now Here</span>
+                <span class="now-here-text">NOW HERE</span>
             </div>
         </div>
 
@@ -194,7 +199,7 @@
 <main class="container">
     <section>
         <h2>最新の運行情報</h2>
-        <p>ポータルサイトを公開しました。路線図の各駅を選択して詳細をご覧ください。</p>
+        <p>ポータルサイトを公開しました。路線図の駅を選択して各項目をご覧ください。</p>
     </section>
 </main>
 
