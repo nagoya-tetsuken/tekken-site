@@ -15,7 +15,7 @@
         header {
             position: relative; width: 100%; line-height: 0;
             background-color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
-            z-index: 2000; /* ヘッダーを一番上に */
+            z-index: 2000;
         }
         header img { width: 100%; height: auto; display: block; }
 
@@ -24,20 +24,17 @@
             position: relative; 
             background-color: #fff; 
             border-bottom: 1px solid #eee; 
-            z-index: 1000; /* ヘッダーのすぐ下の層 */
-            /* transformで隠す（ボタンの高さ分だけ残す） */
+            z-index: 1000;
             transform: translateY(-100%); 
-            margin-bottom: -100%; /* 下のコンテンツを吸い上げる */
+            margin-bottom: -100%; 
             transition: transform 0.4s ease-in-out;
         }
         
-        /* 開いたとき：元の位置に戻す */
         .navigation-section.is-open { 
             transform: translateY(0); 
             margin-bottom: 0;
         }
 
-        /* 言語切り替え */
         .lang-selector {
             position: absolute; right: 10px; top: 10px; z-index: 600;
         }
@@ -51,7 +48,7 @@
             margin: 0 auto; padding: 60px 0 20px 0; line-height: 0;
         }
 
-        /* 路線図画像：ご指示通りさらに上へ */
+        /* 路線図画像 */
         .route-base-img {
             width: 100%; height: auto; display: block;
             margin-top: -55px; 
@@ -71,7 +68,7 @@
         .station-link { width: 100%; display: block; transition: 0.2s; cursor: pointer; }
         .station-link img { width: 100%; height: auto; display: block; }
 
-        /* --- Now Here：指示通りさらに下へ --- */
+        /* --- Now Here：文字だけを上に修正 --- */
         .now-here-marker {
             position: absolute; top: 110%; 
             display: flex; flex-direction: column; align-items: center; width: 100%;
@@ -80,16 +77,24 @@
             width: 0; height: 0;
             border-left: 6px solid transparent; border-right: 6px solid transparent;
             border-bottom: 8px solid #e74c3c; 
-            margin-bottom: 25px; /* さらに間隔を広く */
+            /* 文字との距離を詰めるため margin-bottom を縮小 */
+            margin-bottom: 8px; 
         }
-        .now-here-text { font-size: 0.6rem; font-weight: bold; color: #e74c3c; white-space: nowrap; }
+        .now-here-text { 
+            font-size: 0.6rem; 
+            font-weight: bold; 
+            color: #e74c3c; 
+            white-space: nowrap; 
+            /* マーカーとの一体感を出すため少し上に寄せる */
+            transform: translateY(-2px); 
+        }
 
         .pos-01 { left: 4%; } .pos-02 { left: 24.5%; } .pos-03 { left: 45%; } .pos-04 { left: 65.5%; } .pos-05 { left: 86%; }
 
-        /* --- 出し入れボタン：絶対に見えるように外に配置 --- */
+        /* --- 出し入れボタン --- */
         .menu-toggle-btn {
             position: absolute; 
-            top: 100%; /* メニューの底辺からスタート */
+            top: 100%; 
             left: 50%; 
             transform: translateX(-50%);
             width: 80px; height: 35px; 
@@ -99,7 +104,7 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
             cursor: pointer;
             display: flex; justify-content: center; align-items: center; 
-            z-index: 3000; /* すべての要素より上に */
+            z-index: 3000;
         }
         .toggle-icon {
             width: 0; height: 0; 
@@ -109,7 +114,6 @@
         }
         .is-open .toggle-icon { transform: rotate(180deg); }
 
-        /* コンテンツ */
         .container { max-width: 650px; margin: 80px auto 40px auto; padding: 20px; }
         .welcome-section {
             background: #fff; padding: 35px; border-radius: 12px;
@@ -118,10 +122,6 @@
         .welcome-section h2 {
             margin-top: 0; color: #c0392b; font-size: 1.3rem;
             border-left: 5px solid #c0392b; padding-left: 15px; margin-bottom: 20px;
-        }
-
-        @media screen and (max-width: 480px) {
-            .station-label { font-size: 0.6rem; bottom: 110%; }
         }
     </style>
 </head>
@@ -141,6 +141,7 @@
 
     <div class="route-map-container">
         <img src="menu-image.png" alt="路線図ベース" class="route-base-img">
+        
         <div class="station-group pos-01">
             <span class="station-label lang-target" data-ja="部活動について" data-en="About Us">部活動について</span>
             <a href="index.html" class="station-link"><img src="description.png" alt="部活概要"></a>
@@ -182,7 +183,7 @@
         const lang = document.getElementById('langSelect').value;
         const targets = document.querySelectorAll('.lang-target');
         targets.forEach(el => el.innerText = el.getAttribute('data-' + lang));
-        // 文章の切り替えロジック（中略）
+        // (以前の翻訳ロジックをここに継続)
     }
 </script>
 
