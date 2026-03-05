@@ -19,127 +19,73 @@
         }
         header img { width: 100%; height: auto; display: block; }
 
-        /* --- メニューバー（以前の正常動作時の設定） --- */
+        /* --- メニューバー（安定動作版を維持） --- */
         .navigation-section {
-            position: absolute;
-            width: 100%;
-            background-color: #fff; 
-            border-bottom: 1px solid #eee; 
-            z-index: 1000; 
-            transform: translateY(-100%); 
-            transition: transform 0.4s ease-in-out;
+            position: absolute; width: 100%; background-color: #fff; 
+            border-bottom: 1px solid #eee; z-index: 1000; 
+            transform: translateY(-100%); transition: transform 0.4s ease-in-out;
         }
-        
-        .navigation-section.is-open { 
-            transform: translateY(0); 
-        }
+        .navigation-section.is-open { transform: translateY(0); }
 
-        .lang-selector {
-            position: absolute; right: 10px; top: 10px; z-index: 600;
-        }
-        .lang-selector select {
-            padding: 4px 8px; border-radius: 4px; border: 1px solid #ddd;
-            background: #f9f9f9; font-size: 0.75rem; cursor: pointer;
-        }
+        .lang-selector { position: absolute; right: 10px; top: 10px; z-index: 600; }
+        .lang-selector select { padding: 4px 8px; border-radius: 4px; border: 1px solid #ddd; background: #f9f9f9; font-size: 0.75rem; cursor: pointer; }
 
         .route-map-container {
-            position: relative; width: 95%; max-width: 700px;
-            margin: 0 auto; padding: 60px 0 20px 0; line-height: 0;
+            position: relative; width: 95%; max-content: 700px; margin: 0 auto; padding: 60px 0 20px 0; line-height: 0;
         }
+        .route-base-img { width: 100%; height: auto; display: block; margin-top: -55px; }
 
-        .route-base-img {
-            width: 100%; height: auto; display: block;
-            margin-top: -55px; 
-        }
-
-        /* 駅アイコンとラベル */
-        .station-group {
-            position: absolute; top: 50%; transform: translateY(-50%);
-            width: 10%; display: flex; flex-direction: column; align-items: center;
-        }
-        .station-label {
-            position: absolute; bottom: 125%; width: max-content;
-            font-size: 0.85rem; font-weight: bold; color: #333;
-            white-space: nowrap; pointer-events: none;
-            background-color: rgba(255, 255, 255, 0.8);
-            padding: 2px 6px; border-radius: 4px; z-index: 5;
-        }
-        .station-link { width: 100%; display: block; transition: 0.2s; cursor: pointer; }
+        /* 駅アイコン */
+        .station-group { position: absolute; top: 50%; transform: translateY(-50%); width: 10%; display: flex; flex-direction: column; align-items: center; }
+        .station-label { position: absolute; bottom: 125%; width: max-content; font-size: 0.85rem; font-weight: bold; color: #333; white-space: nowrap; background-color: rgba(255, 255, 255, 0.8); padding: 2px 6px; border-radius: 4px; z-index: 5; }
+        .station-link { width: 100%; display: block; }
         .station-link img { width: 100%; height: auto; display: block; }
-
-        /* NOW HERE の文字位置 */
-        .now-here-marker {
-            position: absolute; top: 110%; 
-            display: flex; flex-direction: column; align-items: center; width: 100%;
-        }
-        .triangle-red {
-            width: 0; height: 0;
-            border-left: 6px solid transparent; border-right: 6px solid transparent;
-            border-bottom: 8px solid #e74c3c; 
-            margin-bottom: 4px;
-        }
-        .now-here-text { 
-            font-size: 0.6rem; font-weight: bold; color: #e74c3c; white-space: nowrap;
-        }
-
         .pos-01 { left: 4%; } .pos-02 { left: 24.5%; } .pos-03 { left: 45%; } .pos-04 { left: 65.5%; } .pos-05 { left: 86%; }
 
-        /* 引き出しボタン */
+        /* NOW HERE */
+        .now-here-marker { position: absolute; top: 110%; display: flex; flex-direction: column; align-items: center; width: 100%; }
+        .triangle-red { width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 8px solid #e74c3c; margin-bottom: 4px; }
+        .now-here-text { font-size: 0.6rem; font-weight: bold; color: #e74c3c; white-space: nowrap; }
+
+        /* メニューボタン */
         .menu-toggle-btn {
-            position: absolute; 
-            top: 100%; 
-            left: 50%; 
-            transform: translateX(-50%);
-            width: 80px; height: 35px; 
-            background-color: #f0f0f0; 
-            border: 1px solid #ddd; border-top: none; 
-            border-radius: 0 0 15px 15px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
-            cursor: pointer;
-            display: flex; justify-content: center; align-items: center; 
-            z-index: 3000;
+            position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+            width: 80px; height: 35px; background-color: #f0f0f0; 
+            border: 1px solid #ddd; border-top: none; border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); cursor: pointer;
+            display: flex; justify-content: center; align-items: center; z-index: 3000;
         }
-        .toggle-icon {
-            width: 0; height: 0; 
-            border-left: 10px solid transparent; border-right: 10px solid transparent;
-            border-top: 12px solid #c0392b; 
-            transition: transform 0.4s ease;
-        }
+        .toggle-icon { width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 12px solid #c0392b; transition: transform 0.4s ease; }
         .is-open .toggle-icon { transform: rotate(180deg); }
 
-        /* コンテンツ */
+        /* --- 下部 Z型レイアウト --- */
         .container { 
-            max-width: 650px; 
-            margin: 60px auto 40px auto; 
-            padding: 20px; 
-            position: relative;
-            z-index: 1;
+            max-width: 900px; margin: 80px auto; padding: 20px;
         }
-        .welcome-section {
-            background: #fff; padding: 35px; border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05); line-height: 1.8;
-        }
-        .welcome-section h2 {
-            margin-top: 0; color: #c0392b; font-size: 1.4rem;
-            border-left: 5px solid #c0392b; padding-left: 15px; margin-bottom: 20px;
-        }
-        .catchphrase {
-            font-weight: bold; color: #c0392b; font-size: 1.2rem; display: block; margin: 15px 0;
-        }
-        .test-release-note {
-            display: block; font-size: 0.8rem; color: #999; margin-top: 30px;
+        
+        .content-row {
+            display: flex; align-items: center; gap: 40px; margin-bottom: 60px;
+            background: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
-        @media screen and (max-width: 480px) {
-            .station-label { font-size: 0.6rem; bottom: 110%; }
+        .content-row.reverse { flex-direction: row-reverse; }
+
+        .text-side { flex: 1.5; }
+        .image-side { flex: 1; }
+        .image-side img { width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+
+        .welcome-section h2 { margin-top: 0; color: #c0392b; font-size: 1.5rem; border-left: 5px solid #c0392b; padding-left: 15px; margin-bottom: 15px; }
+        .catchphrase-row { text-align: center; margin: 40px 0; }
+        .catchphrase { font-weight: bold; color: #c0392b; font-size: 1.8rem; }
+
+        @media screen and (max-width: 768px) {
+            .content-row, .content-row.reverse { flex-direction: column; text-align: center; }
         }
     </style>
 </head>
 <body>
 
-<header>
-    <img src="header-img.png" alt="鉄研ヘッダー">
-</header>
+<header><img src="header-img.png" alt="鉄研ヘッダー"></header>
 
 <nav class="navigation-section" id="routeMenu">
     <div class="lang-selector">
@@ -148,48 +94,50 @@
             <option value="en">Language: English</option>
         </select>
     </div>
-
     <div class="route-map-container">
-        <img src="menu-image.png" alt="路線図ベース" class="route-base-img">
+        <img src="menu-image.png" alt="路線図" class="route-base-img">
         <div class="station-group pos-01">
-            <span class="station-label lang-target" data-ja="部活動について" data-en="About Us">部活動について</span>
-            <a href="index.html" class="station-link"><img src="description.png" alt="部活概要"></a>
-            <div class="now-here-marker">
-                <div class="triangle-red"></div>
-                <span class="now-here-text">NOW HERE</span>
-            </div>
+            <span class="station-label">部活動について</span>
+            <a href="index.html" class="station-link"><img src="description.png"></a>
+            <div class="now-here-marker"><div class="triangle-red"></div><span class="now-here-text">NOW HERE</span></div>
         </div>
-        <div class="station-group pos-02"><span class="station-label lang-target" data-ja="お知らせ" data-en="News">お知らせ</span><a href="#" class="station-link"><img src="notification.png" alt="お知らせ"></a></div>
-        <div class="station-group pos-03"><span class="station-label lang-target" data-ja="活動紹介" data-en="Activities">活動紹介</span><a href="#" class="station-link"><img src="activities.png" alt="活動紹介"></a></div>
-        <div class="station-group pos-04"><span class="station-label lang-target" data-ja="作品紹介" data-en="Gallery">作品紹介</span><a href="#" class="station-link"><img src="media.png" alt="製作作品"></a></div>
-        <div class="station-group pos-05"><span class="station-label lang-target" data-ja="ジオラマ運転体験" data-en="Diorama">ジオラマ運転体験</span><a href="monitor.html" class="station-link"><img src="N-gage.png" alt="運転体験"></a></div>
+        <div class="station-group pos-05"><span class="station-label">ジオラマ運転体験</span><a href="monitor.html" class="station-link"><img src="N-gage.png"></a></div>
     </div>
-
-    <button class="menu-toggle-btn" onclick="toggleMenu()">
-        <div class="toggle-icon"></div>
-    </button>
+    <button class="menu-toggle-btn" onclick="toggleMenu()"><div class="toggle-icon"></div></button>
 </nav>
 
 <main class="container">
-    <article class="welcome-section">
-        <h2 class="lang-target" data-ja="名古屋中高 鉄道研究部ポータルへようこそ！" data-en="Welcome to Nagoya Railway Club!">名古屋中高 鉄道研究部ポータルへようこそ！</h2>
-        
-        <div class="lang-target" 
-             data-ja="<p>本サイトでは、当部活動の最新情報やイベント情報を発信しています。鉄道模型展示の詳細は、メニューの<strong>「ジオラマ運転体験」</strong>より特設サイトへお越しください。</p>" 
-             data-en="<p>This site provides the latest information about our club. For details on the railway model exhibition, please visit the special site from <strong>'Diorama Experience'</strong> in the menu.</p>">
-            <p>本サイトでは、当部活動の最新情報やイベント情報を発信しています。鉄道模型展示の詳細は、メニューの<strong>「ジオラマ運転体験」</strong>より特設サイトへお越しください。</p>
+    <section class="content-row">
+        <div class="text-side welcome-section">
+            <h2 class="lang-target" data-ja="名古屋中高 鉄道研究部ポータルへようこそ！" data-en="Welcome to Nagoya Railway Club!">名古屋中高 鉄道研究部ポータルへようこそ！</h2>
+            <div class="lang-target" 
+                 data-ja="<p>本サイトでは、当部活動の最新情報やイベント情報を発信しています。鉄道模型展示の詳細は、メニューの<strong>「ジオラマ運転体験」</strong>より特設サイトへお越しください。</p>" 
+                 data-en="<p>This site provides the latest news about our club. Check <strong>'Diorama Experience'</strong> in the menu for details.</p>">
+                <p>本サイトでは、当部活動の最新情報やイベント情報を発信しています。鉄道模型展示の詳細は、メニューの<strong>「ジオラマ運転体験」</strong>より特設サイトへお越しください。</p>
+            </div>
         </div>
+        <div class="image-side">
+            <img src="club-photo1.png" alt="部活動イメージ">
+        </div>
+    </section>
 
+    <div class="catchphrase-row">
         <span class="catchphrase lang-target" data-ja="「夢」にむけて、出発進行！" data-en="Full speed ahead toward your dreams!">「夢」にむけて、出発進行！</span>
+    </div>
 
-        <div class="lang-target" 
-             data-ja="<p>私たちは週に一度の部会を通じて部員同士の交流を深め、部のさらなる発展を目指して話し合っています。また、学校説明会や文化祭では鉄道ジオラマを展示しており、お越しいただいた皆様に運転体験を楽しんでいただけるよう準備を整えています。</p>" 
-             data-en="<p>We deepen interaction between members through weekly meetings and discuss the further development of the club. We also exhibit railway dioramas at school information sessions and cultural festivals, preparing so that visitors can enjoy driving experiences.</p>">
-            <p>私たちは週に一度の部会を通じて部員同士の交流を深め、部のさらなる発展を目指して話し合っています。また、学校説明会や文化祭では鉄道ジオラマを展示しており、お越しいただいた皆様に運転体験を楽しんでいただけるよう準備を整えています。</p>
+    <section class="content-row reverse">
+        <div class="text-side welcome-section">
+            <h2 class="lang-target" data-ja="情熱を分かち合い、さらなる発展へ" data-en="Our Activities & Passion">情熱を分かち合い、さらなる発展へ</h2>
+            <div class="lang-target" 
+                 data-ja="<p>私たちは毎週一度の部会を通じて部員同士の交流を深め、部のさらなる発展を目指して話し合っています。また、学校説明会や文化祭では鉄道ジオラマを展示しており、お越しいただいた皆様に運転体験を楽しんでいただけるよう準備を整えています。</p>" 
+                 data-en="<p>We deepen interaction through weekly meetings and discuss the club's development. We also exhibit dioramas at school events so visitors can enjoy driving experiences.</p>">
+                <p>私たちは毎週一度の部会を通じて部員同士の交流を深め、部のさらなる発展を目指して話し合っています。また、学校説明会や文化祭では鉄道ジオラマを展示しており、お越しいただいた皆様に運転体験を楽しんでいただけるよう準備を整えています。</p>
+            </div>
         </div>
-
-        <span class="test-release-note lang-target" data-ja="※当サイトは現在、試験公開中です。" data-en="*This site is currently in trial release.">※当サイトは現在、試験公開中です。</span>
-    </article>
+        <div class="image-side">
+            <img src="club-photo2.png" alt="ジオラマ展示イメージ">
+        </div>
+    </section>
 </main>
 
 <script>
