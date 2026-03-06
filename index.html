@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>鉄道研究部 ポータルサイト</title>
     <style>
+        /* リロード時に一瞬下が見えないよう、htmlのスクロール動作を制御 */
+        html { scroll-behavior: smooth; }
+        
         body {
             margin: 0; padding: 0;
             font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
@@ -14,7 +17,7 @@
             overflow-x: hidden;
         }
 
-        /* --- 固定ヘッダー・ナビ（デザイン維持） --- */
+        /* --- ヘッダー・ナビ（固定） --- */
         .fixed-top-container {
             position: fixed; top: 0; left: 0; width: 100%; z-index: 5000;
             background-color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -38,52 +41,61 @@
         .section-row { display: flex; align-items: center; gap: 70px; margin-bottom: 220px; }
         .section-row.reverse { flex-direction: row-reverse; }
 
-        .text-content { flex: 1.3; }
-        
-        /* 【新しいタイトル演出】 */
+        /* --- 電車とタイトルの演出エリア --- */
+        .title-wrap {
+            position: relative;
+            overflow: hidden; /* 電車がはみ出さないように */
+            padding: 10px 0;
+            margin-bottom: 20px;
+        }
+
+        .train-container {
+            display: flex;
+            align-items: center;
+            /* 初期位置：画面の左外側 */
+            transform: translateX(-100%);
+            transition: transform 1.5s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+        }
+
+        /* 電車が通り過ぎた後にタイトルを固定するクラス */
+        .is-visible .train-container {
+            transform: translateX(0);
+        }
+
+        .train-icon {
+            font-size: 2.5rem;
+            margin-right: 15px;
+            filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.2));
+        }
+
         .text-content h2 {
             color: #c0392b; 
             font-size: 2.2rem;
             border-left: 8px solid #c0392b; 
             padding-left: 20px; 
-            margin-bottom: 30px;
-            
-            /* 初期状態：左にズレて透明 */
+            margin: 0;
+            white-space: nowrap;
+        }
+
+        .text-content p { 
+            line-height: 2; font-size: 1.3rem; margin-top: 20px;
+            /* 本文は少し遅れてフェードイン */
             opacity: 0;
-            transform: translateX(-50px);
-            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1); /* 加速感のある動き */
+            transition: opacity 1s ease 0.8s;
         }
+        .is-visible .text-content p { opacity: 1; }
 
-        /* 画面に入った時のタイトルの動き */
-        .is-visible .text-content h2 {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .text-content p { line-height: 2; font-size: 1.3rem; margin-bottom: 1.8em; }
-
-        .image-content { flex: 1; }
+        .image-content { flex: 1; opacity: 0; transition: opacity 1s ease 1s; }
+        .is-visible .image-content { opacity: 1; }
         .image-content img {
             width: 100%; height: auto; border-radius: 4px; display: block;
             box-shadow: 0 15px 40px rgba(0,0,0,0.12);
         }
 
-        /* セクション全体のフェードイン（画像や本文用） */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 1s ease-out, transform 1s ease-out;
-            visibility: hidden;
-        }
-        .fade-in.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-            visibility: visible;
-        }
-
         @media (max-width: 768px) {
             body { padding-top: 110px; }
             .section-row { margin-bottom: 120px; gap: 40px; flex-direction: column !important; }
+            .text-content h2 { font-size: 1.6rem; }
         }
     </style>
 </head>
@@ -103,40 +115,52 @@
 </div>
 
 <main class="container">
-    <section class="section-row fade-in">
+    <section class="section-row scroll-trigger">
         <div class="text-content">
-            <h2>名古屋中高 鉄道研究部へようこそ</h2>
-            <p>私たちは「夢にむけて、出発進行！」を合言葉に、日々鉄道の魅力を探求しています。週に一度の部会では、鉄道知識の共有からイベントの企画まで、部員主導で活発な議論を行っています。</p>
+            <div class="title-wrap">
+                <div class="train-container">
+                    <span class="train-icon">🚃</span> <h2>名古屋中高 鉄道研究部へようこそ</h2>
+                </div>
+            </div>
+            <p>私たちは「夢にむけて、出発進行！」を合言葉に、日々鉄道の魅力を探求しています。週に一度の部会を通じて、学年を問わず交流を深めています。</p>
         </div>
         <div class="image-content"><img src="intro-image.jpg" alt="部活動の様子"></div>
     </section>
 
-    <section class="section-row reverse fade-in">
+    <section class="section-row reverse scroll-trigger">
         <div class="text-content">
-            <h2>文化祭・説明会での展示活動</h2>
-            <p>当部の活動の集大成は、精巧に作り込まれた大型鉄道模型ジオラマの展示です。実際の風景を忠実に再現した情景の中を、様々な列車が走行します。</p>
+            <div class="title-wrap">
+                <div class="train-container">
+                    <span class="train-icon">🚃</span>
+                    <h2>文化祭・説明会での展示活動</h2>
+                </div>
+            </div>
+            <p>精巧な大型ジオラマ展示は当部の誇りです。実際の街並みを再現し、多くの来場者に運転の楽しさを伝えています。</p>
         </div>
         <div class="image-content"><img src="diorama-image.jpg" alt="ジオラマ展示"></div>
     </section>
 </main>
 
 <script>
-    // スクロール監視の設定
+    // 1. リロード時に強制的に一番上に戻す
+    window.onbeforeunload = function () {
+        window.scrollTo(0, 0);
+    };
+
+    // 2. スクロール監視
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                // 画面内に入った時
                 entry.target.classList.add('is-visible');
-            } else {
-                // 画面外に出た時（リセット）
-                entry.target.classList.remove('is-visible');
+                // 一度表示したら監視を解除してリセットを防ぐ
+                observer.unobserve(entry.target);
             }
         });
-    }, { 
-        threshold: 0.15 
-    });
+    }, { threshold: 0.2 });
 
-    document.querySelectorAll('.fade-in').forEach(el => { observer.observe(el); });
+    document.querySelectorAll('.scroll-trigger').forEach(el => {
+        observer.observe(el);
+    });
 </script>
 
 </body>
