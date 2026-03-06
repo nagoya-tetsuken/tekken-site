@@ -3,133 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>運行情報表示器 - Station Monitor</title>
+    <title>運行情報表示器 - Flap Display</title>
     <style>
-        /* サイト全体は白基調 */
         body {
             background-color: #ffffff;
             color: #333;
-            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            font-family: "Helvetica Neue", Arial, sans-serif;
             margin: 0;
-            padding: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
         }
 
-        /* ヘッダータイトル（オプション） */
         .page-header {
             width: 100%;
-            padding: 20px 0;
+            padding: 15px 0;
             text-align: center;
-            background: #f8f9fa;
-            border-bottom: 1px solid #ddd;
-            margin-bottom: 40px;
+            background: #f0f0f0;
+            border-bottom: 2px solid #ccc;
+            margin-bottom: 30px;
         }
 
-        /* 灰色（メタリック）の発車標フレーム */
+        /* 灰色フレーム */
         .station-board {
-            width: 90vw;
-            max-width: 1000px;
-            background: #2d2d2d; /* 濃い灰色 */
-            border: 8px solid #555; /* 外枠の灰色 */
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            width: 95vw;
+            max-width: 1100px;
+            background: #333;
+            border: 10px solid #666;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
             overflow: hidden;
         }
 
-        /* 1段目：メイン表示エリア */
+        /* 1段目：フラップエリア */
         .display-row-top {
             display: flex;
-            border-bottom: 4px solid #444;
-            height: 180px;
-            align-items: center;
+            background: #1a1a1a;
+            padding: 25px 10px;
+            gap: 15px;
+            justify-content: space-around;
+            border-bottom: 5px solid #222;
         }
 
         .col {
-            height: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            text-align: center;
-            border-right: 2px solid #444;
+            align-items: center;
         }
-        
+
         .label {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: #aaa;
-            margin-bottom: 8px;
-            letter-spacing: 2px;
-        }
-
-        /* 各列の色設定（高輝度LED風） */
-        .col-wait-count { width: 20%; color: #33ff33; } /* 緑 */
-        .col-wait-time { width: 25%; color: #ffcc00; }  /* 黄/オレンジ */
-        .col-calling { width: 55%; color: #ff3333; border-right: none; } /* 赤 */
-
-        .value {
-            font-family: 'Courier New', Courier, monospace; /* ドット風フォント */
+            margin-bottom: 12px;
             font-weight: bold;
-            line-height: 1;
+            letter-spacing: 1px;
         }
-        .col-wait-count .value { font-size: 4rem; }
-        .col-wait-time .value { font-size: 4rem; }
-        .col-calling .value { font-size: 4.5rem; letter-spacing: 2px; }
 
-        /* 2段目：テロップエリア */
+        /* --- 反転フラップ（パタパタ）の基本スタイル --- */
+        .flap-container {
+            display: flex;
+            gap: 4px;
+        }
+
+        .flap {
+            position: relative;
+            background: #222;
+            color: #eee;
+            width: 60px;
+            height: 90px;
+            line-height: 90px;
+            text-align: center;
+            font-size: 4rem;
+            font-weight: bold;
+            border-radius: 6px;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.5);
+            /* 中央の溝 */
+            background-image: linear-gradient(to bottom, #222 49%, #000 50%, #222 51%);
+        }
+
+        /* 数字の切り替わりアニメーション */
+        .flip {
+            animation: flip-anim 0.4s ease-in;
+        }
+
+        @keyframes flip-anim {
+            0% { transform: rotateX(0deg); }
+            50% { transform: rotateX(90deg); background: #444; }
+            100% { transform: rotateX(0deg); }
+        }
+
+        /* 各列の文字色（フラップの文字色） */
+        .col-wait-count .flap { color: #55ff55; } /* 緑 */
+        .col-wait-time .flap { color: #ffcc00; }  /* 黄 */
+        .col-calling .flap { color: #ff4444; }    /* 赤 */
+
+        /* 2段目：テロップ（ここは通常通り） */
         .display-row-bottom {
-            height: 80px;
-            background: #1a1a1a;
+            height: 70px;
+            background: #000;
             display: flex;
             align-items: center;
         }
 
         marquee {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             color: #ffcc00;
             font-weight: bold;
         }
 
-        /* 補助テキスト */
-        .unit { font-size: 1.2rem; margin-left: 5px; color: #888; }
-
-        /* 隠しボタン */
-        .admin-trigger {
-            position: fixed;
-            bottom: 0;
-            right: 0;
-            width: 60px;
-            height: 60px;
-            cursor: pointer;
-            opacity: 0.1;
-        }
+        .admin-trigger { position: fixed; bottom: 0; right: 0; width: 40px; height: 40px; cursor: pointer; opacity: 0; }
     </style>
 </head>
 <body>
 
     <header class="page-header">
-        <h1 style="margin:0; font-size: 1.5rem; color: #555;">Nゲージ運転体験 運行案内</h1>
+        <h1 style="margin:0; font-size: 1.4rem; color: #444;">Nゲージ運転体験 運行状況</h1>
     </header>
 
     <div class="station-board">
         <div class="display-row-top">
             <div class="col col-wait-count">
-                <div class="label">WAITING</div>
-                <div class="value"><span id="wait-count">0</span><span class="unit">組</span></div>
+                <div class="label">WAITING LIST</div>
+                <div class="flap-container" id="wait-count-container">
+                    <div class="flap">0</div><div class="flap">0</div>
+                </div>
             </div>
             <div class="col col-wait-time">
-                <div class="label">TIME</div>
-                <div class="value"><span id="wait-time">0</span><span class="unit">分</span></div>
+                <div class="label">ESTIMATED TIME</div>
+                <div class="flap-container" id="wait-time-container">
+                    <div class="flap">0</div><div class="flap">0</div>
+                </div>
             </div>
             <div class="col col-calling">
                 <div class="label">NOW CALLING</div>
-                <div id="calling-now" class="value">---</div>
+                <div class="flap-container" id="calling-container">
+                    <div class="flap">-</div><div class="flap">-</div><div class="flap">-</div><div class="flap">-</div>
+                </div>
             </div>
         </div>
 
         <div class="display-row-bottom">
-            <marquee id="telop-text" scrollamount="12">運行情報を取得中...</marquee>
+            <marquee id="telop-text" scrollamount="10">CONNECTING TO SYSTEM...</marquee>
         </div>
     </div>
 
@@ -138,25 +153,44 @@
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbwlzBgQoST_MLC8nvPeJSMQBHnIFouiEB8MI6N2s-oObA0HP-X_txcevkIv8q7UFpfLJQ/exec";
 
+        /**
+         * 特定のコンテナ内のフラップを更新する（アニメーション付き）
+         */
+        function updateFlaps(containerId, newValue) {
+            const container = document.getElementById(containerId);
+            const flaps = container.querySelectorAll('.flap');
+            const newChars = newValue.toString().padStart(flaps.length, ' ').split('');
+
+            newChars.forEach((char, i) => {
+                if (flaps[i] && flaps[i].innerText !== char) {
+                    flaps[i].classList.remove('flip');
+                    void flaps[i].offsetWidth; // 強制再描画
+                    flaps[i].innerText = char;
+                    flaps[i].classList.add('flip');
+                }
+            });
+        }
+
         async function updateMonitor() {
             try {
-                // 1. 通常データ（dataシート）取得
+                // 通常データ取得
                 const response = await fetch(API_URL);
                 const data = await response.json();
 
-                // 待ち組数（ステータスが 'resep' のもの）
-                const waitList = data.filter(d => d.status === 'resep');
-                document.getElementById('wait-count').innerText = waitList.length;
+                // 1. 待ち組数 (2桁)
+                const waitCount = data.filter(d => d.status === 'resep').length;
+                updateFlaps('wait-count-container', waitCount.toString().padStart(2, '0'));
 
-                // 待ち時間（1組5分計算）
-                const waitMinutes = waitList.length * 5;
-                document.getElementById('wait-time').innerText = waitMinutes;
+                // 2. 待ち時間 (2桁、1組5分)
+                const waitTime = waitCount * 5;
+                updateFlaps('wait-time-container', waitTime.toString().padStart(2, '0'));
 
-                // 呼出番号（ステータスが 'call' のもの）
+                // 3. 呼出番号 (直近の1つを表示、4桁)
                 const callingIds = data.filter(d => d.status === 'call').map(d => d.id);
-                document.getElementById('calling-now').innerText = callingIds.length > 0 ? callingIds.join(' ') : "---";
+                const latestCall = callingIds.length > 0 ? callingIds[callingIds.length - 1] : "----";
+                updateFlaps('calling-container', latestCall);
 
-                // 2. マスターデータ（テロップ）取得
+                // テロップ取得
                 const mRes = await fetch(API_URL + "?sheet=master");
                 const mData = await mRes.json();
                 if (mData.telop) {
@@ -164,13 +198,13 @@
                 }
 
             } catch (e) {
-                console.error("Monitor Update Error:", e);
+                console.error("Monitor Error:", e);
             }
         }
 
-        // 10秒おきに更新
-        setInterval(updateMonitor, 10000);
+        // 初回実行と定期更新
         updateMonitor();
+        setInterval(updateMonitor, 10000);
     </script>
 </body>
 </html>
