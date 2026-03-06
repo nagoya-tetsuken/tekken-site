@@ -9,8 +9,8 @@
             margin: 0; padding: 0;
             font-family: "Helvetica Neue", Arial, sans-serif;
             background-color: #f0f8ff; color: #333;
-            /* ヘッダーとナビの合計高さ分、コンテンツを下げる */
-            padding-top: 140px; 
+            /* 固定ヘッダーの高さに合わせて調整 */
+            padding-top: 160px; 
         }
 
         /* --- ヘッダー・ナビ固定コンテナ --- */
@@ -27,35 +27,50 @@
         }
         header img { width: 100%; height: auto; display: block; }
 
-        /* --- ナビゲーション（横いっぱい・画像のみ） --- */
+        /* --- ナビゲーション（黒枠・直角デザイン） --- */
         .navigation-section {
             display: flex;
-            width: 100%; /* 横幅いっぱい */
+            justify-content: center;
             background-color: #fff;
+            padding: 5px 0; /* 上下に少し余白 */
         }
 
         .button-grid {
             display: flex;
-            width: 100%; /* 画面端まで広げる */
-            justify-content: space-between;
-            gap: 0; /* 隙間をなくす場合は0に設定 */
+            width: 100%; /* 横幅いっぱい */
+            max-width: 100%; 
+            gap: 0; /* ボタン同士を密着させる（隙間が必要なら数px設定） */
         }
 
         .nav-button {
             flex: 1;
-            display: block;
-            line-height: 0; /* 画像の下に隙間ができないようにする */
+            display: flex;
+            align-items: center;
+            justify-content: center;
             text-decoration: none;
-            transition: opacity 0.3s ease;
+            /* 黒い細めの枠（直角） */
+            border: 1px solid #000; 
+            margin-left: -1px; /* 隣り合う枠線が太くならないように重ねる */
+            background-color: #fff;
+            aspect-ratio: 3 / 1; /* ボタンの縦横比を固定 */
+            overflow: hidden;
+            transition: background-color 0.2s;
+        }
+
+        /* 最初のボタンの左枠を維持 */
+        .nav-button:first-child {
+            margin-left: 0;
         }
 
         .nav-button:hover {
-            opacity: 0.7; /* マウスを乗せた時に少し透けさせる */
+            background-color: #f0f0f0;
         }
 
         .nav-button img {
-            width: 100%; /* ボタンの横幅いっぱいに画像を広げる */
-            height: auto;
+            width: 100%;
+            height: 100%;
+            /* 画像全体をボタン内に収め、切れないようにする */
+            object-fit: contain; 
             display: block;
         }
 
@@ -76,7 +91,7 @@
         }
 
         @media (max-width: 600px) {
-            body { padding-top: 100px; }
+            body { padding-top: 120px; }
         }
     </style>
 </head>
