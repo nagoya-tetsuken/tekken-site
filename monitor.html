@@ -28,6 +28,7 @@
             font-size: 0.85rem;
             border-radius: 4px;
             background: #fff;
+            z-index: 100;
         }
 
         /* 発車標筐体 */
@@ -41,7 +42,7 @@
             margin-top: 60px;
         }
 
-        /* 上部グレーエリア（網掛け対象外） */
+        /* 上部グレーエリア */
         .lcd-upper-gray {
             background: #3c3f41;
             padding: 25px 35px;
@@ -53,40 +54,46 @@
         .lcd-upper-gray .main-jp { font-size: 2.4rem; font-weight: bold; color: #fff; }
         .lcd-upper-gray .sub-en { font-size: 1.2rem; color: #bbb; }
 
-        /* --- LED表示エリア（ここだけに網を1枚置く） --- */
+        /* --- LED表示エリア --- */
         .led-display-zone {
             position: relative;
             background: #000;
             overflow: hidden;
         }
 
-        /* 網掛け：画像を1枚だけ配置 */
-        .led-display-zone::after {
-            content: "";
+        /* 4分割網掛けレイヤー */
+        .grid-mask-layer {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            /* amikake.png を1枚だけ配置し、エリアにフィットさせる */
-            background-image: url('amikake.png');
-            background-repeat: no-repeat; /* 繰り返さない */
-            background-size: cover;      /* エリア全体を覆うように拡大縮小 */
-            opacity: 0.4;
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* 横2分割 */
+            grid-template-rows: 1fr 1fr;    /* 縦2分割 */
             z-index: 10;
             pointer-events: none;
+            opacity: 0.5;
         }
 
-        /* ヘッダー */
+        /* 4枚の網画像それぞれ */
+        .mask-item {
+            width: 100%;
+            height: 100%;
+            background-image: url('amikake.png');
+            background-size: 100% 100%; /* 枠いっぱいに広げる */
+            background-repeat: no-repeat;
+        }
+
+        /* コンテンツ部分 */
         .lcd-header {
             display: flex;
             background: #111;
             padding: 10px 0;
             border-bottom: 1px solid #222;
         }
-        .h-col { font-size: 0.95rem; color: #888; text-align: center; font-weight: bold; flex-shrink: 0; }
+        .h-col { font-size: 0.95rem; color: #888; text-align: center; font-weight: bold; }
 
-        /* メインデータ行 */
         .lcd-main-row {
             display: flex;
             height: 140px;
@@ -96,22 +103,18 @@
 
         .col-type { width: 20%; display: flex; justify-content: center; }
         .type-box { font-size: 2.5rem; color: #ff9d00; font-weight: bold; letter-spacing: 4px; }
-
         .col-wait { width: 20%; font-size: 3.8rem; color: #ff9d00; text-align: center; font-weight: bold; }
         .col-time { width: 20%; font-size: 3.8rem; text-align: center; font-weight: bold; }
         .col-id   { width: 40%; font-size: 4.8rem; color: #ff9d00; text-align: center; font-family: 'Consolas', monospace; font-weight: bold; }
 
-        /* 待ち時間の3段階カラー */
         .time-normal { color: #00ff00; }
         .time-crowded { color: #ff9d00; }
         .time-heavy { color: #ff3300; }
 
-        /* 共通：文字の視認性を上げるための光彩 */
         .type-box, .col-wait, .col-time, .col-id, marquee {
             text-shadow: 0 0 10px currentColor;
         }
 
-        /* 下部テロップ */
         .lcd-footer {
             height: 70px;
             display: flex;
@@ -148,6 +151,13 @@
         </div>
 
         <div class="led-display-zone">
+            <div class="grid-mask-layer">
+                <div class="mask-item"></div>
+                <div class="mask-item"></div>
+                <div class="mask-item"></div>
+                <div class="mask-item"></div>
+            </div>
+
             <div class="lcd-header">
                 <div class="h-col" style="width: 20%;">種別</div>
                 <div class="h-col" style="width: 20%;">待ち組数</div>
@@ -195,13 +205,8 @@
 
                 const mRes = await fetch(API_URL + "?sheet=master");
                 const mData = await mRes.json();
-                if (mData.telop) {
-                    document.getElementById('telop-text').innerText = mData.telop;
-                }
-
-            } catch (e) {
-                console.error("Fetch error:", e);
-            }
+                if (mData.telop) document.getElementById('telop-text').innerText = mData.telop;
+            } catch (e) { console.error(e); }
         }
 
         setInterval(updateMonitor, 10000);
