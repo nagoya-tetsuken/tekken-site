@@ -9,8 +9,8 @@
             margin: 0; padding: 0;
             font-family: "Helvetica Neue", Arial, sans-serif;
             background-color: #f0f8ff; color: #333;
-            /* 固定ヘッダーの高さに合わせてコンテンツを下げる（適宜微調整してください） */
-            padding-top: 140px; 
+            /* 固定エリアの高さに合わせて調整。ヘッダーが低くなった分、少し詰めました */
+            padding-top: 130px; 
         }
 
         /* --- ヘッダー・ナビ固定コンテナ --- */
@@ -19,27 +19,25 @@
             top: 0; left: 0; width: 100%;
             z-index: 5000;
             background-color: #fff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
-        header { line-height: 0; }
+        header { line-height: 0; background-color: #fff; }
+        /* 2560x150の比率を維持 */
         header img { width: 100%; height: auto; display: block; }
 
-        /* --- ナビゲーション（下地サイズを画像に合わせる） --- */
+        /* --- ナビゲーション（下地を画像に完全一致させる） --- */
         .navigation-section {
             display: flex;
             justify-content: center;
-            background-color: #fff;
-            /* 下地の余計な隙間をゼロにする */
-            padding: 0; 
-            border-bottom: 1px solid #ccc; /* 下端に薄い区切り線 */
+            background-color: #000; /* 枠と同じ黒にすることで一体感を出す */
+            padding: 0;
         }
 
         .button-grid {
             display: flex;
             width: 100%;
-            /* フレーム同士の隙間を1px（境界線のみ見える状態） */
-            gap: 1px; 
+            gap: 0; /* 隙間をゼロにして枠同士を合体させる */
         }
 
         .nav-button {
@@ -50,18 +48,22 @@
             text-decoration: none;
             background-color: #fff;
             
-            /* 【修正】フレームを太く（3px）、色は真っ黒に */
-            border: 3px solid #000; 
+            /* 【修正】フレームをさらに太く（5px） */
+            border: 5px solid #000; 
             
-            /* 【修正】画像とフレームの隙間を1pxに（ほぼ密着） */
-            padding: 1px; 
+            /* 【修正】隙間を完全にゼロにして密着させる */
+            padding: 0; 
             
+            margin-left: -5px; /* 隣り合う太枠が重なって太くなりすぎないよう調整 */
             box-sizing: border-box;
-            line-height: 0; /* 下地の隙間対策 */
-            transition: background-color 0.2s;
+            line-height: 0;
+            transition: opacity 0.2s;
         }
 
+        .nav-button:first-child { margin-left: 0; }
+
         .nav-button:hover {
+            opacity: 0.8;
             background-color: #eee;
         }
 
@@ -73,7 +75,7 @@
 
         /* --- メインコンテンツ --- */
         .container { 
-            max-width: 800px; margin: 30px auto; padding: 20px;
+            max-width: 800px; margin: 40px auto; padding: 20px;
         }
         .welcome-section {
             background: #fff; padding: 35px; border-radius: 12px;
@@ -82,8 +84,8 @@
 
         /* スマホ対応 */
         @media (max-width: 768px) {
-            body { padding-top: 100px; }
-            .nav-button { border-width: 2px; padding: 1px; }
+            body { padding-top: 90px; }
+            .nav-button { border-width: 3px; margin-left: -3px; }
         }
     </style>
 </head>
@@ -109,6 +111,7 @@
     <article class="welcome-section">
         <h2>名古屋中高 鉄道研究部ポータルへようこそ！</h2>
         <p>本サイトでは、当部活動の最新情報やイベント情報を発信しています。</p>
+        <p>新しいヘッダーとメニューで、より公式感のあるデザインになりました。</p>
     </article>
 </main>
 
