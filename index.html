@@ -7,13 +7,13 @@
     <style>
         body {
             margin: 0; padding: 0;
-            font-family: "Helvetica Neue", Arial, sans-serif;
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
             background-color: #f0f8ff; color: #333;
-            /* 固定エリアの高さに合わせて調整。ヘッダーが低くなった分、少し詰めました */
-            padding-top: 130px; 
+            /* 固定エリアの高さ（ヘッダー+メニュー）に合わせて調整 */
+            padding-top: 150px; 
         }
 
-        /* --- ヘッダー・ナビ固定コンテナ --- */
+        /* --- ヘッダー・ナビ固定（前回確定デザイン） --- */
         .fixed-top-container {
             position: fixed;
             top: 0; left: 0; width: 100%;
@@ -21,71 +21,72 @@
             background-color: #fff;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
-
-        header { line-height: 0; background-color: #fff; }
-        /* 2560x150の比率を維持 */
+        header { line-height: 0; }
         header img { width: 100%; height: auto; display: block; }
-
-        /* --- ナビゲーション（下地を画像に完全一致させる） --- */
-        .navigation-section {
-            display: flex;
-            justify-content: center;
-            background-color: #000; /* 枠と同じ黒にすることで一体感を出す */
-            padding: 0;
-        }
-
-        .button-grid {
-            display: flex;
-            width: 100%;
-            gap: 0; /* 隙間をゼロにして枠同士を合体させる */
-        }
-
+        .navigation-section { display: flex; justify-content: center; background-color: #000; padding: 0; }
+        .button-grid { display: flex; width: 100%; gap: 0; }
         .nav-button {
-            flex: 1;
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            text-decoration: none; background-color: #fff;
+            border: 5px solid #000; padding: 0; margin-left: -5px;
+            box-sizing: border-box; line-height: 0; transition: opacity 0.2s;
+        }
+        .nav-button:first-child { margin-left: 0; }
+        .nav-button:hover { opacity: 0.8; }
+        .nav-button img { width: 100%; height: auto; display: block; }
+
+        /* --- メインコンテンツ：交互レイアウト --- */
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .section-row {
             display: flex;
             align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            background-color: #fff;
-            
-            /* 【修正】フレームをさらに太く（5px） */
-            border: 5px solid #000; 
-            
-            /* 【修正】隙間を完全にゼロにして密着させる */
-            padding: 0; 
-            
-            margin-left: -5px; /* 隣り合う太枠が重なって太くなりすぎないよう調整 */
-            box-sizing: border-box;
-            line-height: 0;
-            transition: opacity 0.2s;
+            gap: 40px;
+            margin-bottom: 60px;
+            background: transparent; /* フレームなし */
         }
 
-        .nav-button:first-child { margin-left: 0; }
-
-        .nav-button:hover {
-            opacity: 0.8;
-            background-color: #eee;
+        /* 2段目は左右を入れ替える */
+        .section-row.reverse {
+            flex-direction: row-reverse;
         }
 
-        .nav-button img {
+        .text-content {
+            flex: 1;
+            line-height: 1.8;
+        }
+
+        .text-content h2 {
+            color: #c0392b;
+            font-size: 1.6rem;
+            border-left: 6px solid #c0392b;
+            padding-left: 15px;
+            margin-bottom: 15px;
+        }
+
+        .image-content {
+            flex: 1;
+        }
+
+        .image-content img {
             width: 100%;
             height: auto;
+            border-radius: 8px; /* 画像の角を少しだけ丸くして柔らかい印象に（不要なら0に） */
             display: block;
         }
 
-        /* --- メインコンテンツ --- */
-        .container { 
-            max-width: 800px; margin: 40px auto; padding: 20px;
-        }
-        .welcome-section {
-            background: #fff; padding: 35px; border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05); line-height: 1.8;
-        }
-
-        /* スマホ対応 */
+        /* スマホ対応：縦に並べる */
         @media (max-width: 768px) {
-            body { padding-top: 90px; }
-            .nav-button { border-width: 3px; margin-left: -3px; }
+            body { padding-top: 110px; }
+            .section-row, .section-row.reverse {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .image-content { width: 100%; }
         }
     </style>
 </head>
@@ -95,7 +96,6 @@
     <header>
         <img src="header-img.png" alt="鉄研ヘッダー">
     </header>
-
     <nav class="navigation-section">
         <div class="button-grid">
             <a href="index.html" class="nav-button"><img src="aboutus.png" alt="概要"></a>
@@ -108,11 +108,27 @@
 </div>
 
 <main class="container">
-    <article class="welcome-section">
-        <h2>名古屋中高 鉄道研究部ポータルへようこそ！</h2>
-        <p>本サイトでは、当部活動の最新情報やイベント情報を発信しています。</p>
-        <p>新しいヘッダーとメニューで、より公式感のあるデザインになりました。</p>
-    </article>
+    <section class="section-row">
+        <div class="text-content">
+            <h2>名古屋中高 鉄道研究部へようこそ</h2>
+            <p>私たちは「夢にむけて、出発進行！」を合言葉に、日々鉄道の魅力を探求しています。週に一度の部会では、鉄道知識の共有からイベントの企画まで、部員主導で活発な議論を行っています。</p>
+            <p>初心者からベテランの鉄道ファンまで、誰もが楽しめる環境を大切にしています。</p>
+        </div>
+        <div class="image-content">
+            <img src="intro-image.jpg" alt="部活動の様子">
+        </div>
+    </section>
+
+    <section class="section-row reverse">
+        <div class="text-content">
+            <h2>文化祭・説明会での展示活動</h2>
+            <p>当部の目玉は、精巧に作り込まれた鉄道模型ジオラマの展示です。自分たちの手で作り上げた風景の中を列車が走る姿は、多くの方々からご好評をいただいています。</p>
+            <p>「ジオラマ運転体験」では、実際にコントローラーを握って模型を動かす体験も提供しており、子供たちに大人気です。</p>
+        </div>
+        <div class="image-content">
+            <img src="diorama-image.jpg" alt="ジオラマ展示">
+        </div>
+    </section>
 </main>
 
 </body>
