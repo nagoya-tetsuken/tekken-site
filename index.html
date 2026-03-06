@@ -9,7 +9,7 @@
             margin: 0; padding: 0;
             font-family: "Helvetica Neue", Arial, sans-serif;
             background-color: #f0f8ff; color: #333;
-            /* ヘッダーとナビの高さ分（約140px）余白を確保 */
+            /* ヘッダーとナビの合計高さ分、コンテンツを下げる */
             padding-top: 140px; 
         }
 
@@ -18,8 +18,8 @@
             position: fixed;
             top: 0; left: 0; width: 100%;
             z-index: 5000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
         header {
@@ -27,53 +27,36 @@
         }
         header img { width: 100%; height: auto; display: block; }
 
-        /* --- ナビゲーション（枠なしスタイル） --- */
+        /* --- ナビゲーション（横いっぱい・画像のみ） --- */
         .navigation-section {
-            padding: 10px 0;
             display: flex;
-            justify-content: center;
+            width: 100%; /* 横幅いっぱい */
+            background-color: #fff;
         }
 
         .button-grid {
             display: flex;
-            width: 95%;
-            max-width: 900px;
-            gap: 10px;
+            width: 100%; /* 画面端まで広げる */
             justify-content: space-between;
+            gap: 0; /* 隙間をなくす場合は0に設定 */
         }
 
         .nav-button {
             flex: 1;
-            aspect-ratio: 3 / 1;
-            background-color: #f8f8f8; /* 枠の代わりに背景色で境界を出す */
-            border: none; /* 枠組みを削除 */
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            display: block;
+            line-height: 0; /* 画像の下に隙間ができないようにする */
             text-decoration: none;
-            color: #333;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            transition: opacity 0.3s ease;
         }
 
-        /* マウスを乗せた時の動作（枠の代わりに背景で反応） */
         .nav-button:hover {
-            background-color: #e0e0e0;
-            transform: translateY(-2px);
+            opacity: 0.7; /* マウスを乗せた時に少し透けさせる */
         }
 
         .nav-button img {
-            width: 35%; /* ボタンサイズに合わせて微調整 */
+            width: 100%; /* ボタンの横幅いっぱいに画像を広げる */
             height: auto;
-            object-fit: contain;
-            margin-bottom: 4px;
-        }
-
-        .nav-button span {
-            font-size: clamp(0.6rem, 1.4vw, 0.85rem);
-            font-weight: bold;
-            white-space: nowrap;
+            display: block;
         }
 
         /* --- メインコンテンツ --- */
@@ -94,8 +77,6 @@
 
         @media (max-width: 600px) {
             body { padding-top: 100px; }
-            .button-grid { gap: 5px; }
-            .nav-button { border-radius: 4px; }
         }
     </style>
 </head>
@@ -110,23 +91,18 @@
         <div class="button-grid">
             <a href="index.html" class="nav-button">
                 <img src="aboutus.png" alt="概要">
-                <span>概要</span>
             </a>
             <a href="#" class="nav-button">
                 <img src="notifications.png" alt="お知らせ">
-                <span>お知らせ</span>
             </a>
             <a href="#" class="nav-button">
                 <img src="katsudou.png" alt="活動">
-                <span>活動</span>
             </a>
             <a href="#" class="nav-button">
                 <img src="medias.png" alt="作品">
-                <span>作品</span>
             </a>
             <a href="monitor.html" class="nav-button">
                 <img src="modeltrain.png" alt="運転体験">
-                <span>運転体験</span>
             </a>
         </div>
     </nav>
