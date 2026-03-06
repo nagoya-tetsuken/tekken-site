@@ -1,43 +1,54 @@
-<style>
-    /* 処理中を知らせる画面全体のレイヤー */
-    #loading-overlay {
-        display: none; /* 通常は隠しておく */
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background-color: rgba(0, 0, 0, 0.85); /* 画面を暗くする */
-        z-index: 9999;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        font-family: 'Courier New', monospace;
-    }
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>スタッフ管理パネル - 鉄道研究部</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ページ全体の基本背景 */
+        body { background-color: #1a1a1a; color: white; padding: 20px; font-family: sans-serif; }
+        
+        /* ステータス表示エリア */
+        .admin-panel { border: 2px solid #f1c40f; padding: 20px; border-radius: 10px; text-align: center; }
+        #currentStatus { font-size: 2rem; font-weight: bold; color: #2ecc71; margin: 20px 0; }
+        
+        /* 操作ボタン */
+        .btn-call { background: #e74c3c; color: white; border: none; padding: 15px 30px; font-size: 1.2rem; cursor: pointer; border-radius: 5px; }
 
-    .loading-spinner {
-        width: 50px;
-        height: 50px;
-        border: 5px solid #333;
-        border-top: 5px solid #f1c40f; /* 鉄道の警告色 */
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-        margin-bottom: 20px;
-    }
+        /* 処理中レイヤー（提供いただいたコード） */
+        #loading-overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.85); z-index: 9999;
+            flex-direction: column; justify-content: center; align-items: center;
+            font-family: 'Courier New', monospace;
+        }
+        .loading-spinner {
+            width: 50px; height: 50px; border: 5px solid #333;
+            border-top: 5px solid #f1c40f; border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 20px;
+        }
+        .loading-text {
+            color: #f1c40f; font-size: 1.5rem; font-weight: bold;
+            text-transform: uppercase; letter-spacing: 3px;
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+    </style>
+</head>
+<body>
 
-    .loading-text {
-        color: #f1c40f;
-        font-size: 1.5rem;
-        font-weight: bold;
-        text-transform: uppercase;
-        letter-spacing: 3px;
-        animation: blink 1s step-end infinite;
-    }
-
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    @keyframes blink { 
-        0%, 100% { opacity: 1; } 
-        50% { opacity: 0; } 
-    }
-</style>
+<div class="admin-panel">
+    <h1>スタッフ管理パネル</h1>
+    <p>現在の呼出ステータス:</p>
+    <div id="currentStatus">WAITING</div>
+    
+    <button class="btn-call" onclick="handleCallRequest(this)">次の番号を呼ぶ (CALL)</button>
+    <br><br>
+    <button onclick="location.href='monitor.html'" style="color: #888; background: none; border: 1px solid #444; padding: 5px 10px; cursor: pointer;">モニターに戻る</button>
+</div>
 
 <div id="loading-overlay">
     <div class="loading-spinner"></div>
@@ -45,30 +56,32 @@
     <p style="color: #888; margin-top: 15px;">Accessing Spreadsheet Data</p>
 </div>
 
+<script src="script.js"></script>
+
 <script>
     async function handleCallRequest(button) {
-        // 1. 処理中画面を表示
         const overlay = document.getElementById('loading-overlay');
         overlay.style.display = 'flex';
 
         try {
-            // ここにスプレッドシートへの通信処理を書く
-            // fetch("https://script.google.com/...") など
+            // ここに実際のスプレッドシート更新処理を入れる
+            // 例: await updateSheetStatus('call'); 
             
-            // --- 通信のシミュレーション（実際はここをfetchに置き換えます） ---
+            // 通信のシミュレーション（3秒待機）
             await new Promise(resolve => setTimeout(resolve, 3000)); 
-            // ---------------------------------------------------------
 
-            // 通信成功後の処理
-            document.getElementById('currentStatus').innerText = "CALL";
-            document.getElementById('currentStatus').style.color = "#e74c3c"; // 赤に変更
+            // 表示の更新
+            document.getElementById('currentStatus').innerText = "CALLING...";
+            document.getElementById('currentStatus').style.color = "#e74c3c";
             
         } catch (error) {
             console.error("Communication error:", error);
-            alert("信号受信に失敗しました。");
+            alert("通信に失敗しました。");
         } finally {
-            // 2. 処理が終わったら（成功しても失敗しても）画面を戻す
             overlay.style.display = 'none';
         }
     }
 </script>
+
+</body>
+</html>
