@@ -7,7 +7,6 @@
     <style>
         body {
             margin: 0; padding: 0;
-            /* 基本の文字サイズを少し大きく設定 */
             font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
             font-size: 18px; 
             background-color: #f0f8ff; color: #333;
@@ -17,11 +16,8 @@
 
         /* --- 固定ヘッダー・ナビ（デザイン維持） --- */
         .fixed-top-container {
-            position: fixed;
-            top: 0; left: 0; width: 100%;
-            z-index: 5000;
-            background-color: #fff;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 5000;
+            background-color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
         header { line-height: 0; }
         header img { width: 100%; height: auto; display: block; }
@@ -38,39 +34,30 @@
         .nav-button img { width: 100%; height: auto; display: block; }
 
         /* --- メインコンテンツ --- */
-        .container {
-            max-width: 1100px; /* 文字が大きくなったので幅も少し広げました */
-            margin: 80px auto;
-            padding: 0 30px;
-        }
-
-        .section-row {
-            display: flex;
-            align-items: center;
-            gap: 70px; 
-            margin-bottom: 220px; /* 文字サイズに合わせて間隔も微増 */
-        }
-
+        .container { max-width: 1100px; margin: 80px auto; padding: 0 30px; }
+        .section-row { display: flex; align-items: center; gap: 70px; margin-bottom: 220px; }
         .section-row.reverse { flex-direction: row-reverse; }
 
-        .text-content { flex: 1.3; } 
+        .text-content { flex: 1.3; }
         
-        /* 【修正】タイトルサイズを大きく（2.2rem） */
+        /* タイトル設定：タイプライター用に少し調整 */
         .text-content h2 {
-            color: #c0392b; 
-            font-size: 2.2rem;
-            border-left: 8px solid #c0392b; 
-            padding-left: 20px; 
-            margin-bottom: 30px;
-            line-height: 1.3;
+            color: #c0392b; font-size: 2.2rem;
+            border-left: 8px solid #c0392b; padding-left: 20px; 
+            margin-bottom: 30px; min-height: 1.3em; /* ガタつき防止 */
         }
 
-        /* 【修正】本文サイズを大きく（1.3rem） */
-        .text-content p { 
-            line-height: 2; 
-            font-size: 1.3rem; 
-            margin-bottom: 1.8em; 
+        /* タイプライターのカーソル演出（任意） */
+        .typewriter::after {
+            content: '|';
+            animation: blink 0.7s infinite;
+            margin-left: 5px;
+            color: #c0392b;
         }
+        .typewriter.done::after { display: none; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        .text-content p { line-height: 2; font-size: 1.3rem; margin-bottom: 1.8em; }
 
         .image-content { flex: 1; }
         .image-content img {
@@ -78,25 +65,17 @@
             box-shadow: 0 15px 40px rgba(0,0,0,0.12);
         }
 
-        /* --- フェードイン演出 --- */
+        /* 全体のフェードイン */
         .fade-in {
-            opacity: 0;
-            transform: translateY(60px); 
+            opacity: 0; transform: translateY(50px);
             transition: opacity 1.2s ease-out, transform 1.2s ease-out;
             visibility: hidden;
         }
+        .fade-in.is-visible { opacity: 1; transform: translateY(0); visibility: visible; }
 
-        .fade-in.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-            visibility: visible;
-        }
-
-        /* スマホ対応 */
         @media (max-width: 768px) {
-            body { padding-top: 110px; font-size: 16px; }
-            .section-row { margin-bottom: 120px; gap: 40px; }
-            .section-row, .section-row.reverse { flex-direction: column; }
+            body { padding-top: 110px; }
+            .section-row { margin-bottom: 120px; gap: 40px; flex-direction: column !important; }
             .text-content h2 { font-size: 1.8rem; }
             .text-content p { font-size: 1.15rem; }
         }
@@ -120,41 +99,59 @@
 <main class="container">
     <section class="section-row fade-in">
         <div class="text-content">
-            <h2>名古屋中高 鉄道研究部へようこそ</h2>
+            <h2 class="typewriter-target">名古屋中高 鉄道研究部へようこそ</h2>
             <p>私たちは「夢にむけて、出発進行！」を合言葉に、日々鉄道の魅力を探求しています。週に一度の部会では、鉄道知識の共有からイベントの企画まで、部員主導で活発な議論を行っています。</p>
-            <p>初心者から熱心なファンまで、幅広い部員が活躍しています。</p>
         </div>
-        <div class="image-content">
-            <img src="intro-image.jpg" alt="部活動の様子">
-        </div>
+        <div class="image-content"><img src="intro-image.jpg" alt="部活動の様子"></div>
     </section>
 
     <section class="section-row reverse fade-in">
         <div class="text-content">
-            <h2>文化祭・説明会での展示活動</h2>
+            <h2 class="typewriter-target">文化祭・説明会での展示活動</h2>
             <p>当部の活動の集大成は、精巧に作り込まれた大型鉄道模型ジオラマの展示です。実際の風景を忠実に再現した情景の中を、様々な列車が走行します。</p>
-            <p>文化祭当日は、自分たちで制作した車両を運転できる体験コーナーも設けています。</p>
         </div>
-        <div class="image-content">
-            <img src="diorama-image.jpg" alt="ジオラマ展示">
-        </div>
+        <div class="image-content"><img src="diorama-image.jpg" alt="ジオラマ展示"></div>
     </section>
 </main>
 
 <script>
+    // タイプライター関数の定義
+    function typeWriter(element) {
+        const text = element.innerText;
+        element.innerText = '';
+        element.classList.add('typewriter');
+        let i = 0;
+        const speed = 100; // 1文字あたりの速度（ミリ秒）
+
+        function type() {
+            if (i < text.length) {
+                element.innerHTML += text.charAt(i);
+                i++;
+                setTimeout(type, speed);
+            } else {
+                element.classList.add('done');
+            }
+        }
+        type();
+    }
+
+    // スクロール監視
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
+                // セクションを表示
                 entry.target.classList.add('is-visible');
+                
+                // タイトルのタイプライターを開始（一度きり）
+                const title = entry.target.querySelector('.typewriter-target');
+                if (title && !title.classList.contains('typewriter')) {
+                    typeWriter(title);
+                }
             }
         });
-    }, {
-        threshold: 0.15 
-    });
+    }, { threshold: 0.2 });
 
-    document.querySelectorAll('.fade-in').forEach(el => {
-        observer.observe(el);
-    });
+    document.querySelectorAll('.fade-in').forEach(el => { observer.observe(el); });
 </script>
 
 </body>
