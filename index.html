@@ -9,10 +9,11 @@
             margin: 0; padding: 0;
             font-family: "Helvetica Neue", Arial, sans-serif;
             background-color: #f0f8ff; color: #333;
-            /* 固定エリアの高さに合わせて調整 */
+            /* 固定ヘッダーの高さに合わせてコンテンツを下げる（適宜微調整してください） */
             padding-top: 140px; 
         }
 
+        /* --- ヘッダー・ナビ固定コンテナ --- */
         .fixed-top-container {
             position: fixed;
             top: 0; left: 0; width: 100%;
@@ -24,19 +25,21 @@
         header { line-height: 0; }
         header img { width: 100%; height: auto; display: block; }
 
-        /* --- ナビゲーション（極狭フレーム設定） --- */
+        /* --- ナビゲーション（下地サイズを画像に合わせる） --- */
         .navigation-section {
             display: flex;
             justify-content: center;
             background-color: #fff;
-            padding: 5px 0; /* 上下の外側の余白を最小に */
+            /* 下地の余計な隙間をゼロにする */
+            padding: 0; 
+            border-bottom: 1px solid #ccc; /* 下端に薄い区切り線 */
         }
 
         .button-grid {
             display: flex;
-            width: 100%; /* 画面いっぱいまで広げる */
-            gap: 1px;    /* フレームとフレームの間の隙間を1px（極細）に */
-            justify-content: center;
+            width: 100%;
+            /* フレーム同士の隙間を1px（境界線のみ見える状態） */
+            gap: 1px; 
         }
 
         .nav-button {
@@ -45,20 +48,21 @@
             align-items: center;
             justify-content: center;
             text-decoration: none;
-            
-            /* フレームの線（黒・2px） */
-            border: 2px solid #000; 
             background-color: #fff;
             
-            /* 画像とフレームの間の空間を「2px」まで削る */
-            padding: 2px; 
+            /* 【修正】フレームを太く（3px）、色は真っ黒に */
+            border: 3px solid #000; 
+            
+            /* 【修正】画像とフレームの隙間を1pxに（ほぼ密着） */
+            padding: 1px; 
             
             box-sizing: border-box;
+            line-height: 0; /* 下地の隙間対策 */
             transition: background-color 0.2s;
         }
 
         .nav-button:hover {
-            background-color: #f0f0f0;
+            background-color: #eee;
         }
 
         .nav-button img {
@@ -75,14 +79,11 @@
             background: #fff; padding: 35px; border-radius: 12px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05); line-height: 1.8;
         }
-        .welcome-section h2 {
-            margin-top: 0; color: #c0392b; font-size: 1.4rem;
-            border-left: 5px solid #c0392b; padding-left: 15px; margin-bottom: 20px;
-        }
 
+        /* スマホ対応 */
         @media (max-width: 768px) {
             body { padding-top: 100px; }
-            .nav-button { padding: 1px; border-width: 1px; }
+            .nav-button { border-width: 2px; padding: 1px; }
         }
     </style>
 </head>
