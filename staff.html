@@ -36,17 +36,14 @@
 <div class="staff-container">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
         <span style="font-weight: bold;">[ SYSTEM TERMINAL - STAFF ONLY ]</span>
-        <button onclick="location.href='index.html'" style="font-size: 0.7rem;">EXIT</button>
+        <button onclick="location.href='monitor.html'" style="font-size: 0.7rem;">EXIT</button>
     </div>
 
     <div class="section">
         <div class="section-title">QUICK ISSUE (新規発行)</div>
         <div class="issue-form">
             <select id="v-select">
-                <option value="E5系 はやぶさ">E5系 はやぶさ</option>
-                <option value="E235系 山手線">E235系 山手線</option>
-                <option value="923形 ドクターイエロー">923形 ドクターイエロー</option>
-                <option value="N700S のぞみ">N700S のぞみ</option>
+                <option value="">車両リスト読込中...</option>
             </select>
             <select id="t-select">
                 <option value="S">特別(S)</option>
@@ -65,12 +62,39 @@
 
 <script src="script.js"></script>
 <script>
+    // --- 車両マスターの読み込み ---
+    async function loadVehicleMaster() {
+        const vSelect = document.getElementById('v-select');
+        try {
+            // script.jsにあるfetchSheetDataを流用、またはマスター取得用APIを叩く
+            // GAS側で ?sheet=master のように切り替えられる実装を想定
+            const vehicles = await fetchMasterData(); 
+            
+            if (vehicles && vehicles.length > 0) {
+                vSelect.innerHTML = ''; // 読み込み中をクリア
+                vehicles.forEach(v => {
+                    const opt = document.createElement('option');
+                    opt.value = v;
+                    opt.textContent = v;
+                    vSelect.appendChild(opt);
+                });
+            } else {
+                vSelect.innerHTML = '<option value="">車両データなし</option>';
+            }
+        } catch (e) {
+            console.error("Master Load Error:", e);
+            vSelect.innerHTML = '<option value="">読込失敗</option>';
+        }
+    }
+
     // --- スタッフ側からの新規発行 ---
     async function staffIssue() {
         const btn = document.getElementById('issue-btn');
         const v = document.getElementById('v-select').value;
         const t = document.getElementById('t-select').value;
         
+        if (!v) { alert("車両を選択してください"); return; }
+
         btn.disabled = true;
         btn.innerText = "WAIT...";
         
@@ -92,7 +116,6 @@
             const data = await fetchSheetData();
             const container = document.getElementById('list-container');
             
-            // 終了分を除外
             const activeData = data.filter(d => d.status !== 'end');
 
             let html = `<table class="admin-table">
@@ -132,8 +155,14 @@
         refresh();
     }
 
+    // 起動時の処理
+    window.addEventListener('load', () => {
+        loadVehicleMaster();
+        refresh();
+    });
+
+    // 定期更新（10秒おき）
     setInterval(refresh, 10000);
-    refresh();
 </script>
 </body>
 </html>
