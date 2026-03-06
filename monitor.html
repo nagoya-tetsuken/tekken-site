@@ -3,186 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>鉄道模型 運行状況モニター</title>
-    <link rel="stylesheet" href="style.css">
+    <title>運行情報表示器 - Station Monitor</title>
     <style>
-        /* 白基調のシンプルデザイン */
-        body.viewer-mode {
-            background-color: #f8f9fa;
-            color: #333;
-            font-family: sans-serif;
-            margin: 0;
-            overflow-x: hidden;
-        }
-
-        .top-nav {
-            background-color: #ffffff;
-            border-bottom: 1px solid #dee2e6;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .btn-entry {
-            background: #007bff;
+        /* 鉄道掲示板風の黒背景 */
+        body {
+            background-color: #000;
             color: #fff;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
+            font-family: "MS UI Gothic", "Meiryo", sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
         }
 
-        /* メインパネル */
-        .monitor-container {
-            max-width: 900px;
-            margin: 20px auto;
-            padding: 0 20px;
+        /* 全体を囲むフレーム */
+        .station-board {
+            width: 95vw;
+            margin: 5vh auto;
+            border: 4px solid #444;
+            background: #000;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
         }
 
-        .lcd-panel {
-            background: #ffffff;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 40px 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        /* 1段目：発車標メインエリア */
+        .display-row-top {
+            display: flex;
+            border-bottom: 3px solid #333;
+            height: 150px;
+            align-items: center;
             text-align: center;
         }
 
-        .lcd-number {
-            color: #dc3545;
-            font-size: 6rem;
+        /* 各列の定義 */
+        .col {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-right: 2px solid #333;
+        }
+        .label {
+            font-size: 1rem;
+            color: #ccc;
+            margin-bottom: 5px;
+        }
+        .value {
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        /* 1列目：待ち組数（緑LED風） */
+        .col-wait-count { width: 20%; color: #00ff00; }
+        .col-wait-count .value { font-size: 3.5rem; }
+
+        /* 2列目：待ち時間（オレンジLED風） */
+        .col-wait-time { width: 25%; color: #ff9900; }
+        .col-wait-time .value { font-size: 3.5rem; }
+
+        /* 3列目：呼出番号（赤LED風） */
+        .col-calling { width: 55%; color: #ff3300; border-right: none; }
+        .col-calling .value { font-size: 4rem; letter-spacing: 5px; }
+
+        /* 2段目：テロップエリア */
+        .display-row-bottom {
+            height: 80px;
+            background: #000;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        marquee {
+            font-size: 2.5rem;
+            color: #ff9900; /* オレンジ */
             font-weight: bold;
         }
 
-        /* 下部テロップ (スプレッドシート連動) */
-        .marquee-container {
+        /* 管理用ボタン（隠し要素風） */
+        .admin-trigger {
             position: fixed;
-            bottom: 0;
-            width: 100%;
-            background: #333;
-            color: #fff;
-            padding: 10px 0;
-            font-size: 1.5rem;
-            font-weight: bold;
+            top: 0;
+            right: 0;
+            width: 50px;
+            height: 50px;
+            cursor: default;
         }
-
-        /* モーダル・読み込み画面のスタイルは以前のものを維持 */
-        #loading-overlay {
-            display: none;
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #fff; z-index: 10000;
-            flex-direction: column; justify-content: center; align-items: center;
-        }
-        .spinner {
-            width: 50px; height: 50px; border: 5px solid #f3f3f3;
-            border-top: 5px solid #3498db; border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        #login-modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); z-index: 9999;
-            justify-content: center; align-items: center;
-        }
-        .login-box { background: #fff; padding: 30px; border-radius: 12px; width: 300px; text-align: center; }
-        .login-box input { width: 100%; padding: 10px; margin: 15px 0; box-sizing: border-box; }
     </style>
 </head>
-<body class="viewer-mode">
+<body>
 
-    <nav class="top-nav">
-        <div>
-            <button onclick="location.href='entry.html'" class="btn-entry">新規 整理券発行</button>
-            <button id="resume-btn" class="btn-entry" style="display:none; margin-left:10px; background:#6c757d;">自分の整理券</button>
+    <div class="station-board">
+        <div class="display-row-top">
+            <div class="col col-wait-count">
+                <div class="label">待ち組数</div>
+                <div id="wait-count" class="value">0</div>
+            </div>
+            <div class="col col-wait-time">
+                <div class="label">待ち時間(分)</div>
+                <div id="wait-time" class="value">約0</div>
+            </div>
+            <div class="col col-calling">
+                <div class="label">ただいまのお呼出し</div>
+                <div id="calling-now" class="value">---</div>
+            </div>
         </div>
-        <button onclick="openStaffLogin()" style="background:none; border:none; color:#ced4da; cursor:pointer;">管理</button>
-    </nav>
 
-    <main class="monitor-container">
-        <div class="lcd-panel">
-            <span style="color:#666;">ただいまの呼出番号</span>
-            <div id="calling-now" class="lcd-number">---</div>
-        </div>
-    </main>
-
-    <div class="marquee-container">
-        <marquee id="telop-text" scrollamount="8">情報を読み込み中...</marquee>
-    </div>
-
-    <div id="login-modal">
-        <div class="login-box">
-            <h3>スタッフ認証</h3>
-            <input type="password" id="pass-input" placeholder="パスワードを入力">
-            <button onclick="verifyPassword()" style="width:100%; padding:10px; background:#333; color:#fff; border:none;">ログイン</button>
-            <button onclick="closeStaffLogin()" style="background:none; border:none; color:#999; margin-top:10px;">キャンセル</button>
-            <p id="error-msg" style="color:red; font-size:0.8rem; visibility:hidden;">パスワードが違います</p>
+        <div class="display-row-bottom">
+            <marquee id="telop-text" scrollamount="10">運行情報を取得中...</marquee>
         </div>
     </div>
 
-    <div id="loading-overlay">
-        <div class="spinner"></div>
-        <p>読み込み中...</p>
-    </div>
+    <div class="admin-trigger" ondblclick="location.href='staff.html'"></div>
 
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbwlzBgQoST_MLC8nvPeJSMQBHnIFouiEB8MI6N2s-oObA0HP-X_txcevkIv8q7UFpfLJQ/exec";
 
-        // 1. 呼出番号とテロップの更新
-        async function updateDisplay() {
+        async function updateMonitor() {
             try {
-                // 通常データ取得
+                // 1. 通常データ（dataシート）取得
                 const response = await fetch(API_URL);
                 const data = await response.json();
-                
-                // 呼出中番号の表示
-                const callingIds = data.filter(d => d.status === 'call').map(d => d.id);
-                document.getElementById('calling-now').innerText = callingIds.length > 0 ? callingIds.join(' / ') : "---";
 
-                // マスターデータ（テロップ）の取得
+                // 待ち組数：statusが 'resep' のものをカウント
+                const waitList = data.filter(d => d.status === 'resep');
+                document.getElementById('wait-count').innerText = waitList.length;
+
+                // 待ち時間（計算）：1組あたり5分と仮定（ここはお好みで調整してください）
+                const waitMinutes = waitList.length * 5;
+                document.getElementById('wait-time').innerText = `約${waitMinutes}`;
+
+                // 呼出番号：statusが 'call' のものを抽出
+                const callingIds = data.filter(d => d.status === 'call').map(d => d.id);
+                document.getElementById('calling-now').innerText = callingIds.length > 0 ? callingIds.join(' ') : "---";
+
+                // 2. マスターデータ（テロップ）取得
                 const mRes = await fetch(API_URL + "?sheet=master");
                 const mData = await mRes.json();
                 if (mData.telop) {
                     document.getElementById('telop-text').innerText = mData.telop;
                 }
 
-                // 自分の整理券ボタンの管理
-                const savedId = localStorage.getItem('my_ticket_id');
-                const resumeBtn = document.getElementById('resume-btn');
-                if (savedId) {
-                    const myTicket = data.find(d => d.id === savedId);
-                    if (myTicket && myTicket.status !== 'end') {
-                        resumeBtn.style.display = 'inline-block';
-                        resumeBtn.onclick = () => {
-                            location.href = `issued.html?id=${savedId}&v=${encodeURIComponent(localStorage.getItem('my_ticket_v'))}`;
-                        };
-                    } else {
-                        resumeBtn.style.display = 'none';
-                    }
-                }
-            } catch (e) { console.error("Update Error:", e); }
-        }
-
-        // スタッフログイン
-        function openStaffLogin() { document.getElementById('login-modal').style.display = 'flex'; }
-        function closeStaffLogin() { document.getElementById('login-modal').style.display = 'none'; }
-        
-        async function verifyPassword() {
-            const pass = document.getElementById('pass-input').value;
-            if (pass === "1234") { // パスワード設定
-                document.getElementById('login-modal').style.display = 'none';
-                document.getElementById('loading-overlay').style.display = 'flex';
-                await new Promise(r => setTimeout(r, 1000));
-                location.href = 'staff.html';
-            } else {
-                document.getElementById('error-msg').style.visibility = 'visible';
+            } catch (e) {
+                console.error("Monitor Update Error:", e);
             }
         }
 
-        setInterval(updateDisplay, 10000);
-        updateDisplay();
+        // 10秒おきに更新
+        setInterval(updateMonitor, 10000);
+        updateMonitor();
     </script>
 </body>
 </html>
