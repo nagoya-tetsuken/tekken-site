@@ -6,7 +6,7 @@
     <title>STAFF ONLY - 運行管理</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* 無骨なUIのための上書き設定 */
+        /* 無骨なUIのための基本設定 */
         body { background: #222; color: #ddd; font-family: monospace; margin: 0; }
         .staff-container { max-width: 800px; margin: 0 auto; padding: 10px; }
         
@@ -19,8 +19,8 @@
         select, button, input { border: 1px solid #666; background: #333; color: #fff; padding: 10px; border-radius: 0 !important; font-size: 1rem; }
         button { cursor: pointer; text-transform: uppercase; }
         button:active { background: #555; }
-        .btn-call { background: #800; } /* 控えめな赤 */
-        .btn-end { background: #444; }
+        .btn-call { background: #800; } /* 呼出ボタン */
+        .btn-end { background: #444; }  /* 終了ボタン */
 
         /* リスト表示 */
         .admin-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
@@ -28,7 +28,42 @@
         .admin-table th { background: #111; font-size: 0.8rem; }
         
         /* 呼出中行の強調 */
-        .row-calling { background: #221100; color: #ff9900; }
+        .row-calling { background: #221100; color: #ff9900; font-weight: bold; }
+
+        /* --- お気に入りのローディングレイアウト --- */
+        #loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 9999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Courier New', monospace;
+        }
+
+        .loading-spinner {
+            width: 50px; height: 50px;
+            border: 5px solid #333;
+            border-top: 5px solid #f1c40f;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        .loading-text {
+            color: #f1c40f;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
     </style>
 </head>
 <body class="staff-mode">
@@ -60,60 +95,64 @@
     </div>
 </div>
 
-<script src="script.js"></script>
+<div id="loading-overlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Communicating...</div>
+    <p style="color: #888; margin-top: 15px;">Accessing Spreadsheet Data</p>
+</div>
+
 <script>
-    // --- 車両マスターの読み込み ---
-    async function loadVehicleMaster() {
-        const vSelect = document.getElementById('v-select');
+    const API_URL = "https://script.google.com/macros/s/AKfycbwlzBgQoST_MLC8nvPeJSMQBHnIFouiEB8MI6N2s-oObA0HP-X_txcevkIv8q7UFpfLJQ/exec";
+
+    // 1. 車両マスター読み込み
+    async function loadMaster() {
         try {
-            // script.jsにあるfetchSheetDataを流用、またはマスター取得用APIを叩く
-            // GAS側で ?sheet=master のように切り替えられる実装を想定
-            const vehicles = await fetchMasterData(); 
+            const response = await fetch(`${API_URL}?sheet=master`);
+            const data = await response.json();
+            const select = document.getElementById('v-select');
             
-            if (vehicles && vehicles.length > 0) {
-                vSelect.innerHTML = ''; // 読み込み中をクリア
-                vehicles.forEach(v => {
+            if (data.vehicles && data.vehicles.length > 0) {
+                select.innerHTML = '';
+                data.vehicles.forEach(v => {
                     const opt = document.createElement('option');
                     opt.value = v;
                     opt.textContent = v;
-                    vSelect.appendChild(opt);
+                    select.appendChild(opt);
                 });
             } else {
-                vSelect.innerHTML = '<option value="">車両データなし</option>';
+                select.innerHTML = '<option value="">有効な車両なし</option>';
             }
         } catch (e) {
-            console.error("Master Load Error:", e);
-            vSelect.innerHTML = '<option value="">読込失敗</option>';
+            console.error(e);
+            document.getElementById('v-select').innerHTML = '<option value="">読込失敗</option>';
         }
     }
 
-    // --- スタッフ側からの新規発行 ---
+    // 2. スタッフ側からの新規発行
     async function staffIssue() {
-        const btn = document.getElementById('issue-btn');
         const v = document.getElementById('v-select').value;
         const t = document.getElementById('t-select').value;
-        
-        if (!v) { alert("車両を選択してください"); return; }
+        if(!v) return;
 
-        btn.disabled = true;
-        btn.innerText = "WAIT...";
-        
+        showLoading(true);
         try {
-            const res = await postToSheet({ action: 'issue', type: t, vehicle: v });
-            if(res.result === 'success') {
-                alert("発行完了: " + res.id);
+            const res = await fetch(API_URL, {
+                method: "POST",
+                body: JSON.stringify({ action: 'issue', type: t, vehicle: v })
+            });
+            const json = await res.json();
+            if(json.result === 'success') {
                 refresh();
             }
         } catch (e) { alert("ERROR"); }
-        
-        btn.disabled = false;
-        btn.innerText = "発行実行";
+        showLoading(false);
     }
 
-    // --- リスト更新 ---
+    // 3. リスト更新
     async function refresh() {
         try {
-            const data = await fetchSheetData();
+            const response = await fetch(API_URL);
+            const data = await response.json();
             const container = document.getElementById('list-container');
             
             const activeData = data.filter(d => d.status !== 'end');
@@ -146,22 +185,33 @@
 
             html += `</tbody></table>`;
             container.innerHTML = activeData.length ? html : "NO DATA";
-
         } catch (e) { console.error(e); }
     }
 
+    // 4. ステータス更新
     async function upd(id, s) {
-        await postToSheet({ action: 'update', id: id, status: s });
-        refresh();
+        showLoading(true);
+        try {
+            await fetch(API_URL, {
+                method: "POST",
+                body: JSON.stringify({ action: 'update', id: id, status: s })
+            });
+            refresh();
+        } catch (e) { alert("ERROR"); }
+        showLoading(false);
     }
 
-    // 起動時の処理
+    function showLoading(show) {
+        document.getElementById('loading-overlay').style.display = show ? 'flex' : 'none';
+    }
+
+    // 初期起動
     window.addEventListener('load', () => {
-        loadVehicleMaster();
+        loadMaster();
         refresh();
     });
 
-    // 定期更新（10秒おき）
+    // 10秒おきにリスト更新
     setInterval(refresh, 10000);
 </script>
 </body>
