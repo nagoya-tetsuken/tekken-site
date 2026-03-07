@@ -17,59 +17,58 @@
             font-family: 'Noto Sans JP', sans-serif;
         }
 
-        /* ⚙管理ボタン：画面の右上に固定 */
+        /* ⚙ 管理ボタン：画面の右上に絶対固定 */
         .admin-link {
             position: fixed;
             top: 20px;
             right: 20px;
             text-decoration: none;
-            color: #666;
+            color: #333;
             border: 1px solid #ccc;
-            padding: 8px 15px;
-            font-size: 0.85rem;
+            padding: 8px 16px;
+            font-size: 0.9rem;
             border-radius: 4px;
-            background: rgba(255,255,255,0.9);
-            z-index: 1000; /* 最前面 */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background: white;
+            z-index: 1000; /* 全要素の最前面 */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         /* --- 表示器本体 --- */
         .lcd-board {
             position: relative;
-            width: 900px; /* 画像の表示幅 */
-            aspect-ratio: 16 / 9; /* 画像の比率を維持 */
+            width: 900px;
+            aspect-ratio: 16 / 9;
             background-image: url('hassyahyou.png');
             background-size: contain;
             background-repeat: no-repeat;
             margin-top: 40px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
         }
 
-        /* --- LED上段（待ち時間・待ち組・呼出） --- */
-        .led-upper-zone {
+        /* LEDエリア共通設定 */
+        .led-zone {
             position: absolute;
-            top: 38%;    /* 黒枠上段の位置 */
-            left: 7.2%;  /* 黒枠の左端 */
-            width: 85.6%;
-            height: 25%; /* 黒枠上段の高さ */
-            display: flex;
-            align-items: center;
-            z-index: 5;
-        }
-
-        /* --- LED下段（テロップ用） --- */
-        .led-lower-zone {
-            position: absolute;
-            top: 66%;    /* 黒枠下段の位置 */
             left: 7.2%;
             width: 85.6%;
-            height: 25%;
-            display: flex;
-            align-items: center;
-            z-index: 5;
+            overflow: hidden;
         }
 
-        /* 網掛け：一番手前に重ねる */
+        /* 上段（データ） */
+        .upper-zone {
+            top: 36.5%;
+            height: 22%;
+            display: flex;
+            align-items: center;
+        }
+
+        /* 下段（テロップ） */
+        .lower-zone {
+            top: 64.5%;
+            height: 22%;
+            display: flex;
+            align-items: center;
+        }
+
+        /* --- 網掛け（最前面に配置） --- */
         .led-mask {
             position: absolute;
             top: 0;
@@ -77,30 +76,39 @@
             width: 100%;
             height: 100%;
             background-image: url('amikake.png');
-            background-size: cover;
-            opacity: 0.6;
-            z-index: 100; /* 文字よりも前に出す */
-            pointer-events: none;
+            background-size: 100% 100%;
+            /* 透明度を0にする＝不透明（100%表示） */
+            opacity: 1.0; 
+            z-index: 100; /* 文字よりも上に配置 */
+            pointer-events: none; /* 下のボタンなどの邪魔をしない */
+        }
+
+        /* コンテンツ（網掛けの後ろ） */
+        .led-content {
+            position: relative;
+            z-index: 50; 
+            width: 100%;
+            display: flex;
+            width: 100%;
         }
 
         .led-text {
             font-family: 'Inter', 'Noto Sans JP', sans-serif;
             font-weight: 900;
             text-align: center;
-            line-height: 1;
         }
 
-        /* 各項目の幅と色の調整 */
-        .col-time { width: 33%; color: #00ff44; font-size: 4.5rem; }
-        .col-wait { width: 34%; color: #ff9d00; font-size: 4.5rem; }
-        .col-id   { width: 33%; color: #ffca00; font-size: 5.5rem; letter-spacing: -2px; }
+        /* 各色の設定：網掛け越しに見えるよう少し明るめに */
+        .col-time { width: 33%; color: #00ff66; font-size: 5rem; }
+        .col-wait { width: 34%; color: #ffcc00; font-size: 5rem; }
+        .col-id   { width: 33%; color: #ffff00; font-size: 6rem; letter-spacing: -2px; }
 
-        small { font-size: 1.2rem; margin-left: 3px; vertical-align: baseline; }
+        small { font-size: 1.2rem; margin-left: 4px; }
 
         marquee {
             width: 100%;
-            font-size: 2.2rem;
-            color: #ff9d00;
+            font-size: 2.8rem;
+            color: #ffcc00;
             font-weight: 900;
         }
 
@@ -110,13 +118,11 @@
             background: #008542;
             color: #fff;
             text-decoration: none;
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             font-weight: 900;
             border-radius: 50px;
             box-shadow: 0 5px 0 #005a2d;
-            transition: 0.1s;
         }
-        .btn-issue:active { transform: translateY(3px); box-shadow: none; }
     </style>
 </head>
 <body>
@@ -124,14 +130,18 @@
     <a href="staff.html" class="admin-link">⚙ 管理ボタン</a>
 
     <div class="lcd-board">
-        <div class="led-upper-zone">
-            <div class="led-mask"></div> <div class="led-text col-time"><span id="wait-time">0</span><small>分</small></div>
-            <div class="led-text col-wait"><span id="wait-count">0</span><small>組</small></div>
-            <div class="led-text col-id" id="calling-now">---</div>
+        <div class="led-zone upper-zone">
+            <div class="led-mask"></div> <div class="led-content">
+                <div class="led-text col-time"><span id="wait-time">0</span><small>分</small></div>
+                <div class="led-text col-wait"><span id="wait-count">0</span><small>組</small></div>
+                <div class="led-text col-id" id="calling-now">---</div>
+            </div>
         </div>
 
-        <div class="led-lower-zone">
-            <div class="led-mask"></div> <marquee id="telop-text" scrollamount="10">運行システムに接続中...</marquee>
+        <div class="led-zone lower-zone">
+            <div class="led-mask"></div> <div class="led-content">
+                <marquee id="telop-text" scrollamount="12">☆運行システム稼働中☆</marquee>
+            </div>
         </div>
     </div>
 
