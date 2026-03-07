@@ -44,28 +44,28 @@
             margin-top: 40px;
         }
 
-        /* --- 網掛け共通設定 --- */
-        .led-mask-common {
+        /* --- 網掛け設定（共通） --- */
+        .led-mask {
             position: absolute;
             left: 6%;
             width: 88.5%;
             background-image: url('amikake.png');
             background-repeat: no-repeat;
-            background-size: 100% 80px;
-            background-position: center top;
-            opacity: 1.0;
-            z-index: 100;
+            background-size: 100% 80px; 
+            background-position: center top; 
+            opacity: 1.0; 
+            z-index: 100; /* 最前面 */
             pointer-events: none;
         }
 
-        /* 一段目の網 */
-        .led-mask-upper {
-            top: 41%;
+        /* 1枚目（一段目用） */
+        .mask-upper {
+            top: 41%; 
         }
 
-        /* 二段目の網 (単純に下に移動) */
-        .led-mask-lower {
-            top: 68.5%; /* 位置は画像に合わせて微調整してください */
+        /* 2枚目（二段目用：一段目からコピーして下にずらしたもの） */
+        .mask-lower {
+            top: 67%; /* 画像のテロップ枠に合わせて調整してください */
         }
 
         /* --- 文字コンテンツ --- */
@@ -122,11 +122,6 @@
             font-weight: 900;
             border-radius: 50px;
             box-shadow: 0 5px 0 #005a2d;
-            transition: 0.1s;
-        }
-        .btn-issue:active {
-            transform: translateY(3px);
-            box-shadow: none;
         }
     </style>
 </head>
@@ -135,8 +130,8 @@
     <a href="staff.html" class="admin-link">⚙ 管理ボタン</a>
 
     <div class="lcd-board">
-        <div class="led-mask-common led-mask-upper"></div>
-        <div class="led-mask-common led-mask-lower"></div>
+        <div class="led-mask mask-upper"></div>
+        <div class="led-mask mask-lower"></div>
 
         <div class="led-content-wrapper">
             <div class="upper-row">
@@ -154,32 +149,21 @@
 
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbwlzBgQoST_MLC8nvPeJSMQBHnIFouiEB8MI6N2s-oObA0HP-X_txcevkIv8q7UFpfLJQ/exec";
-
         async function updateMonitor() {
             try {
                 const response = await fetch(API_URL);
                 const data = await response.json();
-                
                 const waitList = data.filter(d => d.status === 'resep');
                 const count = waitList.length;
-                const minutes = count * 5;
-
                 document.getElementById('wait-count').innerText = count;
-                document.getElementById('wait-time').innerText = minutes;
-
+                document.getElementById('wait-time').innerText = count * 5;
                 const callingIds = data.filter(d => d.status === 'call').map(d => d.id);
                 document.getElementById('calling-now').innerText = callingIds.length > 0 ? callingIds[callingIds.length - 1] : "---";
-
                 const mRes = await fetch(API_URL + "?sheet=master");
                 const mData = await mRes.json();
-                if (mData.telop) {
-                    document.getElementById('telop-text').innerText = mData.telop;
-                }
-            } catch (e) {
-                console.error("更新失敗:", e);
-            }
+                if (mData.telop) document.getElementById('telop-text').innerText = mData.telop;
+            } catch (e) { console.error("更新失敗:", e); }
         }
-
         setInterval(updateMonitor, 10000);
         updateMonitor();
     </script>
