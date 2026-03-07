@@ -17,7 +17,7 @@
             font-family: 'Noto Sans JP', sans-serif;
         }
 
-        /* ⚙ 管理ボタン：画面の右上に絶対固定 */
+        /* ⚙ 管理ボタン：右上固定 */
         .admin-link {
             position: fixed;
             top: 20px;
@@ -29,7 +29,7 @@
             font-size: 0.9rem;
             border-radius: 4px;
             background: white;
-            z-index: 1000; /* 全要素の最前面 */
+            z-index: 1000;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
@@ -44,52 +44,50 @@
             margin-top: 40px;
         }
 
-        /* LEDエリア共通設定 */
-        .led-zone {
+        /* --- 網掛け（amikake.png） --- */
+        /* サイズを変えず、黒枠のエリアの左上に1枚だけ置く設定 */
+        .led-mask-single {
             position: absolute;
+            /* 黒枠の座標（画像に合わせて微調整してください） */
+            top: 36.5%; 
+            left: 7.2%;
+            /* 枠の範囲だけ表示（画像がはみ出す場合は隠す） */
+            width: 85.6%;
+            height: 52%; 
+            
+            background-image: url('amikake.png');
+            background-repeat: no-repeat; /* 繰り返さない */
+            background-size: auto;       /* サイズを変えない（元のピクセルのまま） */
+            opacity: 1.0;                 /* 透明度0（不透明） */
+            z-index: 100;                 /* 最前面 */
+            pointer-events: none;
+        }
+
+        /* 文字コンテンツエリア */
+        .led-content-wrapper {
+            position: absolute;
+            top: 36.5%;
             left: 7.2%;
             width: 85.6%;
-            overflow: hidden;
+            height: 52%;
+            z-index: 50; /* 網（100）の下 */
         }
 
-        /* 上段（データ） */
-        .upper-zone {
-            top: 36.5%;
-            height: 22%;
+        /* 上段データ */
+        .upper-row {
             display: flex;
+            height: 45%;
             align-items: center;
         }
 
-        /* 下段（テロップ） */
-        .lower-zone {
-            top: 64.5%;
-            height: 22%;
-            display: flex;
-            align-items: center;
-        }
-
-        /* --- 網掛け（最前面に配置） --- */
-        .led-mask {
+        /* 下段テロップ */
+        .lower-row {
             position: absolute;
-            top: 0;
-            left: 0;
+            bottom: 5%;
             width: 100%;
-            height: 100%;
-            background-image: url('amikake.png');
-            background-size: 100% 100%;
-            /* 透明度を0にする＝不透明（100%表示） */
-            opacity: 1.0; 
-            z-index: 100; /* 文字よりも上に配置 */
-            pointer-events: none; /* 下のボタンなどの邪魔をしない */
-        }
-
-        /* コンテンツ（網掛けの後ろ） */
-        .led-content {
-            position: relative;
-            z-index: 50; 
-            width: 100%;
+            height: 40%;
             display: flex;
-            width: 100%;
+            align-items: center;
         }
 
         .led-text {
@@ -98,7 +96,6 @@
             text-align: center;
         }
 
-        /* 各色の設定：網掛け越しに見えるよう少し明るめに */
         .col-time { width: 33%; color: #00ff66; font-size: 5rem; }
         .col-wait { width: 34%; color: #ffcc00; font-size: 5rem; }
         .col-id   { width: 33%; color: #ffff00; font-size: 6rem; letter-spacing: -2px; }
@@ -130,16 +127,15 @@
     <a href="staff.html" class="admin-link">⚙ 管理ボタン</a>
 
     <div class="lcd-board">
-        <div class="led-zone upper-zone">
-            <div class="led-mask"></div> <div class="led-content">
+        <div class="led-mask-single"></div>
+
+        <div class="led-content-wrapper">
+            <div class="upper-row">
                 <div class="led-text col-time"><span id="wait-time">0</span><small>分</small></div>
                 <div class="led-text col-wait"><span id="wait-count">0</span><small>組</small></div>
                 <div class="led-text col-id" id="calling-now">---</div>
             </div>
-        </div>
-
-        <div class="led-zone lower-zone">
-            <div class="led-mask"></div> <div class="led-content">
+            <div class="lower-row">
                 <marquee id="telop-text" scrollamount="12">☆運行システム稼働中☆</marquee>
             </div>
         </div>
