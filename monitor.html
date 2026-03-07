@@ -44,27 +44,32 @@
             margin-top: 40px;
         }
 
-        /* --- 網掛け共通設定 --- */
-        .led-mask {
+        /* --- 網掛け1枚目（上段専用） --- */
+        .mask-upper-final {
             position: absolute;
-            left: 6%;  /* 前回の調整値 */
-            width: 88.5%; 
+            top: 41%; 
+            left: 6%;
+            width: 88.5%;
+            height: 80px; /* 縦幅を固定 */
             background-image: url('amikake.png');
             background-repeat: no-repeat;
-            background-size: 100% 80px; /* 縦80pxに固定 */
-            opacity: 1.0; 
-            z-index: 100; /* 文字より前 */
+            background-size: 100% 100%; /* この要素（80px）いっぱいに広げる */
+            z-index: 100;
             pointer-events: none;
         }
 
-        /* 1枚目（上段データ用）の位置 */
-        .mask-1 {
-            top: 41%; 
-        }
-
-        /* 2枚目（下段テロップ用）の位置 */
-        .mask-2 {
-            top: 68%; /* 上段から下にずらした位置 */
+        /* --- 網掛け2枚目（下段専用） --- */
+        .mask-lower-final {
+            position: absolute;
+            top: 68%; /* 上段とは違う位置 */
+            left: 6%;
+            width: 88.5%;
+            height: 80px; /* 縦幅を固定 */
+            background-image: url('amikake.png');
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            z-index: 101; /* 重なってもいいように少し変えています */
+            pointer-events: none;
         }
 
         /* --- 文字コンテンツ --- */
@@ -129,8 +134,8 @@
     <a href="staff.html" class="admin-link">⚙ 管理ボタン</a>
 
     <div class="lcd-board">
-        <div class="led-mask mask-1"></div>
-        <div class="led-mask mask-2"></div>
+        <div class="mask-upper-final"></div>
+        <div class="mask-lower-final"></div>
 
         <div class="led-content-wrapper">
             <div class="upper-row">
