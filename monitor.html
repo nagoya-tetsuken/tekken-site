@@ -48,7 +48,6 @@
             z-index: 101; pointer-events: none;
         }
 
-        /* --- LED文字の基本設定 --- */
         .led-item {
             position: absolute; font-family: serif; font-weight: 900;
             display: flex; align-items: baseline; justify-content: center; z-index: 50;
@@ -72,7 +71,7 @@
 
         /* 🎫 自分の整理券を確認（紺色） */
         #my-ticket-btn {
-            display: none; /* 初期状態は非表示 */
+            display: none; 
             padding: 12px 40px;
             background: #001f3f; /* 紺色 */
             color: #fff;
@@ -121,13 +120,13 @@
     </div>
 
     <script>
-        // --- 自分の整理券データの有無を確認 ---
-        function checkTicketStatus() {
+        const API_URL = "https://script.google.com/macros/s/AKfycbwlzBgQoST_MLC8nvPeJSMQBHnIFouiEB8MI6N2s-oObA0HP-X_txcevkIv8q7UFpfLJQ/exec";
+
+        // --- 自分の整理券ボタンの表示制御 ---
+        function updateTicketButtonVisibility() {
             const myNum = localStorage.getItem('my_ticket_id');
             const btn = document.getElementById('my-ticket-btn');
-            if (myNum) {
-                btn.style.display = 'block'; // 番号があれば紺色ボタンを表示
-            }
+            btn.style.display = myNum ? 'block' : 'none';
         }
 
         function goToAdmin() {
@@ -136,27 +135,42 @@
             else if (pass !== null) { alert("パスワードが違います"); }
         }
 
-        const API_URL = "https://script.google.com/macros/s/AKfycbwlzBgQoST_MLC8nvPeJSMQBHnIFouiEB8MI6N2s-oObA0HP-X_txcevkIv8q7UFpfLJQ/exec";
         async function updateMonitor() {
             try {
                 const response = await fetch(API_URL);
                 const data = await response.json();
+
+                // データが空（リセットされた）場合の処理
+                if (!data || data.length === 0) {
+                    // 端末に保存されている自分の整理券情報も消去する
+                    localStorage.removeItem('my_ticket_id');
+                }
+
                 const waitList = data.filter(d => d.status === 'resep');
                 const count = waitList.length;
                 document.getElementById('wait-count').innerText = count;
                 document.getElementById('wait-time').innerText = count * 5;
+                
                 const callingIds = data.filter(d => d.status === 'call').map(d => d.id);
                 document.getElementById('calling-now').innerText = callingIds.length > 0 ? callingIds[callingIds.length - 1] : "---";
                 
                 const mRes = await fetch(API_URL + "?sheet=master");
                 const mData = await mRes.json();
                 if (mData.telop) document.getElementById('telop-text').innerText = mData.telop;
-            } catch (e) { console.error("更新失敗:", e); }
+
+                // ボタンの表示状態を再確認
+                updateTicketButtonVisibility();
+
+            } catch (e) { 
+                console.error("更新失敗:", e); 
+            }
         }
 
-        checkTicketStatus();
-        setInterval(updateMonitor, 10000);
+        // 初期実行
+        updateTicketButtonVisibility();
         updateMonitor();
+        // 10秒ごとに更新
+        setInterval(updateMonitor, 10000);
     </script>
 </body>
 </html>
