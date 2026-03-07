@@ -9,46 +9,51 @@
             margin: 0; padding: 0;
             font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
             background-color: #f0f8ff; color: #333;
-            /* 画像の高さに合わせて調整。メニューがない分、少し詰めました */
-            padding-top: 130px; 
+            /* index.htmlの padding-top: 160px に合わせ、ナビがない分を微調整 */
+            padding-top: 110px; 
             display: flex;
             flex-direction: column;
             align-items: center;
             overflow-x: hidden;
         }
 
-        /* --- 固定ヘッダー（画像のみ） --- */
+        /* --- 固定ヘッダー（index.htmlの構造とサイズを完全継承） --- */
         .fixed-top-container {
             position: fixed; top: 0; left: 0; width: 100%; z-index: 5000;
             background-color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            line-height: 0;
         }
-        header img {
-            width: 100%; height: auto; display: block;
-            max-width: 900px; /* index.htmlのヘッダーサイズ感に合わせる */
-            margin: 0 auto;
+        header { line-height: 0; }
+        header img { 
+            width: 100%; /* 画面横幅いっぱいに広げる */
+            height: auto; 
+            display: block; 
         }
 
-        /* 🏠 戻るボタン（ヘッダーと重ならない位置に配置） */
+        /* 🏠 戻るボタン */
         .home-link {
-            position: fixed; top: 15px; left: 15px; text-decoration: none;
-            color: #333; border: 1px solid #ccc; padding: 6px 12px;
-            font-size: 0.8rem; border-radius: 4px; background: white; z-index: 6000;
+            position: fixed; top: 20px; left: 20px; text-decoration: none;
+            color: #333; border: 1px solid #ccc; padding: 8px 16px;
+            font-size: 0.9rem; border-radius: 4px; background: white; z-index: 6000;
         }
 
         /* ⚙ 管理ボタン */
         .admin-link {
-            position: fixed; top: 15px; right: 15px; text-decoration: none;
-            color: #333; border: 1px solid #ccc; padding: 6px 12px;
-            font-size: 0.8rem; border-radius: 4px; background: white; z-index: 6000;
+            position: fixed; top: 20px; right: 20px; text-decoration: none;
+            color: #333; border: 1px solid #ccc; padding: 8px 16px;
+            font-size: 0.9rem; border-radius: 4px; background: white; z-index: 6000;
             cursor: pointer;
         }
 
         /* --- 表示器本体 --- */
         .lcd-board {
-            position: relative; width: 90%; max-width: 900px; aspect-ratio: 16 / 9;
-            background-image: url('hassyahyou.png'); background-size: contain;
-            background-repeat: no-repeat; margin-bottom: 30px;
+            position: relative; 
+            width: 900px; /* ここは掲示板の画像サイズに依存 */
+            aspect-ratio: 16 / 9;
+            background-image: url('hassyahyou.png'); 
+            background-size: contain;
+            background-repeat: no-repeat;
+            margin-top: 20px;
+            margin-bottom: 30px;
         }
 
         /* 網掛けマスク */
@@ -93,19 +98,24 @@
             border-radius: 50px; box-shadow: 0 6px 0 #005a2d;
         }
 
-        @media (max-width: 768px) {
-            body { padding-top: 100px; }
+        /* レスポンシブ表示設定 */
+        @media (max-width: 920px) {
             .lcd-board { width: 95%; }
-            .pos-time, .pos-wait { font-size: 2rem; }
-            .pos-calling { font-size: 2.5rem; }
-            marquee { font-size: 1.5rem; }
+            .pos-time, .pos-wait { font-size: 6vw; }
+            .pos-calling { font-size: 8vw; }
+            marquee { font-size: 5vw; }
+        }
+        @media (max-width: 768px) {
+            body { padding-top: 80px; }
         }
     </style>
 </head>
 <body>
 
 <div class="fixed-top-container">
-    <header><img src="mokeiheader.png" alt="鉄研模型ヘッダー"></header>
+    <header>
+        <img src="mokeiheader.png" alt="鉄研模型ヘッダー">
+    </header>
 </div>
 
 <a href="index.html" class="home-link">⬅ 戻る</a>
