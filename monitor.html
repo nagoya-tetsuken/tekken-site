@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>名古屋鉄研ジオラマ特設サイト</title>
+    <title>鉄研模型特設サイト</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@900&family=Inter:wght@900&display=swap');
 
@@ -47,27 +47,25 @@
         /* --- 網掛け（amikake.png） --- */
         .led-mask-custom {
             position: absolute;
-            /* 黒枠の座標 */
             top: 36.5%; 
             left: 7.2%;
-            /* 枠の範囲 */
             width: 85.6%;
             height: 52%; 
             
             background-image: url('amikake.png');
             background-repeat: no-repeat;
             
-            /* 【ここがポイント】縦を短く、横を長く引き伸ばす設定 */
-            /* 100% 100% と指定することで、親要素（黒枠）のサイズに強制的に合わせます */
-            background-size: 100% 90%; /* 横は100%いっぱい、縦は少し短めの90% */
-            background-position: center top; /* 上詰めで配置 */
+            /* 【修正ポイント】 */
+            /* 横幅は 100%（枠いっぱい）に伸ばし、 */
+            /* 縦幅は px で直接指定して「短く」固定します */
+            background-size: 100% 120px; /* 120px の部分は、今の網の見た目より小さめの数字に調整してください */
+            background-position: center top; 
             
             opacity: 1.0; 
-            z-index: 100; /* 最前面 */
+            z-index: 100;
             pointer-events: none;
         }
 
-        /* コンテンツエリア */
         .led-content-wrapper {
             position: absolute;
             top: 36.5%;
@@ -146,7 +144,6 @@
     <a href="entry.html" class="btn-issue">整理券を発行する</a>
 
     <script>
-        // API更新スクリプト（前回と同じ）
         const API_URL = "https://script.google.com/macros/s/AKfycbwlzBgQoST_MLC8nvPeJSMQBHnIFouiEB8MI6N2s-oObA0HP-X_txcevkIv8q7UFpfLJQ/exec";
         async function updateMonitor() {
             try {
