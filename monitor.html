@@ -17,7 +17,7 @@
             font-family: 'Noto Sans JP', sans-serif;
         }
 
-        /* ⚙ 管理ボタン：右上固定 */
+        /* ⚙ 管理ボタン */
         .admin-link {
             position: fixed;
             top: 20px;
@@ -44,24 +44,27 @@
             margin-top: 40px;
         }
 
-        /* --- 網掛け（amikake.png）1枚で全体を覆う --- */
-        .led-mask-custom {
+        /* --- 網掛け共通設定 --- */
+        .led-mask {
             position: absolute;
-            top: 41%; /* 少し下へ */
-            left: 6%;  /* 少し左へ */
-            width: 88.5%; /* 横幅を広げた状態 */
-            height: 52%; 
-            
+            left: 6%;  /* 前回の調整値 */
+            width: 88.5%; 
             background-image: url('amikake.png');
             background-repeat: no-repeat;
-            
-            /* 縦を80pxに固定して潰し、横を100%に引き伸ばす */
-            background-size: 100% 80px; 
-            background-position: center top; 
-            
+            background-size: 100% 80px; /* 縦80pxに固定 */
             opacity: 1.0; 
-            z-index: 100; /* 文字より手前 */
+            z-index: 100; /* 文字より前 */
             pointer-events: none;
+        }
+
+        /* 1枚目（上段データ用）の位置 */
+        .mask-1 {
+            top: 41%; 
+        }
+
+        /* 2枚目（下段テロップ用）の位置 */
+        .mask-2 {
+            top: 68%; /* 上段から下にずらした位置 */
         }
 
         /* --- 文字コンテンツ --- */
@@ -126,7 +129,8 @@
     <a href="staff.html" class="admin-link">⚙ 管理ボタン</a>
 
     <div class="lcd-board">
-        <div class="led-mask-custom"></div>
+        <div class="led-mask mask-1"></div>
+        <div class="led-mask mask-2"></div>
 
         <div class="led-content-wrapper">
             <div class="upper-row">
