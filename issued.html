@@ -4,22 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>マイ整理券 - 運行ナビ</title>
-    <link rel="stylesheet" href="style.css">
     <style>
         body { background: #f0f0f0; font-family: sans-serif; transition: background 0.3s; margin: 0; overflow-x: hidden; }
         .nav-container { max-width: 500px; margin: 20px auto; padding: 20px; background: white; border-radius: 15px; position: relative; z-index: 2; }
 
-        /* 呼出時の背景点滅アニメーション */
         @keyframes calling-flash {
             0% { background-color: #ff9900; }
             50% { background-color: #ffffff; }
             100% { background-color: #ff9900; }
         }
-        .is-calling-body {
-            animation: calling-flash 0.8s infinite;
-        }
+        .is-calling-body { animation: calling-flash 0.8s infinite; }
 
-        /* 路線図スタイル */
         .route-map { position: relative; margin: 40px 0 40px 60px; border-left: 8px solid #ccc; }
         .station { position: relative; margin-bottom: 60px; padding-left: 20px; }
         .station::before {
@@ -38,7 +33,6 @@
             100% { box-shadow: 0 0 0 0 rgba(230, 126, 34, 0); }
         }
 
-        /* 音声有効化ボタン */
         #audio-unlock {
             background: #27ae60; color: white; border: none; padding: 10px;
             width: 100%; margin-bottom: 15px; border-radius: 5px; cursor: pointer;
@@ -57,8 +51,8 @@
 
     <div class="route-map">
         <div id="stat-me" class="station current">
-            <div class="station-name">あなたの位置</div>
-            <div id="wait-count" class="wait-info">読込中...</div>
+            <div id="me-title" class="station-name">あなたの位置</div>
+            <div id="wait-count" class="wait-info">確認中...</div>
         </div>
         <div class="station goal">
             <div class="station-name">運転台</div>
@@ -70,15 +64,29 @@
 <audio id="call-sound" src="call.mp3" preload="auto"></audio>
 
 <script src="script.js"></script>
+
 <script>
     const urlParams = new URLSearchParams(window.location.search);
-    const myId = urlParams.get('id');
-    const myV = urlParams.get('v');
-    document.getElementById('disp-id').innerText = myId;
-    document.getElementById('disp-v').innerText = myV;
+    let myId = urlParams.get('id');
+    let myV = urlParams.get('v');
+
+    // --- ローカルストレージ連動処理 ---
+    if (myId && myV) {
+        // 新規発行時：ストレージに保存
+        localStorage.setItem('my_ticket_id', myId);
+        localStorage.setItem('my_ticket_v', myV);
+    } else {
+        // 再訪問時：ストレージから読み込み
+        myId = localStorage.getItem('my_ticket_id');
+        myV = localStorage.getItem('my_ticket_v');
+    }
+
+    // 画面表示
+    if (myId) document.getElementById('disp-id').innerText = myId;
+    if (myV) document.getElementById('disp-v').innerText = myV;
 
     let audioUnlocked = false;
-    let isCalled = false; // 二重再生防止用
+    let isCalled = false;
 
     function unlockAudio() {
         const sound = document.getElementById('call-sound');
@@ -87,50 +95,66 @@
             sound.currentTime = 0;
             audioUnlocked = true;
             document.getElementById('audio-unlock').style.display = 'none';
-        });
+        }).catch(e => console.log("Audio unlock failed"));
     }
 
     async function updateStatus() {
+        if (!myId) return; // IDがない場合は何もしない
+
         try {
             const data = await fetchSheetData();
-            const myData = data.find(d => d.id === myId);
+            const myData = data.find(d => String(d.id) === String(myId));
             const body = document.body;
             const sound = document.getElementById('call-sound');
+            const infoText = document.getElementById('wait-count');
+            const meTitle = document.getElementById('me-title');
 
-            if (myData && myData.status === 'call') {
-                // 【呼出中！】
+            // 1. データが完全に消えた or 終了ステータスの場合
+            if (!data || data.length === 0 || !myData || myData.status === 'end') {
+                localStorage.removeItem('my_ticket_id');
+                localStorage.removeItem('my_ticket_v');
+                alert("整理券の有効期限が終了しました。");
+                location.href = 'index.html';
+                return;
+            }
+
+            // 2. 呼出中判定
+            if (myData.status === 'call') {
                 body.classList.add('is-calling-body');
-                document.querySelector('.station-name').innerText = "まもなく発車（受付へ！）";
+                meTitle.innerText = "まもなく発車（受付へ！）";
+                infoText.innerText = "順番が来ました！";
                 
                 if (audioUnlocked && !isCalled) {
-                    sound.play(); // 音を鳴らす
+                    sound.play();
                     isCalled = true; 
                 }
             } else {
                 body.classList.remove('is-calling-body');
+                meTitle.innerText = "あなたの位置";
                 isCalled = false;
-            }
 
-            // 待ち順計算
-            const waitingList = data.filter(d => d.status === 'resep');
-            const myIndex = waitingList.findIndex(d => d.id === myId);
-            const infoText = document.getElementById('wait-count');
-            
-            if (myIndex !== -1) {
-                infoText.innerText = `前に ${myIndex} 組お待ちです (約 ${myIndex * 5} 分)`;
-            } else if (myData && myData.status === 'call') {
-                infoText.innerText = "順番が来ました！";
+                // 3. 待ち順計算
+                const waitingList = data.filter(d => d.status === 'resep');
+                const myIndex = waitingList.findIndex(d => String(d.id) === String(myId));
+                
+                if (myIndex !== -1) {
+                    infoText.innerText = `前に ${myIndex} 組お待ちです (約 ${myIndex * 5} 分)`;
+                } else {
+                    infoText.innerText = "状況確認中...";
+                }
             }
-
-            if (!myData || myData.status === 'end') {
-                alert("整理券の有効期限が終了しました。");
-                location.href = 'index.html';
-            }
-        } catch (e) { console.error(e); }
+        } catch (e) { 
+            console.error("更新失敗:", e); 
+        }
     }
 
-    setInterval(updateStatus, 10000);
-    updateStatus();
+    // 初回実行とループ設定
+    if (myId) {
+        updateStatus();
+        setInterval(updateStatus, 10000);
+    } else {
+        location.href = 'index.html'; // IDが保存されていなければ戻す
+    }
 </script>
 </body>
 </html>
