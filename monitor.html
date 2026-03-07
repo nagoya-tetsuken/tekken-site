@@ -16,10 +16,21 @@
             font-weight: 900;
         }
 
+        /* 🏠 左上の戻るボタン */
+        .home-link {
+            position: fixed; top: 20px; left: 20px; text-decoration: none;
+            color: #333; border: 1px solid #ccc; padding: 8px 16px;
+            font-size: 0.9rem; border-radius: 4px; background: white; z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* ⚙ 管理ボタン */
         .admin-link {
             position: fixed; top: 20px; right: 20px; text-decoration: none;
             color: #333; border: 1px solid #ccc; padding: 8px 16px;
             font-size: 0.9rem; border-radius: 4px; background: white; z-index: 1000;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
         /* --- 表示器本体 --- */
@@ -58,55 +69,33 @@
         }
         small { font-size: 0.9rem; margin-left: 2px; }
 
-        /* --- 各パーツを独立して配置（ここで微調整） --- */
-
-        /* 1. 待ち時間 (緑) */
+        /* --- 各パーツを独立して配置 --- */
         .pos-time {
-            top: 40%; 
-            left: 9%; /* もっと左へ */
-            width: 150px;
-            color: #00ff44;
-            font-size: 3.8rem;
+            top: 40%; left: 9%; width: 150px;
+            color: #00ff44; font-size: 3.8rem;
             text-shadow: 0 0 8px rgba(0, 255, 68, 0.6);
         }
 
-        /* 2. まち組 (深オレンジ) */
         .pos-wait {
-            top: 40%;
-            left: 30%; /* 待ち時間の右隣・左寄り */
-            width: 150px;
-            color: #ff8800;
-            font-size: 3.8rem;
+            top: 40%; left: 30%; width: 150px;
+            color: #ff8800; font-size: 3.8rem;
             text-shadow: 0 0 8px rgba(255, 136, 0, 0.6);
         }
 
-        /* 3. ただいま呼び出し中 (黄色) */
         .pos-calling {
-            top: 37%;
-            left: 54%; /* まち組の右隣・左寄り */
-            width: 280px;
-            color: #ffcc00;
-            font-size: 4.8rem;
+            top: 37%; left: 54%; width: 280px;
+            color: #ffcc00; font-size: 4.8rem;
             text-shadow: 0 0 10px rgba(255, 204, 0, 0.6);
             letter-spacing: -2px;
         }
 
-        /* 4. 下段テロップ (深オレンジ) */
         .pos-telop {
-            position: absolute;
-            bottom: 25%; /* 元の位置 5% */
-            left: 6.8%;
-            width: 86.6%;
-            height: 80px;
-            display: flex;
-            align-items: center;
-            z-index: 40; /* 網掛け(101)より下、背景より上 */
+            position: absolute; bottom: 25%; left: 6.8%; width: 86.6%;
+            height: 80px; display: flex; align-items: center; z-index: 40;
         }
 
         marquee {
-            width: 100%;
-            font-size: 2.8rem;
-            color: #ff8800;
+            width: 100%; font-size: 2.8rem; color: #ff8800;
             text-shadow: 0 0 8px rgba(255, 136, 0, 0.5);
         }
 
@@ -120,7 +109,9 @@
 </head>
 <body>
 
-    <a href="staff.html" class="admin-link">⚙ 管理ボタン</a>
+    <a href="index.html" class="home-link">⬅ 戻る</a>
+
+    <div class="admin-link" onclick="goToAdmin()">⚙ 管理者用</div>
 
     <div class="lcd-board">
         <div class="mask-upper"></div>
@@ -138,6 +129,17 @@
     <a href="entry.html" class="btn-issue">整理券を発行する</a>
 
     <script>
+        // --- パスワード処理 ---
+        function goToAdmin() {
+            const pass = prompt("パスワードを入力してください");
+            if (pass === "0000") {
+                window.location.href = "staff.html";
+            } else if (pass !== null) {
+                alert("パスワードが違います");
+            }
+        }
+
+        // --- データ更新処理 ---
         const API_URL = "https://script.google.com/macros/s/AKfycbwlzBgQoST_MLC8nvPeJSMQBHnIFouiEB8MI6N2s-oObA0HP-X_txcevkIv8q7UFpfLJQ/exec";
         async function updateMonitor() {
             try {
@@ -149,6 +151,7 @@
                 document.getElementById('wait-time').innerText = count * 5;
                 const callingIds = data.filter(d => d.status === 'call').map(d => d.id);
                 document.getElementById('calling-now').innerText = callingIds.length > 0 ? callingIds[callingIds.length - 1] : "---";
+                
                 const mRes = await fetch(API_URL + "?sheet=master");
                 const mData = await mRes.json();
                 if (mData.telop) document.getElementById('telop-text').innerText = mData.telop;
