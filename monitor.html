@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -46,7 +46,7 @@
             margin-bottom: 30px;
         }
 
-        /* 網掛け：height を % 指定に変更してボードに追従 */
+        /* 網掛け：height を % 指定でボードに完全追従 */
         .mask-upper {
             position: absolute;
             top: 41%;
@@ -70,7 +70,14 @@
             pointer-events: none;
         }
 
-        /* LED文字：clamp() でスマホでも追従 */
+        /*
+         * LED文字：font-size を cqw（コンテナクエリ幅）で指定。
+         * ボードが何px幅になっても、文字サイズが同じ比率でスケールする。
+         * container-type を lcd-board に設定することで機能する。
+         */
+        .lcd-board {
+            container-type: inline-size;
+        }
         .led-item {
             position: absolute;
             font-family: serif;
@@ -81,21 +88,21 @@
             z-index: 50;
         }
         .pos-time {
-            top: 40%; left: 9%; width: 150px;
+            top: 40%; left: 9%; width: 16.7%;
             color: #00ff44;
-            font-size: clamp(1rem, 4vw, 3.8rem);
+            font-size: 4.2cqw;
             text-shadow: 0 0 8px rgba(0, 255, 68, 0.6);
         }
         .pos-wait {
-            top: 40%; left: 30%; width: 150px;
+            top: 40%; left: 30%; width: 16.7%;
             color: #ff8800;
-            font-size: clamp(1rem, 4vw, 3.8rem);
+            font-size: 4.2cqw;
             text-shadow: 0 0 8px rgba(255, 136, 0, 0.6);
         }
         .pos-calling {
-            top: 37%; left: 54%; width: 280px;
+            top: 37%; left: 54%; width: 31.1%;
             color: #ffcc00;
-            font-size: clamp(1.2rem, 5vw, 4.8rem);
+            font-size: 5.3cqw;
             text-shadow: 0 0 10px rgba(255, 204, 0, 0.6);
             letter-spacing: -2px;
         }
@@ -108,7 +115,7 @@
         }
         marquee {
             width: 100%;
-            font-size: clamp(1rem, 3vw, 2.8rem);
+            font-size: 3.1cqw;
             color: #ff8800;
             text-shadow: 0 0 8px rgba(255, 136, 0, 0.5);
         }
@@ -151,7 +158,7 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.1);
         }
 
-        /* レスポンシブ */
+        /* レスポンシブ：ボード幅を縮めるだけ。中身は cqw で自動追従 */
         @media (max-width: 920px) {
             .lcd-board { width: 95%; }
         }
