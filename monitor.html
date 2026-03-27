@@ -1,4 +1,4 @@
-DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -34,8 +34,13 @@ DOCTYPE html>
             font-size: 0.9rem; border-radius: 4px; background: white; cursor: pointer;
         }
 
-        /* 表示器本体 */
+        /* 表示器本体
+         * container-type を設定することで、子要素が cqw 単位を使えるようになる。
+         * PC では width:900px のまま → 元の見た目を完全維持。
+         * スマホでは width:95% に縮むが、cqw も同じ比率で縮むので位置関係が保たれる。
+         */
         .lcd-board {
+            container-type: inline-size;
             position: relative;
             width: 900px;
             aspect-ratio: 16 / 9;
@@ -46,78 +51,58 @@ DOCTYPE html>
             margin-bottom: 30px;
         }
 
-        /* 網掛け：height を % 指定でボードに完全追従 */
+        /* 網掛け
+         * height を px→% に変更。ボードが縮んでも同じ位置・高さ比率を維持。
+         * 元の 80px / (900px * 9/16) = 80/506.25 ≒ 15.8%
+         */
         .mask-upper {
-            position: absolute;
-            top: 41%;
-            left: 6%;
-            width: 88.5%;
-            height: 8.9%;
-            background-image: url('amikake.png');
-            background-size: 100% 100%;
-            z-index: 100;
-            pointer-events: none;
+            position: absolute; top: 41%; left: 6%; width: 88.5%; height: 15.8%;
+            background-image: url('amikake.png'); background-size: 100% 100%;
+            z-index: 100; pointer-events: none;
         }
         .mask-lower {
-            position: absolute;
-            top: 59.5%;
-            left: 6%;
-            width: 88.5%;
-            height: 8.9%;
-            background-image: url('amikake.png');
-            background-size: 100% 100%;
-            z-index: 101;
-            pointer-events: none;
+            position: absolute; top: 59.5%; left: 6%; width: 88.5%; height: 15.8%;
+            background-image: url('amikake.png'); background-size: 100% 100%;
+            z-index: 101; pointer-events: none;
         }
 
-        /*
-         * LED文字：font-size を cqw（コンテナクエリ幅）で指定。
-         * ボードが何px幅になっても、文字サイズが同じ比率でスケールする。
-         * container-type を lcd-board に設定することで機能する。
-         */
-        .lcd-board {
-            container-type: inline-size;
-        }
+        /* LED要素共通 */
         .led-item {
-            position: absolute;
-            font-family: serif;
-            font-weight: 900;
-            display: flex;
-            align-items: baseline;
-            justify-content: center;
-            z-index: 50;
+            position: absolute; font-family: serif; font-weight: 900;
+            display: flex; align-items: baseline; justify-content: center; z-index: 50;
         }
+
+        /* 各LED位置・サイズ
+         * top/left/width は元コードと同じ %。
+         * font-size のみ rem → cqw に変換。
+         *   3.8rem @ 900px = 60.8px → 60.8/900*100 ≒ 6.76cqw
+         *   4.8rem @ 900px = 76.8px → 76.8/900*100 ≒ 8.53cqw
+         *   2.8rem @ 900px = 44.8px → 44.8/900*100 ≒ 4.98cqw
+         */
         .pos-time {
             top: 40%; left: 9%; width: 16.7%;
-            color: #00ff44;
-            font-size: 4.2cqw;
+            color: #00ff44; font-size: 6.76cqw;
             text-shadow: 0 0 8px rgba(0, 255, 68, 0.6);
         }
         .pos-wait {
             top: 40%; left: 30%; width: 16.7%;
-            color: #ff8800;
-            font-size: 4.2cqw;
+            color: #ff8800; font-size: 6.76cqw;
             text-shadow: 0 0 8px rgba(255, 136, 0, 0.6);
         }
         .pos-calling {
             top: 37%; left: 54%; width: 31.1%;
-            color: #ffcc00;
-            font-size: 5.3cqw;
+            color: #ffcc00; font-size: 8.53cqw;
             text-shadow: 0 0 10px rgba(255, 204, 0, 0.6);
             letter-spacing: -2px;
         }
         .pos-telop {
-            position: absolute;
-            bottom: 25%; left: 6.8%;
-            width: 86.6%; height: 8.9%;
-            display: flex; align-items: center;
-            z-index: 40;
+            position: absolute; bottom: 25%; left: 6.8%;
+            width: 86.6%; height: 15.8%;
+            display: flex; align-items: center; z-index: 40;
         }
         marquee {
-            width: 100%;
-            font-size: 3.1cqw;
-            color: #ff8800;
-            text-shadow: 0 0 8px rgba(255, 136, 0, 0.5);
+            width: 100%; font-size: 4.98cqw;
+            color: #ff8800; text-shadow: 0 0 8px rgba(255, 136, 0, 0.5);
         }
 
         /* 発行ボタンエリア */
@@ -126,17 +111,14 @@ DOCTYPE html>
             gap: 20px; margin-bottom: 80px;
         }
         #my-ticket-btn {
-            display: none; padding: 15px 40px;
-            background: #001f3f; color: #fff;
-            text-decoration: none; font-size: 1.2rem;
-            font-weight: bold; border-radius: 50px;
-            box-shadow: 0 4px 0 #000;
+            display: none; padding: 15px 40px; background: #001f3f; color: #fff;
+            text-decoration: none; font-size: 1.2rem; font-weight: bold;
+            border-radius: 50px; box-shadow: 0 4px 0 #000;
         }
         .btn-issue {
             padding: 20px 60px; background: #008542; color: #fff;
-            text-decoration: none; font-size: 1.8rem;
-            font-weight: bold; border-radius: 50px;
-            box-shadow: 0 6px 0 #005a2d;
+            text-decoration: none; font-size: 1.8rem; font-weight: bold;
+            border-radius: 50px; box-shadow: 0 6px 0 #005a2d;
         }
 
         /* 紹介セクション */
@@ -158,7 +140,7 @@ DOCTYPE html>
             box-shadow: 0 8px 20px rgba(0,0,0,0.1);
         }
 
-        /* レスポンシブ：ボード幅を縮めるだけ。中身は cqw で自動追従 */
+        /* スマホ：ボード幅を縮めるだけ。中身は cqw で自動追従 */
         @media (max-width: 920px) {
             .lcd-board { width: 95%; }
         }
@@ -249,4 +231,4 @@ DOCTYPE html>
 </script>
 
 </body>
-</html>
+</html> 
