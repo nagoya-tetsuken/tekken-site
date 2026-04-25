@@ -106,9 +106,9 @@
     <nav class="navigation-section">
         <div class="button-grid">
             <a href="index.html" class="nav-button"><img src="aboutus.png" alt="概要"></a>
-            <a href="#" class="nav-button"><img src="notifications.png" alt="お知らせ"></a>
-            <a href="#" class="nav-button"><img src="katsudou.png" alt="活動"></a>
-            <a href="#" class="nav-button"><img src="medias.png" alt="作品"></a>
+            <a href="notify.html" class="nav-button"><img src="notifications.png" alt="お知らせ"></a>
+            <a href="activity.html" class="nav-button"><img src="katsudou.png" alt="活動"></a>
+            <a href="media.html" class="nav-button"><img src="medias.png" alt="作品"></a>
             <a href="monitor.html" class="nav-button"><img src="modeltrain.png" alt="運転体験"></a>
         </div>
     </nav>
@@ -127,18 +127,14 @@
 </footer>
 
 <script>
-    // ページ遷移時に言語設定を反映
     function changeLang(lang) {
         localStorage.setItem('siteLang', lang);
-        location.reload(); // ページをリロードして反映
+        location.reload();
     }
 
     function toggleLang() {
         document.getElementById('langSidebar').classList.toggle('is-open');
     }
-
-    // 読み込み時に設定があれば言語を切り替える必要がある場合はここに実装します
-    // ※今回は汎用テンプレートのため、各ページで必要に応じて翻訳辞書を追加してください
 </script>
 
 </body>
