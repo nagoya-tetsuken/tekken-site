@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ページタイトル | 鉄道研究部 ポータルサイト</title>
+    <title>お知らせ | 鉄道研究部 ポータルサイト</title>
     <link rel="icon" href="logo.png" type="image/png">
     
     <style>
@@ -22,7 +22,7 @@
             overflow-x: hidden;
         }
 
-        /* --- 固定ヘッダー・ナビ --- */
+        /* --- ヘッダー・ナビ（共通） --- */
         .fixed-top-container {
             position: fixed; top: 0; left: 0; width: 100%; z-index: 5000;
             background-color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -41,7 +41,7 @@
         .nav-button:hover { opacity: 0.8; }
         .nav-button img { width: 100%; height: auto; display: block; }
 
-        /* --- 収納式言語メニュー --- */
+        /* --- 言語メニュー（共通） --- */
         .language-sidebar {
             position: fixed; top: calc(var(--header-height) + 20px); right: -140px;
             display: flex; align-items: center; z-index: 6000;
@@ -63,26 +63,19 @@
         }
         .lang-menu button:hover { background-color: #003366; color: #ffda44; }
 
-        /* --- メインコンテンツ --- */
-        .container { max-width: 1100px; margin: 80px auto; padding: 0 30px; }
+        /* --- コンテンツエリア --- */
+        .container { max-width: 800px; margin: 80px auto; padding: 0 30px; }
+        h1 { color: var(--main-color); border-bottom: 2px solid var(--main-color); padding-bottom: 10px; margin-bottom: 30px; }
         
-        /* コンテンツ用スタイル */
-        .content-body { line-height: 1.8; font-size: 1.2rem; }
-        h1 { color: var(--main-color); border-bottom: 2px solid var(--main-color); padding-bottom: 10px; }
+        /* SNS埋め込み用 */
+        .twitter-container { width: 100%; margin-top: 20px; }
 
-        /* --- フッター --- */
+        /* フッター（共通） */
         .site-footer {
-            width: 100%;
-            background-color: var(--main-color);
-            color: rgba(255,255,255,0.5);
-            text-align: center;
-            padding: 20px;
-            font-size: 0.75rem;
-            box-sizing: border-box;
-            margin-top: 100px;
+            width: 100%; background-color: var(--main-color); color: rgba(255,255,255,0.5);
+            text-align: center; padding: 20px; font-size: 0.75rem;
+            box-sizing: border-box; margin-top: 100px;
         }
-        .site-footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
-        .site-footer a:hover { color: #fff; }
 
         @media (max-width: 768px) {
             body { padding-top: 110px; }
@@ -115,10 +108,11 @@
 </div>
 
 <main class="container">
-    <article class="content-body">
-        <h1>ここにページタイトル</h1>
-        <p>ここに内容を自由に記述してください。</p>
-    </article>
+    <h1>お知らせ</h1>
+    <div class="twitter-container">
+        <a class="twitter-timeline" href="https://twitter.com/YOUR_ACCOUNT_ID?ref_src=twsrc%5Etfw">Tweets by YOUR_ACCOUNT_ID</a>
+        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+        </div>
 </main>
 
 <footer class="site-footer">
@@ -127,18 +121,13 @@
 </footer>
 
 <script>
-    // ページ遷移時に言語設定を反映
     function changeLang(lang) {
         localStorage.setItem('siteLang', lang);
-        location.reload(); // ページをリロードして反映
+        location.reload();
     }
-
     function toggleLang() {
         document.getElementById('langSidebar').classList.toggle('is-open');
     }
-
-    // 読み込み時に設定があれば言語を切り替える必要がある場合はここに実装します
-    // ※今回は汎用テンプレートのため、各ページで必要に応じて翻訳辞書を追加してください
 </script>
 
 </body>
