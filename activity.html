@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>活動紹介 | 鉄道研究部 ポータルサイト</title>
+    <title>活動紹介 | 名古屋中学校・高等学校 鉄道研究部</title>
     <link rel="icon" href="logo.png" type="image/png">
     
     <style>
@@ -66,7 +66,7 @@
         /* --- メインコンテンツ --- */
         .container { max-width: 1100px; margin: 80px auto; padding: 0 30px; }
         .content-body { line-height: 1.8; font-size: 1.2rem; }
-        h1 { color: var(--main-color); border-bottom: 2px solid var(--main-color); padding-bottom: 10px; }
+        h1 { color: var(--accent-color); font-size: 2.1rem; border-left: 8px solid var(--accent-color); padding-left: 20px; margin-bottom: 40px; }
 
         /* --- 活動紹介用スタイル --- */
         .post-card { background: #fff; border-radius: 8px; padding: 25px; margin-bottom: 30px; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
@@ -78,10 +78,16 @@
 
         /* --- フッター --- */
         .site-footer {
-            width: 100%; background-color: var(--main-color); color: rgba(255,255,255,0.5);
-            text-align: center; padding: 20px; font-size: 0.75rem;
-            box-sizing: border-box; margin-top: 100px;
+            width: 100%;
+            background-color: var(--main-color);
+            color: rgba(255,255,255,0.5);
+            text-align: center;
+            padding: 20px;
+            font-size: 0.75rem;
+            box-sizing: border-box;
         }
+        .site-footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
+        .site-footer a:hover { color: #fff; }
 
         @media (max-width: 768px) {
             body { padding-top: 110px; }
@@ -135,15 +141,17 @@
 
 <footer class="site-footer">
     <p>名古屋中学校・高等学校 鉄道研究部</p>
+    <p>このサイトのコードの一部には、生成AIを使用しています。</p>
 </footer>
 
 <script>
+    function toggleLang() {
+        document.getElementById('langSidebar').classList.toggle('is-open');
+    }
+
     function changeLang(lang) {
         localStorage.setItem('siteLang', lang);
         location.reload();
-    }
-    function toggleLang() {
-        document.getElementById('langSidebar').classList.toggle('is-open');
     }
 </script>
 
