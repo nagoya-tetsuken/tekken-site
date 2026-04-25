@@ -5,22 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>お知らせ | 名高鉄研 ポータルサイト</title>
     <link rel="icon" href="logo.png" type="image/png">
+    
     <style>
-        :root { --header-height: 160px; --main-color: #001f3f; }
-        body { margin: 0; padding-top: var(--header-height); font-family: sans-serif; background-color: #f0f8ff; }
-        .fixed-top-container { position: fixed; top: 0; left: 0; width: 100%; z-index: 5000; background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .navigation-section { display: flex; justify-content: center; background: #000; }
-        .nav-button { flex: 1; border: 5px solid #000; display: block; }
+        :root {
+            --header-height: 160px;
+            --main-color: #001f3f;
+        }
+
+        body {
+            margin: 0; padding: 0;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            background-color: #f0f8ff; color: #333;
+            padding-top: var(--header-height);
+        }
+
+        /* ヘッダー・ナビ用スタイル */
+        .fixed-top-container {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 5000;
+            background-color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        header { line-height: 0; }
+        header img { width: 100%; height: auto; display: block; }
+        .navigation-section { display: flex; justify-content: center; background-color: #000; }
+        .button-grid { display: flex; width: 100%; }
+        .nav-button {
+            flex: 1; display: block; border: 5px solid #000;
+            margin-left: -5px; box-sizing: border-box; line-height: 0;
+        }
+        .nav-button:first-child { margin-left: 0; }
         .nav-button img { width: 100%; height: auto; display: block; }
-        .container { max-width: 800px; margin: 40px auto; padding: 20px; }
-        .site-footer { background: var(--main-color); color: #fff; text-align: center; padding: 20px; margin-top: 50px; }
+
+        /* コンテンツ */
+        .container { max-width: 800px; margin: 40px auto; padding: 0 30px; }
+        h1 { color: var(--main-color); border-bottom: 2px solid var(--main-color); padding-bottom: 10px; }
+        .twitter-container { width: 100%; margin-top: 30px; }
+        
+        .site-footer {
+            width: 100%; background-color: var(--main-color); color: rgba(255,255,255,0.5);
+            text-align: center; padding: 20px; margin-top: 50px;
+        }
     </style>
 </head>
 <body>
 
 <div class="fixed-top-container">
+    <header><img src="header-img.png" alt="鉄研ヘッダー"></header>
     <nav class="navigation-section">
-        <div style="display: flex; width: 100%;">
+        <div class="button-grid">
             <a href="index.html" class="nav-button"><img src="aboutus.png" alt="概要"></a>
             <a href="notify.html" class="nav-button"><img src="notifications.png" alt="お知らせ"></a>
             <a href="activity.html" class="nav-button"><img src="katsudou.png" alt="活動"></a>
