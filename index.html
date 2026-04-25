@@ -174,32 +174,31 @@
 <script>
     const translations = {
         ja: {
-            t1: "ようこそ鉄道研究部へ",
-            d1: "ここに活動概要の日本語文章が入ります。",
-            t2: "鉄道模型の制作",
-            d2: "精巧なジオラマを作成し、運転会を行っています。",
-            t3: "校外活動",
-            d3: "合宿や撮影会など、外での活動も活発です。",
-            t4: "デジタルコンテンツ",
-            d4: "シミュレーター制作や映像編集を行っています。",
-            t5: "アーカイブ・資料",
-            d5: "先輩方が残した貴重な鉄道資料を保存・整理しています。"
+            t1: "[ここにタイトル1を挿入]",
+            d1: "[ここに文章1を挿入]",
+            t2: "[ここにタイトル2を挿入]",
+            d2: "[ここに文章2を挿入]",
+            t3: "[ここにタイトル3を挿入]",
+            d3: "[ここに文章3を挿入]",
+            t4: "[ここにタイトル4を挿入]",
+            d4: "[ここに文章4を挿入]",
+            t5: "[ここにタイトル5を挿入]",
+            d5: "[ここに文章5を挿入]"
         },
         en: {
-            t1: "Welcome to Railway Club",
-            d1: "Introduction text in English.",
-            t2: "Diorama Modeling",
-            d2: "We create detailed dioramas and hold operating sessions.",
-            t3: "Field Trips",
-            d3: "We participate in training camps and photography trips.",
-            t4: "Digital Contents",
-            d4: "We develop train simulators and edit videos.",
-            t5: "Legacy of Records",
-            d5: "We preserve and curate historical railway documents."
+            t1: "[Insert title 1 here]",
+            d1: "[Insert text 1 here]",
+            t2: "[Insert title 2 here]",
+            d2: "[Insert text 2 here]",
+            t3: "[Insert title 3 here]",
+            d3: "[Insert text 3 here]",
+            t4: "[Insert title 4 here]",
+            d4: "[Insert text 4 here]",
+            t5: "[Insert title 5 here]",
+            d5: "[Insert text 5 here]"
         }
     };
 
-    // 言語を適用する共通関数
     function applyLanguage(lang) {
         for (let i = 1; i <= 5; i++) {
             document.getElementById(`t${i}`).innerText = translations[lang][`t${i}`];
@@ -207,16 +206,14 @@
         }
     }
 
-    // 言語切り替え処理
     function changeLang(lang) {
-        localStorage.setItem('siteLang', lang); // 設定を保存
+        localStorage.setItem('siteLang', lang);
         applyLanguage(lang);
         toggleLang();
     }
 
-    // 初期ロード時の処理
     window.addEventListener('DOMContentLoaded', () => {
-        const savedLang = localStorage.getItem('siteLang') || 'ja'; // 保存があればそれ、無ければja
+        const savedLang = localStorage.getItem('siteLang') || 'ja';
         applyLanguage(savedLang);
     });
 
@@ -224,7 +221,6 @@
         document.getElementById('langSidebar').classList.toggle('is-open');
     }
 
-    // スクロール時のアニメーション
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
