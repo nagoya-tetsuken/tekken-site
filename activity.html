@@ -3,37 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>活動紹介 | 名高鉄研 ポータルサイト</title>
+    <title>活動紹介 | 鉄道研究部 ポータルサイト</title>
+    <link rel="icon" href="logo.png" type="image/png">
+    
     <style>
-        :root { --main-color: #001f3f; }
-        body { margin: 0; padding-top: 160px; font-family: sans-serif; background-color: #f0f8ff; }
-        
-        /* ヘッダー・ナビ（共通） */
-        .fixed-top-container { position: fixed; top: 0; width: 100%; z-index: 5000; background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .navigation-section { display: flex; justify-content: center; background: #000; }
-        .nav-button { flex: 1; border: 5px solid #000; display: block; }
+        :root {
+            --header-height: 160px;
+            --main-color: #001f3f;
+            --accent-color: #c0392b;
+        }
+
+        body {
+            margin: 0; padding: 0;
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+            font-size: 18px;
+            background-color: #f0f8ff; color: #333;
+            padding-top: var(--header-height);
+            overflow-x: hidden;
+        }
+
+        /* --- 固定ヘッダー・ナビ --- */
+        .fixed-top-container {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 5000;
+            background-color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        header { line-height: 0; }
+        header img { width: 100%; height: auto; display: block; }
+        .navigation-section { display: flex; justify-content: center; background-color: #000; padding: 0; }
+        .button-grid { display: flex; width: 100%; gap: 0; }
+        .nav-button {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            text-decoration: none; background-color: #fff;
+            border: 5px solid #000; padding: 0; margin-left: -5px;
+            box-sizing: border-box; line-height: 0; transition: opacity 0.2s;
+        }
+        .nav-button:first-child { margin-left: 0; }
+        .nav-button:hover { opacity: 0.8; }
         .nav-button img { width: 100%; height: auto; display: block; }
 
-        /* 活動ページ専用 */
-        .container { max-width: 800px; margin: 40px auto; padding: 0 20px; }
+        /* --- 収納式言語メニュー --- */
+        .language-sidebar {
+            position: fixed; top: calc(var(--header-height) + 20px); right: -140px;
+            display: flex; align-items: center; z-index: 6000;
+            transition: right 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        .language-sidebar.is-open { right: 0; }
+        .lang-tab {
+            width: 45px; height: 110px; background-color: var(--main-color);
+            color: #fff; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; border-radius: 8px 0 0 8px;
+            box-shadow: -2px 0 8px rgba(0,0,0,0.3);
+            writing-mode: vertical-rl; font-size: 13px; font-weight: bold;
+        }
+        .lang-menu { width: 140px; background-color: var(--main-color); padding: 10px 0; border-radius: 0 0 0 8px; }
+        .lang-menu button {
+            width: 100%; background: none; border: none; border-bottom: 1px solid rgba(255,255,255,0.1);
+            color: #fff; padding: 10px 20px; text-align: left; font-size: 14px;
+            cursor: pointer; transition: background 0.3s; display: flex; align-items: center; gap: 10px;
+        }
+        .lang-menu button:hover { background-color: #003366; color: #ffda44; }
+
+        /* --- メインコンテンツ --- */
+        .container { max-width: 1100px; margin: 80px auto; padding: 0 30px; }
+        .content-body { line-height: 1.8; font-size: 1.2rem; }
         h1 { color: var(--main-color); border-bottom: 2px solid var(--main-color); padding-bottom: 10px; }
-        
-        /* 記事ブロック */
-        .post-card { background: #fff; border-radius: 8px; padding: 20px; margin-bottom: 30px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .post-date { color: #888; font-size: 0.9rem; }
-        .post-title { font-size: 1.5rem; margin: 10px 0; color: #333; }
-        .post-excerpt { color: #555; line-height: 1.6; }
-        .read-more { display: inline-block; margin-top: 15px; color: var(--main-color); text-decoration: none; font-weight: bold; border: 2px solid var(--main-color); padding: 5px 15px; border-radius: 4px; transition: 0.3s; }
+
+        /* --- 活動紹介用スタイル --- */
+        .post-card { background: #fff; border-radius: 8px; padding: 25px; margin-bottom: 30px; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .post-date { color: #888; font-size: 0.9rem; margin-bottom: 5px; }
+        .post-title { margin: 0 0 15px 0; color: #333; font-size: 1.4rem; }
+        .post-excerpt { color: #555; margin-bottom: 20px; }
+        .read-more { display: inline-block; color: var(--main-color); text-decoration: none; font-weight: bold; border: 2px solid var(--main-color); padding: 8px 20px; border-radius: 4px; transition: 0.3s; }
         .read-more:hover { background: var(--main-color); color: #fff; }
 
-        .site-footer { background: var(--main-color); color: #fff; text-align: center; padding: 20px; margin-top: 50px; }
+        /* --- フッター --- */
+        .site-footer {
+            width: 100%; background-color: var(--main-color); color: rgba(255,255,255,0.5);
+            text-align: center; padding: 20px; font-size: 0.75rem;
+            box-sizing: border-box; margin-top: 100px;
+        }
+
+        @media (max-width: 768px) {
+            body { padding-top: 110px; }
+            :root { --header-height: 110px; }
+            .language-sidebar { top: auto; bottom: 20px; }
+        }
     </style>
 </head>
 <body>
 
+<div class="language-sidebar" id="langSidebar">
+    <div class="lang-tab" onclick="toggleLang()">LANG ◀</div>
+    <div class="lang-menu">
+        <button onclick="changeLang('ja')"><span>🇯🇵</span> 日本語</button>
+        <button onclick="changeLang('en')"><span>🇺🇸</span> English</button>
+    </div>
+</div>
+
 <div class="fixed-top-container">
+    <header><img src="header-img.png" alt="鉄研ヘッダー"></header>
     <nav class="navigation-section">
-        <div style="display: flex; width: 100%;">
+        <div class="button-grid">
             <a href="index.html" class="nav-button"><img src="aboutus.png" alt="概要"></a>
             <a href="notify.html" class="nav-button"><img src="notifications.png" alt="お知らせ"></a>
             <a href="activity.html" class="nav-button"><img src="katsudou.png" alt="活動"></a>
@@ -44,19 +114,38 @@
 </div>
 
 <main class="container">
-    <h1>活動紹介</h1>
+    <article class="content-body">
+        <h1>活動紹介</h1>
 
-    <article class="post-card">
-        <div class="post-date">【日付】</div>
-        <h2 class="post-title">【タイトル】</h2>
-        <p class="post-excerpt">【ここに本文を入力してください】</p>
-        <a href="【リンク先URL】" class="read-more">続きを読む</a>
+        <div class="post-card">
+            <div class="post-date">YYYY/MM/DD</div>
+            <h2 class="post-title">【タイトルを入力】</h2>
+            <p class="post-excerpt">【ここに概要を入力してください】</p>
+            <a href="article-01.html" class="read-more">続きを読む</a>
+        </div>
+
+        <div class="post-card">
+            <div class="post-date">YYYY/MM/DD</div>
+            <h2 class="post-title">【タイトルを入力】</h2>
+            <p class="post-excerpt">【ここに概要を入力してください】</p>
+            <a href="article-02.html" class="read-more">続きを読む</a>
+        </div>
     </article>
-    </main>
+</main>
 
 <footer class="site-footer">
-    <p>名古屋中学校・高等学校 鉄道研究部（名高鉄研）</p>
+    <p>名古屋中学校・高等学校 鉄道研究部</p>
 </footer>
+
+<script>
+    function changeLang(lang) {
+        localStorage.setItem('siteLang', lang);
+        location.reload();
+    }
+    function toggleLang() {
+        document.getElementById('langSidebar').classList.toggle('is-open');
+    }
+</script>
 
 </body>
 </html>
