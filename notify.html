@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>お知らせ | 名高鉄研 ポータルサイト</title>
+    <title>お知らせ | 名古屋中学校・高等学校 鉄道研究部</title>
     <link rel="icon" href="logo.png" type="image/png">
     
     <style>
@@ -64,20 +64,23 @@
         .lang-menu button:hover { background-color: #003366; color: #ffda44; }
 
         /* --- コンテンツエリア --- */
-        .container { max-width: 800px; margin: 80px auto; padding: 0 30px; }
-        h1 { color: var(--main-color); border-bottom: 2px solid var(--main-color); padding-bottom: 10px; margin-bottom: 30px; }
+        .container { max-width: 1100px; margin: 80px auto; padding: 0 30px; }
+        h1 { color: var(--accent-color); font-size: 2.1rem; border-left: 8px solid var(--accent-color); padding-left: 20px; margin-bottom: 40px; }
         
         .twitter-container { width: 100%; margin-top: 20px; }
-        
-        /* 埋め込みリンクのスタイル調整 */
-        .twitter-timeline { display: block; }
 
         /* --- フッター --- */
         .site-footer {
-            width: 100%; background-color: var(--main-color); color: rgba(255,255,255,0.5);
-            text-align: center; padding: 20px; font-size: 0.75rem;
-            box-sizing: border-box; margin-top: 100px;
+            width: 100%;
+            background-color: var(--main-color);
+            color: rgba(255,255,255,0.5);
+            text-align: center;
+            padding: 20px;
+            font-size: 0.75rem;
+            box-sizing: border-box;
         }
+        .site-footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
+        .site-footer a:hover { color: #fff; }
 
         @media (max-width: 768px) {
             body { padding-top: 110px; }
@@ -111,7 +114,6 @@
 
 <main class="container">
     <h1>お知らせ</h1>
-    <p>最新情報は名高鉄研のX公式アカウントで発信しています。</p>
     
     <div class="twitter-container">
         <a class="twitter-timeline" 
@@ -125,17 +127,18 @@
 </main>
 
 <footer class="site-footer">
-    <p>名古屋中学校・高等学校 鉄道研究部（名高鉄研）</p>
+    <p>名古屋中学校・高等学校 鉄道研究部</p>
     <p>このサイトのコードの一部には、生成AIを使用しています。</p>
 </footer>
 
 <script>
+    function toggleLang() {
+        document.getElementById('langSidebar').classList.toggle('is-open');
+    }
+
     function changeLang(lang) {
         localStorage.setItem('siteLang', lang);
         location.reload();
-    }
-    function toggleLang() {
-        document.getElementById('langSidebar').classList.toggle('is-open');
     }
 </script>
 
