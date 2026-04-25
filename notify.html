@@ -12,37 +12,89 @@
             --main-color: #001f3f;
             --accent-color: #c0392b;
         }
-        body { margin: 0; padding: 0; font-family: "Helvetica Neue", Arial, sans-serif; background-color: #f0f8ff; color: #333; padding-top: var(--header-height); }
 
-        /* --- ヘッダー・ナビ（共通） --- */
-        .fixed-top-container { position: fixed; top: 0; left: 0; width: 100%; z-index: 5000; background-color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        body {
+            margin: 0; padding: 0;
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+            font-size: 18px;
+            background-color: #f0f8ff; color: #333;
+            padding-top: var(--header-height);
+            overflow-x: hidden;
+        }
+
+        /* --- 固定ヘッダー・ナビ --- */
+        .fixed-top-container {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 5000;
+            background-color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        header { line-height: 0; }
+        header img { width: 100%; height: auto; display: block; }
         .navigation-section { display: flex; justify-content: center; background-color: #000; padding: 0; }
         .button-grid { display: flex; width: 100%; gap: 0; }
-        .nav-button { flex: 1; display: flex; align-items: center; justify-content: center; text-decoration: none; background-color: #fff; border: 5px solid #000; padding: 0; margin-left: -5px; box-sizing: border-box; line-height: 0; }
-        .nav-button img { width: 100%; height: auto; }
+        .nav-button {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            text-decoration: none; background-color: #fff;
+            border: 5px solid #000; padding: 0; margin-left: -5px;
+            box-sizing: border-box; line-height: 0; transition: opacity 0.2s;
+        }
+        .nav-button:first-child { margin-left: 0; }
+        .nav-button:hover { opacity: 0.8; }
+        .nav-button img { width: 100%; height: auto; display: block; }
 
-        /* --- メインコンテンツ --- */
+        /* --- 収納式言語メニュー --- */
+        .language-sidebar {
+            position: fixed; top: calc(var(--header-height) + 20px); right: -140px;
+            display: flex; align-items: center; z-index: 6000;
+            transition: right 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        .language-sidebar.is-open { right: 0; }
+        .lang-tab {
+            width: 45px; height: 110px; background-color: var(--main-color);
+            color: #fff; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; border-radius: 8px 0 0 8px;
+            box-shadow: -2px 0 8px rgba(0,0,0,0.3);
+            writing-mode: vertical-rl; font-size: 13px; font-weight: bold;
+        }
+        .lang-menu { width: 140px; background-color: var(--main-color); padding: 10px 0; border-radius: 0 0 0 8px; }
+        .lang-menu button {
+            width: 100%; background: none; border: none; border-bottom: 1px solid rgba(255,255,255,0.1);
+            color: #fff; padding: 10px 20px; text-align: left; font-size: 14px;
+            cursor: pointer; transition: background 0.3s; display: flex; align-items: center; gap: 10px;
+        }
+        .lang-menu button:hover { background-color: #003366; color: #ffda44; }
+
+        /* --- コンテンツエリア --- */
         .container { max-width: 800px; margin: 80px auto; padding: 0 30px; }
         h1 { color: var(--main-color); border-bottom: 2px solid var(--main-color); padding-bottom: 10px; margin-bottom: 30px; }
         
         .twitter-container { width: 100%; margin-top: 20px; }
         
-        /* 失敗時の「ボタン化」スタイル */
-        .twitter-timeline { 
-            display: block; 
-            padding: 15px 30px; 
-            background-color: var(--main-color); 
-            color: #fff !important; 
-            text-decoration: none; 
-            border-radius: 5px; 
-            text-align: center; 
-            font-weight: bold;
+        /* 埋め込みリンクのスタイル調整 */
+        .twitter-timeline { display: block; }
+
+        /* --- フッター --- */
+        .site-footer {
+            width: 100%; background-color: var(--main-color); color: rgba(255,255,255,0.5);
+            text-align: center; padding: 20px; font-size: 0.75rem;
+            box-sizing: border-box; margin-top: 100px;
         }
 
-        .site-footer { width: 100%; background-color: var(--main-color); color: rgba(255,255,255,0.5); text-align: center; padding: 20px; font-size: 0.75rem; margin-top: 100px; }
+        @media (max-width: 768px) {
+            body { padding-top: 110px; }
+            :root { --header-height: 110px; }
+            .language-sidebar { top: auto; bottom: 20px; }
+        }
     </style>
 </head>
 <body>
+
+<div class="language-sidebar" id="langSidebar">
+    <div class="lang-tab" onclick="toggleLang()">LANG ◀</div>
+    <div class="lang-menu">
+        <button onclick="changeLang('ja')"><span>🇯🇵</span> 日本語</button>
+        <button onclick="changeLang('en')"><span>🇺🇸</span> English</button>
+    </div>
+</div>
 
 <div class="fixed-top-container">
     <header><img src="header-img.png" alt="鉄研ヘッダー"></header>
@@ -59,15 +111,14 @@
 
 <main class="container">
     <h1>お知らせ</h1>
-    <p>最新情報はX(旧Twitter)公式アカウントにて発信中です。</p>
+    <p>最新情報は名高鉄研のX公式アカウントで発信しています。</p>
     
     <div class="twitter-container">
         <a class="twitter-timeline" 
            data-width="800" 
            data-height="600" 
-           data-theme="light" 
            href="https://twitter.com/nakoutetsuken?ref_src=twsrc%5Etfw">
-           名高鉄研のX(Twitter)を見る
+           Tweets by nakoutetsuken
         </a>
         <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     </div>
@@ -75,7 +126,18 @@
 
 <footer class="site-footer">
     <p>名古屋中学校・高等学校 鉄道研究部（名高鉄研）</p>
+    <p>このサイトのコードの一部には、生成AIを使用しています。</p>
 </footer>
+
+<script>
+    function changeLang(lang) {
+        localStorage.setItem('siteLang', lang);
+        location.reload();
+    }
+    function toggleLang() {
+        document.getElementById('langSidebar').classList.toggle('is-open');
+    }
+</script>
 
 </body>
 </html>
