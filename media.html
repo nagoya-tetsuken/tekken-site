@@ -68,8 +68,9 @@
         .content-body { line-height: 1.8; font-size: 1.2rem; }
         h1 { color: var(--accent-color); font-size: 2.1rem; border-left: 8px solid var(--accent-color); padding-left: 20px; margin-bottom: 40px; }
 
-        /* --- 移植した記事用スタイル --- */
+        /* --- 記事スタイル --- */
         .post-card { background: #fff; border-radius: 8px; padding: 25px; margin-bottom: 30px; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .post-thumb { width: 100%; height: 200px; object-fit: cover; border-radius: 4px; margin-bottom: 15px; background-color: #eee; }
         .post-date { color: #888; font-size: 0.9rem; margin-bottom: 5px; }
         .post-title { margin: 0 0 15px 0; color: #333; font-size: 1.4rem; }
         .post-excerpt { color: #555; margin-bottom: 20px; }
@@ -78,13 +79,8 @@
 
         /* --- フッター --- */
         .site-footer {
-            width: 100%;
-            background-color: var(--main-color);
-            color: rgba(255,255,255,0.5);
-            text-align: center;
-            padding: 20px;
-            font-size: 0.75rem;
-            box-sizing: border-box;
+            width: 100%; background-color: var(--main-color); color: rgba(255,255,255,0.5);
+            text-align: center; padding: 20px; font-size: 0.75rem; box-sizing: border-box;
         }
         .site-footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
         .site-footer a:hover { color: #fff; }
@@ -121,23 +117,14 @@
 
 <main class="container">
     <article class="content-body">
-        <h1>データ消失!?部員が作った幻の3Dモデル!</h1>
+        <h1>活動紹介</h1>
         
         <div class="post-card">
+            <img src="アストロメガ.png" alt="記事の画像" class="post-thumb">
+            
             <div class="post-date">2026/4/25</div>
             <h2 class="post-title">データ消失!?部員が作った幻の3Dモデル!</h2>
             <p class="post-excerpt">部員の制作したとある3Dモデル。これまでにない出来栄えに満足し、制作を続けていた矢先に...</p>
-            <a href="#" class="read-more">続きを読む</a>
-        </div>
-    </article>
-
-    <article class="content-body">
-        <h1>ページタイトル</h1>
-        
-        <div class="post-card">
-            <div class="post-date">YYYY/MM/DD</div>
-            <h2 class="post-title">記事のタイトル</h2>
-            <p class="post-excerpt">ここに記事の概要や本文が入ります。</p>
             <a href="#" class="read-more">続きを読む</a>
         </div>
     </article>
@@ -152,7 +139,6 @@
     function toggleLang() {
         document.getElementById('langSidebar').classList.toggle('is-open');
     }
-
     function changeLang(lang) {
         localStorage.setItem('siteLang', lang);
         location.reload();
