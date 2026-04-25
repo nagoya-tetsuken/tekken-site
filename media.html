@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ページタイトル | 鉄道研究部 ポータルサイト</title>
+    <title>ページタイトル | 名古屋中学校・高等学校 鉄道研究部</title>
     <link rel="icon" href="logo.png" type="image/png">
     
     <style>
@@ -65,10 +65,16 @@
 
         /* --- メインコンテンツ --- */
         .container { max-width: 1100px; margin: 80px auto; padding: 0 30px; }
-        
-        /* コンテンツ用スタイル */
         .content-body { line-height: 1.8; font-size: 1.2rem; }
-        h1 { color: var(--main-color); border-bottom: 2px solid var(--main-color); padding-bottom: 10px; }
+        h1 { color: var(--accent-color); font-size: 2.1rem; border-left: 8px solid var(--accent-color); padding-left: 20px; margin-bottom: 40px; }
+
+        /* --- 移植した記事用スタイル --- */
+        .post-card { background: #fff; border-radius: 8px; padding: 25px; margin-bottom: 30px; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .post-date { color: #888; font-size: 0.9rem; margin-bottom: 5px; }
+        .post-title { margin: 0 0 15px 0; color: #333; font-size: 1.4rem; }
+        .post-excerpt { color: #555; margin-bottom: 20px; }
+        .read-more { display: inline-block; color: var(--main-color); text-decoration: none; font-weight: bold; border: 2px solid var(--main-color); padding: 8px 20px; border-radius: 4px; transition: 0.3s; }
+        .read-more:hover { background: var(--main-color); color: #fff; }
 
         /* --- フッター --- */
         .site-footer {
@@ -79,7 +85,6 @@
             padding: 20px;
             font-size: 0.75rem;
             box-sizing: border-box;
-            margin-top: 100px;
         }
         .site-footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
         .site-footer a:hover { color: #fff; }
@@ -116,8 +121,25 @@
 
 <main class="container">
     <article class="content-body">
-        <h1>ここにページタイトル</h1>
-        <p>ここに内容を自由に記述してください。</p>
+        <h1>データ消失!?部員が作った幻の3Dモデル!</h1>
+        
+        <div class="post-card">
+            <div class="post-date">2026/4/25</div>
+            <h2 class="post-title">データ消失!?部員が作った幻の3Dモデル!</h2>
+            <p class="post-excerpt">部員の制作したとある3Dモデル。これまでにない出来栄えに満足し、制作を続けていた矢先に...</p>
+            <a href="#" class="read-more">続きを読む</a>
+        </div>
+    </article>
+
+    <article class="content-body">
+        <h1>ページタイトル</h1>
+        
+        <div class="post-card">
+            <div class="post-date">YYYY/MM/DD</div>
+            <h2 class="post-title">記事のタイトル</h2>
+            <p class="post-excerpt">ここに記事の概要や本文が入ります。</p>
+            <a href="#" class="read-more">続きを読む</a>
+        </div>
     </article>
 </main>
 
@@ -127,18 +149,14 @@
 </footer>
 
 <script>
-    // ページ遷移時に言語設定を反映
-    function changeLang(lang) {
-        localStorage.setItem('siteLang', lang);
-        location.reload(); // ページをリロードして反映
-    }
-
     function toggleLang() {
         document.getElementById('langSidebar').classList.toggle('is-open');
     }
 
-    // 読み込み時に設定があれば言語を切り替える必要がある場合はここに実装します
-    // ※今回は汎用テンプレートのため、各ページで必要に応じて翻訳辞書を追加してください
+    function changeLang(lang) {
+        localStorage.setItem('siteLang', lang);
+        location.reload();
+    }
 </script>
 
 </body>
