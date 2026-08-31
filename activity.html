@@ -6,7 +6,7 @@ title: 活動紹介
 <article class="content-body">
   <h1>活動紹介</h1>
 
-  {% assign posts = site.activities | sort: 'date' | reverse %}
+  {% assign posts = site.activities | where: 'published', true | sort: 'date' | reverse %}
   {% if posts.size > 0 %}
     {% for post in posts %}
     <div class="post-card">
