@@ -10,30 +10,20 @@ layout: default
 </div>
 
 <main class="home-content">
-  {% for i in (1..5) %}
-    {% assign title_key = 'section' | append: i | append: '_title' %}
-    {% assign text_key = 'section' | append: i | append: '_text' %}
-    {% assign title_en_key = 'section' | append: i | append: '_title_en' %}
-    {% assign text_en_key = 'section' | append: i | append: '_text_en' %}
-    {% assign image_key = 'section' | append: i | append: '_image' %}
-    {% assign title = page[title_key] %}
-    {% assign text = page[text_key] %}
-    {% assign title_en = page[title_en_key] %}
-    {% assign text_en = page[text_en_key] %}
-    {% assign image = page[image_key] %}
-    {% if title or text or title_en or text_en or image %}
+  {% for section in page.sections %}
+    {% if section.title or section.text or section.title_en or section.text_en or section.image %}
       <section class="section-row {% cycle '', 'reverse' %} fade-in">
         <div class="text-content">
           <div class="lang-ja">
-            {% if title %}<h2>{{ title }}</h2>{% endif %}
-            {% if text %}<p>{{ text }}</p>{% endif %}
+            {% if section.title %}<h2>{{ section.title }}</h2>{% endif %}
+            {% if section.text %}<p>{{ section.text }}</p>{% endif %}
           </div>
           <div class="lang-en">
-            {% if title_en %}<h2>{{ title_en }}</h2>{% endif %}
-            {% if text_en %}<p>{{ text_en }}</p>{% endif %}
+            {% if section.title_en %}<h2>{{ section.title_en }}</h2>{% endif %}
+            {% if section.text_en %}<p>{{ section.text_en }}</p>{% endif %}
           </div>
         </div>
-        {% if image %}<div class="image-content"><img src="{{ image | relative_url }}" alt="{{ title }}"></div>{% endif %}
+        {% if section.image %}<div class="image-content"><img src="{{ section.image | relative_url }}" alt="{{ section.title }}"></div>{% endif %}
       </section>
     {% endif %}
   {% endfor %}
