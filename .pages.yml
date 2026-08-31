@@ -67,6 +67,20 @@ content:
         type: image
         options: { media: images, extensions: [jpg, jpeg, png, webp] }
 
+  - name: notify
+    label: お知らせページ
+    type: file
+    path: notify.md
+    fields:
+      - name: title
+        label: ページタイトル
+        type: string
+        required: true
+      - name: twitter_username
+        label: X（旧Twitter）のユーザー名
+        type: string
+        required: true
+
   - name: activities
     label: 活動記事
     type: collection
