@@ -18,4 +18,30 @@ twitter_username: nakoutetsuken
   </div>
 </article>
 
-<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<script>
+(function () {
+  function loadXWidgets() {
+    if (window.twttr && window.twttr.widgets) {
+      window.twttr.widgets.load(document.querySelector('.twitter-container'));
+      return;
+    }
+
+    var script = document.createElement('script');
+    script.src = 'https://platform.x.com/widgets.js';
+    script.async = true;
+    script.charset = 'utf-8';
+    script.onload = function () {
+      if (window.twttr && window.twttr.widgets) {
+        window.twttr.widgets.load(document.querySelector('.twitter-container'));
+      }
+    };
+    document.head.appendChild(script);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadXWidgets);
+  } else {
+    loadXWidgets();
+  }
+})();
+</script>
