@@ -1,149 +1,28 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ページタイトル | 名古屋中学校・高等学校 鉄道研究部</title>
-    <link rel="icon" href="logo.png" type="image/png">
-    
-    <style>
-        :root {
-            --header-height: 160px;
-            --main-color: #001f3f;
-            --accent-color: #c0392b;
-        }
+---
+layout: default
+title: 作品紹介
+---
 
-        body {
-            margin: 0; padding: 0;
-            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
-            font-size: 18px;
-            background-color: #f0f8ff; color: #333;
-            padding-top: var(--header-height);
-            overflow-x: hidden;
-        }
+<article class="content-body">
+  <h1>作品紹介</h1>
 
-        /* --- 固定ヘッダー・ナビ --- */
-        .fixed-top-container {
-            position: fixed; top: 0; left: 0; width: 100%; z-index: 5000;
-            background-color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-        header { line-height: 0; }
-        header img { width: 100%; height: auto; display: block; }
-        .navigation-section { display: flex; justify-content: center; background-color: #000; padding: 0; }
-        .button-grid { display: flex; width: 100%; gap: 0; }
-        .nav-button {
-            flex: 1; display: flex; align-items: center; justify-content: center;
-            text-decoration: none; background-color: #fff;
-            border: 5px solid #000; padding: 0; margin-left: -5px;
-            box-sizing: border-box; line-height: 0; transition: opacity 0.2s;
-        }
-        .nav-button:first-child { margin-left: 0; }
-        .nav-button:hover { opacity: 0.8; }
-        .nav-button img { width: 100%; height: auto; display: block; }
-
-        /* --- 収納式言語メニュー --- */
-        .language-sidebar {
-            position: fixed; top: calc(var(--header-height) + 20px); right: -140px;
-            display: flex; align-items: center; z-index: 6000;
-            transition: right 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
-        .language-sidebar.is-open { right: 0; }
-        .lang-tab {
-            width: 45px; height: 110px; background-color: var(--main-color);
-            color: #fff; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; border-radius: 8px 0 0 8px;
-            box-shadow: -2px 0 8px rgba(0,0,0,0.3);
-            writing-mode: vertical-rl; font-size: 13px; font-weight: bold;
-        }
-        .lang-menu { width: 140px; background-color: var(--main-color); padding: 10px 0; border-radius: 0 0 0 8px; }
-        .lang-menu button {
-            width: 100%; background: none; border: none; border-bottom: 1px solid rgba(255,255,255,0.1);
-            color: #fff; padding: 10px 20px; text-align: left; font-size: 14px;
-            cursor: pointer; transition: background 0.3s; display: flex; align-items: center; gap: 10px;
-        }
-        .lang-menu button:hover { background-color: #003366; color: #ffda44; }
-
-        /* --- メインコンテンツ --- */
-        .container { max-width: 1100px; margin: 80px auto; padding: 0 30px; }
-        .content-body { line-height: 1.8; font-size: 1.2rem; }
-        h1 { color: var(--accent-color); font-size: 2.1rem; border-left: 8px solid var(--accent-color); padding-left: 20px; margin-bottom: 40px; }
-
-        /* --- 記事スタイル --- */
-        .post-card { background: #fff; border-radius: 8px; padding: 25px; margin-bottom: 30px; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .post-thumb { width: 100%; height: 200px; object-fit: cover; border-radius: 4px; margin-bottom: 15px; background-color: #eee; }
-        .post-date { color: #888; font-size: 0.9rem; margin-bottom: 5px; }
-        .post-title { margin: 0 0 15px 0; color: #333; font-size: 1.4rem; }
-        .post-excerpt { color: #555; margin-bottom: 20px; }
-        .read-more { display: inline-block; color: var(--main-color); text-decoration: none; font-weight: bold; border: 2px solid var(--main-color); padding: 8px 20px; border-radius: 4px; transition: 0.3s; }
-        .read-more:hover { background: var(--main-color); color: #fff; }
-
-        /* --- フッター --- */
-        .site-footer {
-            width: 100%; background-color: var(--main-color); color: rgba(255,255,255,0.5);
-            text-align: center; padding: 20px; font-size: 0.75rem; box-sizing: border-box;
-        }
-        .site-footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
-        .site-footer a:hover { color: #fff; }
-
-        @media (max-width: 768px) {
-            body { padding-top: 110px; }
-            :root { --header-height: 110px; }
-            .language-sidebar { top: auto; bottom: 20px; }
-        }
-    </style>
-</head>
-<body>
-
-<div class="language-sidebar" id="langSidebar">
-    <div class="lang-tab" onclick="toggleLang()">LANG ◀</div>
-    <div class="lang-menu">
-        <button onclick="changeLang('ja')"><span>🇯🇵</span> 日本語</button>
-        <button onclick="changeLang('en')"><span>🇺🇸</span> English</button>
+  {% assign posts = site.media | sort: 'date' | reverse %}
+  {% if posts.size > 0 %}
+    {% for post in posts %}
+    <div class="post-card">
+      {% if post.cover %}
+      <img src="{{ post.cover | relative_url }}" alt="{{ post.title }}" class="post-thumb">
+      {% endif %}
+      <p class="post-date">{{ post.date | date: "%Y/%m/%d" }}</p>
+      <h2 class="post-title">{{ post.title }}</h2>
+      <p class="post-excerpt">{{ post.excerpt }}</p>
+      <a href="{{ post.url | relative_url }}" class="read-more">続きを読む</a>
     </div>
-</div>
-
-<div class="fixed-top-container">
-    <header><img src="header-img.png" alt="鉄研ヘッダー"></header>
-    <nav class="navigation-section">
-        <div class="button-grid">
-            <a href="index.html" class="nav-button"><img src="aboutus.png" alt="概要"></a>
-            <a href="notify.html" class="nav-button"><img src="notifications.png" alt="お知らせ"></a>
-            <a href="activity.html" class="nav-button"><img src="katsudou.png" alt="活動"></a>
-            <a href="media.html" class="nav-button"><img src="medias.png" alt="作品"></a>
-            <a href="monitor.html" class="nav-button"><img src="modeltrain.png" alt="運転体験"></a>
-        </div>
-    </nav>
-</div>
-
-<main class="container">
-    <article class="content-body">
-        <h1>作品紹介</h1>
-        
-        <div class="post-card">
-            <img src="アストロメガ7.png" alt="記事の画像" class="post-thumb" style="object-position: center bottom;">
-            
-            <div class="post-date">2026/4/25</div>
-            <h2 class="post-title">データ消失!?部員が作った幻の3Dモデル!</h2>
-            <p class="post-excerpt">部員の制作したとある3Dモデル。これまでにない出来栄えに満足し、制作を続けていた矢先に...</p>
-            <a href="article26.4.25.html" class="read-more">続きを読む</a>
-        </div>
-    </article>
-</main>
-
-<footer class="site-footer">
-    <p>名古屋中学校・高等学校 鉄道研究部</p>
-    <p>このサイトのコードの一部には、生成AIを使用しています。</p>
-</footer>
-
-<script>
-    function toggleLang() {
-        document.getElementById('langSidebar').classList.toggle('is-open');
-    }
-    function changeLang(lang) {
-        localStorage.setItem('siteLang', lang);
-        location.reload();
-    }
-</script>
-
-</body>
-</html>
+    {% endfor %}
+  {% else %}
+    <div class="empty-state">
+      <p>現在、公開されている作品記事はありません。</p>
+      <p>記事を追加すると、ここに自動で表示されます。</p>
+    </div>
+  {% endif %}
+</article>
