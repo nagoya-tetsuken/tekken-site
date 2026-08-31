@@ -1,0 +1,13 @@
+title: "名古屋中学校・高等学校 鉄道研究部"
+description: "名古屋中学校・高等学校 鉄道研究部の公式サイト"
+lang: ja
+markdown: kramdown
+collections:
+  activities:
+    output: true
+    permalink: /activity/:name/
+  media:
+    output: true
+    permalink: /media/:name/
+exclude:
+  - README.md
