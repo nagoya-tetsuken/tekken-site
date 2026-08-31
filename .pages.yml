@@ -41,19 +41,42 @@ content:
             type: image
             options: { media: images, extensions: [jpg, jpeg, png, webp] }
 
-  - name: notify
-    label: お知らせページ
-    type: file
-    path: notify.md
+  - name: notices
+    label: お知らせ
+    type: collection
+    path: _notices
+    filename: "{year}-{month}-{day}-{title}.md"
+    operations: { rename: false }
     fields:
       - name: title
-        label: ページタイトル
+        label: タイトル
         type: string
         required: true
-      - name: twitter_username
-        label: X（旧Twitter）のユーザー名
-        type: string
+      - name: date
+        label: 日付
+        type: date
         required: true
+        options: { format: yyyy-MM-dd }
+      - name: published
+        label: 公開する
+        type: boolean
+        default: true
+      - name: excerpt
+        label: 概要
+        type: text
+      - name: cover
+        label: 画像
+        type: image
+        options: { media: images, extensions: [jpg, jpeg, png, webp] }
+      - name: body
+        label: 本文
+        type: rich-text
+        options: { media: images, format: markdown }
+    view:
+      fields: [title, published, date]
+      primary: title
+      sort: [date]
+      default: { sort: date, order: desc }
 
   - name: activities
     label: 活動記事
