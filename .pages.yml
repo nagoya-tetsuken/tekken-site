@@ -16,86 +16,30 @@ content:
       - name: title
         label: ページ名
         type: string
-      - name: section1_title
-        label: セクション1 見出し
-        type: string
-      - name: section1_text
-        label: セクション1 本文
-        type: text
-      - name: section1_title_en
-        label: セクション1 英語見出し
-        type: string
-      - name: section1_text_en
-        label: セクション1 英語本文
-        type: text
-      - name: section1_image
-        label: セクション1 画像
-        type: image
-        options: { media: images, extensions: [jpg, jpeg, png, webp] }
-      - name: section2_title
-        label: セクション2 見出し
-        type: string
-      - name: section2_text
-        label: セクション2 本文
-        type: text
-      - name: section2_title_en
-        label: セクション2 英語見出し
-        type: string
-      - name: section2_text_en
-        label: セクション2 英語本文
-        type: text
-      - name: section2_image
-        label: セクション2 画像
-        type: image
-        options: { media: images, extensions: [jpg, jpeg, png, webp] }
-      - name: section3_title
-        label: セクション3 見出し
-        type: string
-      - name: section3_text
-        label: セクション3 本文
-        type: text
-      - name: section3_title_en
-        label: セクション3 英語見出し
-        type: string
-      - name: section3_text_en
-        label: セクション3 英語本文
-        type: text
-      - name: section3_image
-        label: セクション3 画像
-        type: image
-        options: { media: images, extensions: [jpg, jpeg, png, webp] }
-      - name: section4_title
-        label: セクション4 見出し
-        type: string
-      - name: section4_text
-        label: セクション4 本文
-        type: text
-      - name: section4_title_en
-        label: セクション4 英語見出し
-        type: string
-      - name: section4_text_en
-        label: セクション4 英語本文
-        type: text
-      - name: section4_image
-        label: セクション4 画像
-        type: image
-        options: { media: images, extensions: [jpg, jpeg, png, webp] }
-      - name: section5_title
-        label: セクション5 見出し
-        type: string
-      - name: section5_text
-        label: セクション5 本文
-        type: text
-      - name: section5_title_en
-        label: セクション5 英語見出し
-        type: string
-      - name: section5_text_en
-        label: セクション5 英語本文
-        type: text
-      - name: section5_image
-        label: セクション5 画像
-        type: image
-        options: { media: images, extensions: [jpg, jpeg, png, webp] }
+      - name: sections
+        label: セクション
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "セクション {index}"
+        fields:
+          - name: title
+            label: 見出し
+            type: string
+          - name: text
+            label: 本文
+            type: text
+          - name: title_en
+            label: 英語見出し
+            type: string
+          - name: text_en
+            label: 英語本文
+            type: text
+          - name: image
+            label: 画像
+            type: image
+            options: { media: images, extensions: [jpg, jpeg, png, webp] }
 
   - name: notify
     label: お知らせページ
