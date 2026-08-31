@@ -1,0 +1,26 @@
+---
+layout: default
+---
+<main class="home-content">
+  {% for i in (1..5) %}
+    {% assign title_key = 'section' | append: i | append: '_title' %}
+    {% assign text_key = 'section' | append: i | append: '_text' %}
+    {% assign image_key = 'section' | append: i | append: '_image' %}
+    {% assign title = page[title_key] %}
+    {% assign text = page[text_key] %}
+    {% assign image = page[image_key] %}
+    {% if title or text or image %}
+      <section class="section-row {% cycle '', 'reverse' %} fade-in">
+        <div class="text-content">
+          {% if title %}<h2>{{ title }}</h2>{% endif %}
+          {% if text %}<p>{{ text }}</p>{% endif %}
+        </div>
+        {% if image %}<div class="image-content"><img src="{{ image | relative_url }}" alt="{{ title }}"></div>{% endif %}
+      </section>
+    {% endif %}
+  {% endfor %}
+</main>
+<script>
+const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('is-visible');observer.unobserve(e.target)}}),{threshold:.15});
+document.querySelectorAll('.fade-in').forEach(el=>observer.observe(el));
+</script>
