@@ -2,10 +2,10 @@
 layout: default
 ---
 <div class="language-sidebar" id="langSidebar">
-  <button class="lang-tab" type="button" onclick="toggleLang()">LANG ◀</button>
+  <button class="lang-tab" type="button" id="langTab">LANG ◀</button>
   <div class="lang-menu">
-    <button type="button" onclick="changeLang('ja')">🇯🇵 日本語</button>
-    <button type="button" onclick="changeLang('en')">🇺🇸 English</button>
+    <button type="button" data-lang="ja">日本語</button>
+    <button type="button" data-lang="en">English</button>
   </div>
 </div>
 
@@ -30,27 +30,44 @@ layout: default
 </main>
 
 <script>
-function setHomeLanguage(lang) {
-  document.documentElement.lang = lang;
-  document.querySelectorAll('.lang-ja').forEach(el => el.style.display = lang === 'ja' ? '' : 'none');
-  document.querySelectorAll('.lang-en').forEach(el => el.style.display = lang === 'en' ? '' : 'none');
-}
-function changeLang(lang) {
-  localStorage.setItem('siteLang', lang);
-  setHomeLanguage(lang);
-  document.getElementById('langSidebar').classList.remove('is-open');
-}
-function toggleLang() {
-  document.getElementById('langSidebar').classList.toggle('is-open');
-}
-window.addEventListener('DOMContentLoaded', () => {
-  setHomeLanguage(localStorage.getItem('siteLang') || 'ja');
-  const observer = new IntersectionObserver(entries => entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('is-visible');
-      observer.unobserve(entry.target);
-    }
-  }), { threshold: .15 });
-  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-});
+(function () {
+  function setHomeLanguage(lang) {
+    var isEnglish = lang === 'en';
+    document.documentElement.lang = isEnglish ? 'en' : 'ja';
+    document.querySelectorAll('.lang-ja').forEach(function (el) {
+      el.hidden = isEnglish;
+    });
+    document.querySelectorAll('.lang-en').forEach(function (el) {
+      el.hidden = !isEnglish;
+    });
+  }
+
+  var sidebar = document.getElementById('langSidebar');
+  document.getElementById('langTab').addEventListener('click', function () {
+    sidebar.classList.toggle('is-open');
+  });
+
+  sidebar.querySelectorAll('[data-lang]').forEach(function (button) {
+    button.addEventListener('click', function () {
+      var lang = button.getAttribute('data-lang');
+      try { localStorage.setItem('siteLang', lang); } catch (e) {}
+      setHomeLanguage(lang);
+      sidebar.classList.remove('is-open');
+    });
+  });
+
+  var savedLang = 'ja';
+  try { savedLang = localStorage.getItem('siteLang') || 'ja'; } catch (e) {}
+  setHomeLanguage(savedLang);
+
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.fade-in').forEach(function (el) { observer.observe(el); });
+})();
 </script>
