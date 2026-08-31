@@ -34,11 +34,15 @@ layout: default
   function setHomeLanguage(lang) {
     var isEnglish = lang === 'en';
     document.documentElement.lang = isEnglish ? 'en' : 'ja';
+
     document.querySelectorAll('.lang-ja').forEach(function (el) {
+      el.style.display = isEnglish ? 'none' : 'block';
       el.hidden = isEnglish;
     });
+
     document.querySelectorAll('.lang-en').forEach(function (el) {
-      el.hidden = !isEnglish;
+      el.style.display = isEnglish ? 'block' : 'none';
+      el.hidden = false;
     });
   }
 
