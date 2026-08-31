@@ -1,0 +1,100 @@
+media:
+  - name: images
+    label: 画像
+    input: media/images
+    output: /media/images
+    categories: [image]
+    extensions: [jpg, jpeg, png, webp, gif]
+    rename: safe
+
+content:
+  - name: activities
+    label: 活動記事
+    type: collection
+    path: _activities
+    filename: "{year}-{month}-{day}-{title}.md"
+    fields:
+      - name: title
+        label: タイトル
+        type: string
+        required: true
+      - name: date
+        label: 日付
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: excerpt
+        label: 概要
+        type: text
+        required: true
+      - name: cover
+        label: アイキャッチ画像
+        type: image
+        options:
+          media: images
+          extensions: [jpg, jpeg, png, webp]
+      - name: body
+        label: 本文
+        type: rich-text
+        options:
+          media: images
+          format: markdown
+    view:
+      fields: [title, date]
+      primary: title
+      sort: [date]
+      default:
+        sort: date
+        order: desc
+
+  - name: media
+    label: 作品記事
+    type: collection
+    path: _media
+    filename: "{year}-{month}-{day}-{title}.md"
+    fields:
+      - name: title
+        label: タイトル
+        type: string
+        required: true
+      - name: date
+        label: 日付
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: excerpt
+        label: 概要
+        type: text
+        required: true
+      - name: cover
+        label: アイキャッチ画像
+        type: image
+        options:
+          media: images
+          extensions: [jpg, jpeg, png, webp]
+      - name: body
+        label: 本文
+        type: rich-text
+        options:
+          media: images
+          format: markdown
+    view:
+      fields: [title, date]
+      primary: title
+      sort: [date]
+      default:
+        sort: date
+        order: desc
+
+settings:
+  hide: true
+  content:
+    merge: true
+  commit:
+    templates:
+      create: "content: create {path}"
+      update: "content: update {path}"
+      delete: "content: delete {path}"
+      rename: "content: rename {oldPath} -> {newPath}"
