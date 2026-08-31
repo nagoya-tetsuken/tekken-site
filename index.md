@@ -1,29 +1,5 @@
 ---
 layout: home
 title: 概要
-section1_title: ""
-section1_text: ""
-section1_title_en: ""
-section1_text_en: ""
-section1_image: ""
-section2_title: ""
-section2_text: ""
-section2_title_en: ""
-section2_text_en: ""
-section2_image: ""
-section3_title: ""
-section3_text: ""
-section3_title_en: ""
-section3_text_en: ""
-section3_image: ""
-section4_title: ""
-section4_text: ""
-section4_title_en: ""
-section4_text_en: ""
-section4_image: ""
-section5_title: ""
-section5_text: ""
-section5_title_en: ""
-section5_text_en: ""
-section5_image: ""
+sections: []
 ---
