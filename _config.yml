@@ -9,5 +9,18 @@ collections:
   media:
     output: true
     permalink: /media/:name/
+
+defaults:
+  - scope:
+      path: ""
+      type: "activities"
+    values:
+      layout: article
+  - scope:
+      path: ""
+      type: "media"
+    values:
+      layout: article
+
 exclude:
   - README.md
