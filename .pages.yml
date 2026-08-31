@@ -61,9 +61,6 @@ content:
         label: 公開する
         type: boolean
         default: true
-      - name: excerpt
-        label: 概要
-        type: text
       - name: cover
         label: 画像
         type: image
