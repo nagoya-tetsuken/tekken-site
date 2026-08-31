@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page.title }} | 名古屋中学校・高等学校 鉄道研究部</title>
+  <link rel="icon" href="{{ '/logo.png' | relative_url }}" type="image/png">
+  <link rel="stylesheet" href="{{ '/assets/site.css' | relative_url }}">
+</head>
+<body>
+  <div class="fixed-top-container">
+    <header><img src="{{ '/header-img.png' | relative_url }}" alt="鉄研ヘッダー"></header>
+    <nav class="navigation-section">
+      <div class="button-grid">
+        <a href="{{ '/' | relative_url }}" class="nav-button"><img src="{{ '/aboutus.png' | relative_url }}" alt="概要"></a>
+        <a href="{{ '/notify.html' | relative_url }}" class="nav-button"><img src="{{ '/notifications.png' | relative_url }}" alt="お知らせ"></a>
+        <a href="{{ '/activity.html' | relative_url }}" class="nav-button"><img src="{{ '/katsudou.png' | relative_url }}" alt="活動"></a>
+        <a href="{{ '/media.html' | relative_url }}" class="nav-button"><img src="{{ '/medias.png' | relative_url }}" alt="作品"></a>
+        <a href="{{ '/monitor.html' | relative_url }}" class="nav-button"><img src="{{ '/modeltrain.png' | relative_url }}" alt="運転体験"></a>
+      </div>
+    </nav>
+  </div>
+
+  <main class="container">
+    {{ content }}
+  </main>
+
+  <footer class="site-footer">
+    <p>名古屋中学校・高等学校 鉄道研究部</p>
+    <p>このサイトのコードの一部には、生成AIを使用しています。</p>
+  </footer>
+</body>
+</html>
