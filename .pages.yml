@@ -8,13 +8,71 @@ media:
     rename: safe
 
 content:
+  - name: home
+    label: トップページ
+    type: file
+    path: index.md
+    fields:
+      - name: title
+        label: ページ名
+        type: string
+      - name: section1_title
+        label: セクション1 見出し
+        type: string
+      - name: section1_text
+        label: セクション1 本文
+        type: text
+      - name: section1_image
+        label: セクション1 画像
+        type: image
+        options: { media: images, extensions: [jpg, jpeg, png, webp] }
+      - name: section2_title
+        label: セクション2 見出し
+        type: string
+      - name: section2_text
+        label: セクション2 本文
+        type: text
+      - name: section2_image
+        label: セクション2 画像
+        type: image
+        options: { media: images, extensions: [jpg, jpeg, png, webp] }
+      - name: section3_title
+        label: セクション3 見出し
+        type: string
+      - name: section3_text
+        label: セクション3 本文
+        type: text
+      - name: section3_image
+        label: セクション3 画像
+        type: image
+        options: { media: images, extensions: [jpg, jpeg, png, webp] }
+      - name: section4_title
+        label: セクション4 見出し
+        type: string
+      - name: section4_text
+        label: セクション4 本文
+        type: text
+      - name: section4_image
+        label: セクション4 画像
+        type: image
+        options: { media: images, extensions: [jpg, jpeg, png, webp] }
+      - name: section5_title
+        label: セクション5 見出し
+        type: string
+      - name: section5_text
+        label: セクション5 本文
+        type: text
+      - name: section5_image
+        label: セクション5 画像
+        type: image
+        options: { media: images, extensions: [jpg, jpeg, png, webp] }
+
   - name: activities
     label: 活動記事
     type: collection
     path: _activities
     filename: "{year}-{month}-{day}-{title}.md"
-    operations:
-      rename: false
+    operations: { rename: false }
     fields:
       - name: title
         label: タイトル
@@ -24,8 +82,7 @@ content:
         label: 日付
         type: date
         required: true
-        options:
-          format: yyyy-MM-dd
+        options: { format: yyyy-MM-dd }
       - name: published
         label: 公開する
         type: boolean
@@ -37,30 +94,23 @@ content:
       - name: cover
         label: アイキャッチ画像
         type: image
-        options:
-          media: images
-          extensions: [jpg, jpeg, png, webp]
+        options: { media: images, extensions: [jpg, jpeg, png, webp] }
       - name: body
         label: 本文
         type: rich-text
-        options:
-          media: images
-          format: markdown
+        options: { media: images, format: markdown }
     view:
       fields: [title, published, date]
       primary: title
       sort: [date]
-      default:
-        sort: date
-        order: desc
+      default: { sort: date, order: desc }
 
   - name: media
     label: 作品記事
     type: collection
     path: _media
     filename: "{year}-{month}-{day}-{title}.md"
-    operations:
-      rename: false
+    operations: { rename: false }
     fields:
       - name: title
         label: タイトル
@@ -70,8 +120,7 @@ content:
         label: 日付
         type: date
         required: true
-        options:
-          format: yyyy-MM-dd
+        options: { format: yyyy-MM-dd }
       - name: published
         label: 公開する
         type: boolean
@@ -83,27 +132,20 @@ content:
       - name: cover
         label: アイキャッチ画像
         type: image
-        options:
-          media: images
-          extensions: [jpg, jpeg, png, webp]
+        options: { media: images, extensions: [jpg, jpeg, png, webp] }
       - name: body
         label: 本文
         type: rich-text
-        options:
-          media: images
-          format: markdown
+        options: { media: images, format: markdown }
     view:
       fields: [title, published, date]
       primary: title
       sort: [date]
-      default:
-        sort: date
-        order: desc
+      default: { sort: date, order: desc }
 
 settings:
   hide: true
-  content:
-    merge: true
+  content: { merge: true }
   commit:
     templates:
       create: "content: create {path}"
