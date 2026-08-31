@@ -13,6 +13,8 @@ content:
     type: collection
     path: _activities
     filename: "{year}-{month}-{day}-{title}.md"
+    operations:
+      rename: false
     fields:
       - name: title
         label: タイトル
@@ -24,6 +26,10 @@ content:
         required: true
         options:
           format: yyyy-MM-dd
+      - name: published
+        label: 公開する
+        type: boolean
+        default: true
       - name: excerpt
         label: 概要
         type: text
@@ -41,7 +47,7 @@ content:
           media: images
           format: markdown
     view:
-      fields: [title, date]
+      fields: [title, published, date]
       primary: title
       sort: [date]
       default:
@@ -53,6 +59,8 @@ content:
     type: collection
     path: _media
     filename: "{year}-{month}-{day}-{title}.md"
+    operations:
+      rename: false
     fields:
       - name: title
         label: タイトル
@@ -64,6 +72,10 @@ content:
         required: true
         options:
           format: yyyy-MM-dd
+      - name: published
+        label: 公開する
+        type: boolean
+        default: true
       - name: excerpt
         label: 概要
         type: text
@@ -81,7 +93,7 @@ content:
           media: images
           format: markdown
     view:
-      fields: [title, date]
+      fields: [title, published, date]
       primary: title
       sort: [date]
       default:
