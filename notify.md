@@ -10,9 +10,12 @@ twitter_username: nakoutetsuken
     <a class="twitter-timeline"
        data-width="800"
        data-height="600"
-       href="https://twitter.com/{{ page.twitter_username }}">
-      Tweets by {{ page.twitter_username }}
+       data-dnt="true"
+       data-theme="light"
+       href="https://x.com/{{ page.twitter_username }}">
+      @{{ page.twitter_username }} の投稿
     </a>
-    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
   </div>
 </article>
+
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
