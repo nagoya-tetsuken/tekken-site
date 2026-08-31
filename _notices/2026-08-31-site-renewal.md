@@ -1,7 +1,7 @@
 ---
 title: テスト投稿１
 date: 2026-08-31
-published: false
+published: true
 excerpt: 悪かったな。こいつぁテストだ。
 ---
 制作者「なる早で作ると言ったな。」
