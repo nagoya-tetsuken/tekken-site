@@ -1,0 +1,20 @@
+---
+layout: default
+---
+
+<article class="article-page">
+  <p class="post-date">{{ page.date | date: "%Y/%m/%d" }}</p>
+  <h1>{{ page.title }}</h1>
+
+  {% if page.cover %}
+  <img class="article-cover" src="{{ page.cover | relative_url }}" alt="{{ page.title }}">
+  {% endif %}
+
+  {% if page.excerpt %}
+  <p class="article-excerpt">{{ page.excerpt }}</p>
+  {% endif %}
+
+  <div class="article-body">
+    {{ content }}
+  </div>
+</article>
