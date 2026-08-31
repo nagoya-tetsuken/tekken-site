@@ -1,41 +1,30 @@
 ---
 layout: default
 title: お知らせ
-twitter_username: nakoutetsuken
 ---
 
 <article class="content-body">
-  <h1>{{ page.title }}</h1>
-  <div class="twitter-container">
-    <a class="twitter-timeline"
-       data-width="800"
-       data-height="600"
-       data-dnt="true"
-       data-theme="light"
-       href="https://x.com/{{ page.twitter_username }}">
-      @{{ page.twitter_username }} の投稿
-    </a>
-  </div>
+  <h1>お知らせ</h1>
+
+  {% assign posts = site.notices | where: 'published', true | sort: 'date' | reverse %}
+  {% if posts.size > 0 %}
+    {% for post in posts %}
+    <div class="post-card">
+      {% if post.cover %}
+      <img src="{{ post.cover | relative_url }}" alt="{{ post.title }}" class="post-thumb">
+      {% endif %}
+      <p class="post-date">{{ post.date | date: "%Y/%m/%d" }}</p>
+      <h2 class="post-title">{{ post.title }}</h2>
+      {% if post.excerpt %}<p class="post-excerpt">{{ post.excerpt }}</p>{% endif %}
+      <a href="{{ post.url | relative_url }}" class="read-more">続きを読む</a>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="empty-state">
+      <p>現在、公開されているお知らせはありません。</p>
+      <p>お知らせを追加すると、ここに自動で表示されます。</p>
+    </div>
+  {% endif %}
+
+  <p style="margin-top: 2rem;"><a href="https://x.com/nakoutetsuken" target="_blank" rel="noopener">X（旧Twitter）の公式アカウントはこちら</a></p>
 </article>
-
-<script>
-(function () {
-  function renderTimeline() {
-    if (window.twttr && window.twttr.widgets) {
-      window.twttr.widgets.load(document.querySelector('.twitter-container'));
-    }
-  }
-
-  if (window.twttr && window.twttr.widgets) {
-    renderTimeline();
-    return;
-  }
-
-  var script = document.createElement('script');
-  script.src = 'https://platform.twitter.com/widgets.js';
-  script.async = true;
-  script.charset = 'utf-8';
-  script.onload = renderTimeline;
-  document.head.appendChild(script);
-})();
-</script>
