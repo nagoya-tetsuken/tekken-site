@@ -9,6 +9,9 @@ collections:
   media:
     output: true
     permalink: /media/:name/
+  notices:
+    output: true
+    permalink: /notify/:name/
 
 defaults:
   - scope:
@@ -19,6 +22,11 @@ defaults:
   - scope:
       path: ""
       type: "media"
+    values:
+      layout: article
+  - scope:
+      path: ""
+      type: "notices"
     values:
       layout: article
 
