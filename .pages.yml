@@ -141,6 +141,11 @@ content:
         label: アイキャッチ画像
         type: image
         options: { media: images, extensions: [jpg, jpeg, png, webp] }
+      - name: video
+        label: 動画（YouTube URL）
+        type: string
+        required: false
+        description: YouTubeの通常URLを貼り付けてください。例：https://www.youtube.com/watch?v=xxxxxxxxxxx
       - name: body
         label: 本文
         type: rich-text
