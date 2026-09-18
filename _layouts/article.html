@@ -14,6 +14,31 @@ layout: default
   <p class="article-excerpt">{{ page.excerpt }}</p>
   {% endif %}
 
+  {% if page.video %}
+    {% assign video_url = page.video | strip %}
+    {% assign video_id = "" %}
+    {% if video_url contains "watch?v=" %}
+      {% assign video_id = video_url | split: "watch?v=" | last | split: "&" | first %}
+    {% elsif video_url contains "youtu.be/" %}
+      {% assign video_id = video_url | split: "youtu.be/" | last | split: "?" | first %}
+    {% elsif video_url contains "youtube.com/shorts/" %}
+      {% assign video_id = video_url | split: "youtube.com/shorts/" | last | split: "?" | first %}
+    {% elsif video_url contains "youtube.com/embed/" %}
+      {% assign video_id = video_url | split: "youtube.com/embed/" | last | split: "?" | first %}
+    {% endif %}
+
+    {% if video_id != "" %}
+    <div class="article-video">
+      <iframe
+        src="https://www.youtube-nocookie.com/embed/{{ video_id }}"
+        title="{{ page.title }} の動画"
+        loading="lazy"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen></iframe>
+    </div>
+    {% endif %}
+  {% endif %}
+
   <div class="article-body">
     {{ content }}
   </div>
