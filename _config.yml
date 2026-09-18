@@ -1,6 +1,8 @@
 title: "名古屋中学校・高等学校 鉄道研究部"
 description: "名古屋中学校・高等学校 鉄道研究部の公式サイト"
 lang: ja
+plugins:
+  - jekyll-sitemap
 markdown: kramdown
 collections:
   activities:
