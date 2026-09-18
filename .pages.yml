@@ -6,6 +6,13 @@ media:
     categories: [image]
     extensions: [jpg, jpeg, png, webp, gif]
     rename: safe
+  - name: videos
+    label: 動画
+    input: media/videos
+    output: /media/videos
+    categories: [video]
+    extensions: [mp4, webm, ogg]
+    rename: safe
 
 content:
   - name: home
@@ -142,10 +149,14 @@ content:
         type: image
         options: { media: images, extensions: [jpg, jpeg, png, webp] }
       - name: video
-        label: 動画（YouTube URL）
-        type: string
+        label: 動画
+        type: file
         required: false
-        description: YouTubeの通常URLを貼り付けてください。例：https://www.youtube.com/watch?v=xxxxxxxxxxx
+        options:
+          media: videos
+          categories: [video]
+          extensions: [mp4, webm, ogg]
+        description: 動画ファイルをそのままアップロードできます。
       - name: body
         label: 本文
         type: rich-text
